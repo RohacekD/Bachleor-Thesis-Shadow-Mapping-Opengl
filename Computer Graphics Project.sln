@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Computer Graphics Project", "Computer Graphics Project\Computer Graphics Project.vcxproj", "{2963F312-8C42-47FC-8F2C-A558342B7396}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml", "external\pugixml-1.8-build\pugixml.vcxproj", "{1EA25716-0834-3A1B-B647-AED29DE3B49B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		MinSizeRel|x64 = MinSizeRel|x64
+		Release|x64 = Release|x64
+		RelWithDebInfo|x64 = RelWithDebInfo|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.Debug|x64.ActiveCfg = Debug|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.Debug|x64.Build.0 = Debug|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.MinSizeRel|x64.ActiveCfg = Release|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.MinSizeRel|x64.Build.0 = Release|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.Release|x64.ActiveCfg = Release|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.Release|x64.Build.0 = Release|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.RelWithDebInfo|x64.ActiveCfg = Release|x64
+		{2963F312-8C42-47FC-8F2C-A558342B7396}.RelWithDebInfo|x64.Build.0 = Release|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.Debug|x64.ActiveCfg = Debug|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.Debug|x64.Build.0 = Debug|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.Release|x64.ActiveCfg = Release|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.Release|x64.Build.0 = Release|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{1EA25716-0834-3A1B-B647-AED29DE3B49B}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\render">
+      <UniqueIdentifier>{7b58c3f7-3063-49b8-984d-49900b24355b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\Nodes">
+      <UniqueIdentifier>{24635e2a-44bf-4430-ae4c-d3a73deb20ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{dd2187f2-2a66-41aa-a8ec-aa92065b633e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\Nodes">
+      <UniqueIdentifier>{ff91a8f2-7a42-495f-be60-cfa3f9e57d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GLW">
+      <UniqueIdentifier>{35bba725-2a57-4bc2-9f6c-162120a22cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GLW">
+      <UniqueIdentifier>{130baf1a-b513-4a85-8568-48367ef2e38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\animation">
+      <UniqueIdentifier>{7b27d522-0f16-4b72-81cc-d9b30e88cf78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\animation">
+      <UniqueIdentifier>{c52c06fa-68e6-489b-96f1-1079e1edddcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\animation\TranslationAnimations">
+      <UniqueIdentifier>{478e3e4b-e736-450e-8caa-d117ef14d2d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\animation\TranslationAnimations">
+      <UniqueIdentifier>{2664f6e7-6659-4cea-9f18-bd02cb5da747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{2c689f97-fe6f-418b-9416-8a8290cfa816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Camera">
+      <UniqueIdentifier>{41bad227-8069-4753-a1db-b702c4dc1039}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HighResolutionTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ModelLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SceneLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShaderCompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CameraPath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StudentRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\render\RenderParams.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\render\SceneBuilder.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\render\Nodes\MeshNode.cpp">
+      <Filter>Source Files\render\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\render\Nodes\RenderNode.cpp">
+      <Filter>Source Files\render\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\render\Nodes\Scene.cpp">
+      <Filter>Source Files\render\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLW\Texture.cpp">
+      <Filter>Source Files\GLW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\animation\Animation.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\animation\AnimationComponent.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\animation\OneAxisAnimations.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\animation\TranslationAnimations.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\animation\AnimCompDecorator.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShaderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLW\ShaderProgram.cpp">
+      <Filter>Source Files\GLW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLW\Framebuffer.cpp">
+      <Filter>Source Files\GLW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Camera\ICamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Camera\FreelookCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Camera\OrbitalCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShadowMapCascade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Application.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\HighResolutionTimer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ModelLoader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SceneLoader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TextureLoader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ShaderCompiler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BitOperations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CameraPath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\StudentRenderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Scene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\render\Nodes\MeshNode.h">
+      <Filter>Header Files\render\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\render\Nodes\RenderNode.h">
+      <Filter>Header Files\render\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\render\Nodes\Scene.h">
+      <Filter>Header Files\render\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\render\RenderParams.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\render\SceneBuilder.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GLW\Texture.h">
+      <Filter>Header Files\GLW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\animation\Animation.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\animation\AnimationComponent.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\animation\Interpolation.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\animation\OneAxisAnimations.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\animation\TranslationAnimations.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\animation\AnimCompDecorator.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ShaderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GLW\ShaderProgram.h">
+      <Filter>Header Files\GLW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GLW\Framebuffer.h">
+      <Filter>Header Files\GLW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Camera\ICamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Camera\FreelookCamera.hpp">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Camera\OrbitalCamera.hpp">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ShadowMapCascade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>
