@@ -38,12 +38,12 @@ C_DebugDraw & C_DebugDraw::Instance()
 }
 
 //=================================================================================
-C_DebugDraw::C_DebugDraw()
+void C_DebugDraw::SetupAABB()
 {
 	m_program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
 
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
+	glGenVertexArrays(1, &m_VAOaabb);
+	glBindVertexArray(m_VAOaabb);
 	// Cube 1x1x1, centered on origin
 	GLfloat vertices[] = {
 		-0.5, -0.5, -0.5, 1.0,
@@ -55,9 +55,9 @@ C_DebugDraw::C_DebugDraw()
 		0.5,  0.5,  0.5, 1.0,
 		-0.5,  0.5,  0.5, 1.0,
 	};
-	glGenBuffers(1, &m_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+	glGenBuffers(1, &m_VBOaabb);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOaabb);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -67,10 +67,25 @@ C_DebugDraw::C_DebugDraw()
 		4, 5, 6, 7,
 		0, 4, 1, 5, 2, 6, 3, 7
 	};
-	glGenBuffers(1, &m_IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+	glGenBuffers(1, &m_IBOaabb);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBOaabb);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+//=================================================================================
+C_DebugDraw::C_DebugDraw()
+{
+	SetupAABB();
+	glGenVertexArrays(1, &m_VAOline);
+	glBindVertexArray(m_VAOline);
+	glGenBuffers(1, &m_VBOline);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOline);
+	glBufferData(GL_ARRAY_BUFFER, 2 * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 //=================================================================================
@@ -99,14 +114,14 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& modelMatrix, const
 	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
 
-	glBindVertexArray(m_VAO);
+	glBindVertexArray(m_VAOaabb);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOaabb);
 	ErrorCheck();
 	glEnableVertexAttribArray(0);
 	ErrorCheck();
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBOaabb);
 	ErrorCheck();
 	glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_SHORT, 0);
 	ErrorCheck();
@@ -118,6 +133,37 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& modelMatrix, const
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	m_program->disableProgram();
+	glBindVertexArray(0);
+	ErrorCheck();
+}
+
+//=================================================================================
+void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/)
+{
+	m_program->useProgram();
+
+	glBindVertexArray(m_VAOline);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOline);
+
+	std::vector<glm::vec4> vertices;
+	vertices.push_back(pointA);
+	vertices.push_back(pointB);
+
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec4), vertices.data(), GL_DYNAMIC_DRAW);
+
+	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
+
+	glEnableVertexAttribArray(0);
+
+	glDrawArrays(GL_LINES, 0, 2);
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 	m_program->disableProgram();
 	ErrorCheck();
 }

@@ -32,12 +32,16 @@ public:
 	~C_DebugDraw();
 
 	void DrawAABB(const AABB& bbox, const glm::mat4& modelMatrix, const glm::mat4& projectionMatrix, const glm::vec3& color = glm::vec3(0.0f, 0.0f, 0.0f));
-
+	void DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, const glm::mat4& projectionMatrix, const glm::vec3& color = glm::vec3(0.0f, 0.0f, 0.0f));
 private:
+	void SetupAABB();
+
 	std::shared_ptr<GLW::C_ShaderProgram> m_program;
 	C_DebugDraw();
-	GLuint m_IBO;
-	GLuint m_VBO;
-	GLuint m_VAO;
+	GLuint m_IBOaabb;
+	GLuint m_VBOaabb;
+	GLuint m_VAOaabb;
 
+	GLuint m_VAOline;
+	GLuint m_VBOline;
 };
