@@ -167,3 +167,30 @@ void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, con
 	m_program->disableProgram();
 	ErrorCheck();
 }
+
+void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4 & projectionMatrix, const glm::vec3 & color)
+{
+	m_program->useProgram();
+
+	glBindVertexArray(m_VAOline);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOline);
+
+	std::vector<glm::vec4> vertices;
+
+	glBufferData(GL_ARRAY_BUFFER, pairs.size() * sizeof(glm::vec4), pairs.data(), GL_DYNAMIC_DRAW);
+
+	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
+
+	glEnableVertexAttribArray(0);
+
+	glDrawArrays(GL_LINES, 0, pairs.size());
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	m_program->disableProgram();
+	ErrorCheck();
+}
