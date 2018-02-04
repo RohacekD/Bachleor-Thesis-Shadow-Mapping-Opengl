@@ -135,6 +135,12 @@
     <ClCompile Include="..\src\ShadowMapCascade.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\CameraManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LightInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -228,6 +234,12 @@
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ShadowMapCascade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CameraManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LightInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
