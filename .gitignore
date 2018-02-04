@@ -38,3 +38,9 @@ bin/models/sopwith/sopwith.mtl
 *include*
 *lib*
 */x64/Debug*
+*.filters
+Computer Graphics Project/Computer Graphics Project.vcxproj
+*.opendb
+*.suo
+*.db
+*.suo
