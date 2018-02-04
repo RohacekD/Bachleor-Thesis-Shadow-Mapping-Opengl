@@ -178,7 +178,7 @@ bool Application::Run()
 	m_camera = std::make_shared<T_Camera>();
 	auto debugCam = std::make_shared<T_Camera>();
 
-	GetCamManager()->SetActiveCamera(debugCam);
+	GetCamManager()->SetMainCamera(debugCam);
 	GetCamManager()->SetDebugCamera(m_camera);
 
 	setupCamera(m_camera);
@@ -194,10 +194,10 @@ bool Application::Run()
 
     while (!quit)
 	{
-		auto renderCamera = GetCamManager()->GetViewCamera();
+		auto renderCamera = GetCamManager()->GetActiveCamera();
 		auto controledCamera = renderCamera;
 		if (m_controlMainCam) {
-			controledCamera = GetCamManager()->GetActiveCamera();
+			controledCamera = GetCamManager()->GetMainCamera();
 		}
 		
         while (SDL_PollEvent(&e) != 0)

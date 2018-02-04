@@ -159,7 +159,7 @@ namespace render {
 		glm::vec4 light(0, 15.0f, 0.f, 1.0f);
 		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "lightPos"), 1, glm::value_ptr(light));
 		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "PSSMLimits"), 1, glm::value_ptr(params.m_planes));
-		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "CameraPosition"), 1, glm::value_ptr(Application::Instance().GetCamManager()->GetActiveCamera()->getPosition()));
+		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "CameraPosition"), 1, glm::value_ptr(Application::Instance().GetCamManager()->GetMainCamera()->getPosition()));
 
 		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "toShadowMapSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_toShadowMapSpaceMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_cameraViewProjectionMatrix));

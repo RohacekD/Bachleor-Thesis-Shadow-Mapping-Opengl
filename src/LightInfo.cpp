@@ -59,7 +59,7 @@ glm::mat4 C_DirectionalLight::GetProjectionMatrix() const
 
 
 	AABB cameraAABBInLigthSpace = camerasAABB.getTransformedAABB(GetViewMatrix());
-	auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetViewCamera()->getViewProjectionMatrix();
+	auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
 	C_DebugDraw::Instance().DrawAABB(cameraAABBInLigthSpace, glm::mat4(1.0f), viewProjectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f));
 	C_DebugDraw::Instance().DrawAABB(camerasAABB, glm::mat4(1.0f), viewProjectionMatrix, glm::vec3(0.0f, 1.0f, 0.0f));
 	C_DebugDraw::Instance().DrawAABB(transformedAABB, glm::mat4(1.0f), viewProjectionMatrix, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -73,7 +73,7 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 {
 	AABB camerasAABB = m_camera->GetAABB();
 	glm::vec3 normal = glm::normalize(m_direciton - m_origin);
-	auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetViewCamera()->getViewProjectionMatrix();
+	auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
 	// looking for near and far => looking just for far, because we can say near is smth like 0.1
 	glm::vec3 nearest, futher; // initialize to something really, really far from aabb
 	float near = std::numeric_limits<float>::max();

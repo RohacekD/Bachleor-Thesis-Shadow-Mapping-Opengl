@@ -368,7 +368,7 @@ void FreelookCamera::debugDraw() const
 		lines.push_back(nlb); lines.push_back(flb);
 		lines.push_back(nrb); lines.push_back(frb);
 
-		C_DebugDraw::Instance().DrawLines(lines, Application::Instance().GetCamManager()->GetViewCamera()->getViewProjectionMatrix());
+		C_DebugDraw::Instance().DrawLines(lines, Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix());
 	}
-	C_DebugDraw::Instance().DrawLine(glm::vec4(nearCenter, 1.0f), glm::vec4(farCenter, 1.0f), Application::Instance().GetCamManager()->GetViewCamera()->getViewProjectionMatrix());
+	C_DebugDraw::Instance().DrawLine(glm::vec4(nearCenter, 1.0f), glm::vec4(farCenter, 1.0f), Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix());
 }

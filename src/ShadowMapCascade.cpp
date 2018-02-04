@@ -19,7 +19,7 @@ C_ShadowMapCascade::C_ShadowMapCascade(float resolution, int levels, float nearP
 	, m_fov(fov)
 	, m_lambda(m_lambda)
 {
-	auto camera = Application::Instance().GetCamManager()->GetActiveCamera();
+	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	m_lighInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(-1.0f, 3.0f, 2.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 }
 

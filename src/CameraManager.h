@@ -7,10 +7,10 @@ class C_CameraManager {
 public:
 	C_CameraManager();
 
-	std::shared_ptr<I_Camera> GetViewCamera() const;
-
 	std::shared_ptr<I_Camera> GetActiveCamera() const;
-	void SetActiveCamera(std::shared_ptr<I_Camera> camera);
+
+	std::shared_ptr<I_Camera> GetMainCamera() const;
+	void SetMainCamera(std::shared_ptr<I_Camera> camera);
 
 	std::shared_ptr<I_Camera> GetDebugCamera() const { return m_debugCamera; }
 	void SetDebugCamera(std::shared_ptr<I_Camera> camera);
@@ -23,6 +23,6 @@ public:
 private:
 	bool m_useDebugCam;
 
-	std::shared_ptr<I_Camera> m_activeCamera;
+	std::shared_ptr<I_Camera> m_mainCamera;
 	std::shared_ptr<I_Camera> m_debugCamera;
 };
