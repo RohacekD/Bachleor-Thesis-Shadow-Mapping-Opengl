@@ -24,6 +24,7 @@
 #include "ShaderCompiler.hpp"
 #include "CameraPath.h"
 #include "StudentRenderer.hpp"
+#include "CameraManager.h"
 
 //Project defines
 #define SCREEN_WIDTH  800
@@ -34,6 +35,12 @@
 
 class Application
 {
+	//Camera
+#ifdef USE_ORBITAL_CAMERA
+	using T_Camera = OrbitalCamera;
+#else
+	using T_Camera = FreelookCamera;
+#endif
 public:
 	//Singleton stuff changed by DR
 	Application(Application const&) = delete;
@@ -52,9 +59,8 @@ public:
     //Scene = all the meshes from single file
     bool addModelFileToScene(const char* path, std::shared_ptr<Scene> scene, const glm::mat4& transform = glm::mat4(1));
 
-    //Setup camera for scene
-    void setupCamera(OrbitalCamera& orbitalCamera);
-    void setupCamera(FreelookCamera& freeCamera);
+	void setupCamera(std::shared_ptr<OrbitalCamera>& orbitalCamera);
+	void setupCamera(std::shared_ptr<FreelookCamera>& freeCamera);
 
     //Clears all resources used by the application
     //Also calls clearGL
@@ -66,6 +72,8 @@ public:
 
     //Destroys window
     void clearSDLWindow();
+
+	std::shared_ptr<C_CameraManager> GetCamManager() const { return m_cameraManager; }
 
 private:
 	Application();
@@ -79,12 +87,11 @@ private:
     //Timer
     HighResolutionTimer  _timer;
 
-    //Camera
-#ifdef USE_ORBITAL_CAMERA
-    OrbitalCamera        _camera;
-#else
-    FreelookCamera       _camera;
-#endif
+	bool m_controlMainCam;
+
+	std::shared_ptr<C_CameraManager>		m_cameraManager;
+
+	std::shared_ptr<T_Camera> m_camera;
     //Scene data
     std::shared_ptr<Scene> _scene;
 

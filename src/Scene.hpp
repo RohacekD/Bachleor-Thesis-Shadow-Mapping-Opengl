@@ -65,6 +65,15 @@ struct AABB
 	 AABB getTransformedAABB(const glm::mat4 matrix) const
 	 {
 		 AABB newBB;
+
+		 glm::vec3 size = maxPoint - minPoint;
+
+		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint + glm::vec3(size.x, 0.0f, 0.0f), 1.0f)));
+		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint + glm::vec3(size.x, size.y, 0.0f), 1.0f)));
+		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint + glm::vec3(size.x, 0.0f, size.z), 1.0f)));
+		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint + glm::vec3(0.0f, size.y, 0.0f), 1.0f)));
+		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint + glm::vec3(0.0f, 0.0f, size.z), 1.0f)));
+		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint + glm::vec3(0.0f, size.y, size.z), 1.0f)));
 		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(minPoint, 1.0f)));
 		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(maxPoint, 1.0f)));
 

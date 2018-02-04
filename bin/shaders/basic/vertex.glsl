@@ -9,6 +9,7 @@ uniform mat4 toShadowMapSpaceMatrix;
 uniform mat4 projectionMatrix;
 uniform vec4 lightPos;
 uniform vec4 PSSMLimits;
+uniform vec4 CameraPosition;
 
 //per vertex
 uniform mat4 modelMatrix;
@@ -19,7 +20,8 @@ out vec4 toLight;
 //out vec2 texCoordOUT;
 out vec4 worldCoord;
 out vec4 shadowCoords;
-varying vec4 limits;
+out vec4 limits;
+out float camDistance;
 
 void main()
 {
@@ -33,5 +35,6 @@ void main()
 
 	toLight = normalize(lightPos - vertex);
 	worldCoord = projectionMatrix * modelMatrix * vertex;
+	camDistance = distance(vertex, projectionMatrix * CameraPosition);
     gl_Position = worldCoord;
 }

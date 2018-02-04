@@ -13,11 +13,13 @@ bool Application::Init()
     if (!initGlew())
         return false;
 
+	m_cameraManager = std::make_shared<C_CameraManager>();
 	_scene = std::make_shared<Scene>();
 
     return true;
 }
 
+//=================================================================================
 bool Application::initWindow()
 {
     // Initialize SDL's Video subsystem
@@ -54,7 +56,7 @@ bool Application::initWindow()
     return true;
 }
 
-
+//=================================================================================
 bool Application::initGlew()
 {
     glewExperimental = GL_TRUE;
@@ -67,6 +69,7 @@ bool Application::initGlew()
     return true;
 }
 
+//=================================================================================
 void Application::clearSDLWindow()
 {
 	SDL_GL_DeleteContext(_glContext);
@@ -81,46 +84,49 @@ void Application::Clear()
 	clearSDLWindow();
 }
 
-void Application::setupCamera(OrbitalCamera& camera)
+//=================================================================================
+void Application::setupCamera(std::shared_ptr<OrbitalCamera>& orbitalCamera)
 {
-    //Setup camera
-    //Make the scene fit the camera's view frustum
-    //Camera is static throughout the app, it will be the model that will rotate
+	//Setup camera
+	//Make the scene fit the camera's view frustum
+	//Camera is static throughout the app, it will be the model that will rotate
 
-    //Create hypothetical bounding sphere around scene's AABB, d - its radius
-    //We will create camera's view frustum around this sphere
-    float r = glm::length(_scene->bbox.maxPoint - _scene->bbox.minPoint) / 2; 
-    float fovyDeg = 90;
-    float fovyRad = glm::radians(fovyDeg);
-    float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
-    float nearZ = 0.1f;
-    
-    float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad/2.0f));
+	//Create hypothetical bounding sphere around scene's AABB, d - its radius
+	//We will create camera's view frustum around this sphere
+	float r = glm::length(_scene->bbox.maxPoint - _scene->bbox.minPoint) / 2;
+	float fovyDeg = 90;
+	float fovyRad = glm::radians(fovyDeg);
+	float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
+	float nearZ = 0.1f;
 
-    //The sphere can touch the frustum either on left-right sides, or top-bottom
-    //We choose, which distance is further away
-    float d = r / glm::max(sin(fovyRad/2), sin(fovXrad/2));
+	float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad / 2.0f));
 
-    camera.setupCameraProjection(0.1f, 2*(d + r), aspectRatio, fovyDeg);
-    camera.setupCameraView(d, _scene->bbox.minPoint + 0.5f*(_scene->bbox.maxPoint - _scene->bbox.minPoint), 0, 0);
-    camera.update();
+	//The sphere can touch the frustum either on left-right sides, or top-bottom
+	//We choose, which distance is further away
+	float d = r / glm::max(sin(fovyRad / 2), sin(fovXrad / 2));
+
+	orbitalCamera->setupCameraProjection(0.1f, 2 * (d + r), aspectRatio, fovyDeg);
+	orbitalCamera->setupCameraView(d, _scene->bbox.minPoint + 0.5f*(_scene->bbox.maxPoint - _scene->bbox.minPoint), 0, 0);
+	orbitalCamera->update();
 }
 
-void Application::setupCamera(FreelookCamera& camera)
+//=================================================================================
+void Application::setupCamera(std::shared_ptr<FreelookCamera>& freeCamera)
 {
-    float r = glm::length(_scene->bbox.maxPoint - _scene->bbox.minPoint) / 2; 
-    float fovyDeg = 90;
-    float fovyRad = glm::radians(fovyDeg);
-    float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
-    float nearZ = 0.1f;
-    
-    float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad/2.0f));
-    float d = r / glm::max(sin(fovyRad/2), sin(fovXrad/2));
+	float r = glm::length(_scene->bbox.maxPoint - _scene->bbox.minPoint) / 2;
+	float fovyDeg = 90;
+	float fovyRad = glm::radians(fovyDeg);
+	float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
+	float nearZ = 0.1f;
 
-    camera.setupCameraProjection(0.1f, 2*(d + r), aspectRatio, fovyDeg);
-    camera.positionCamera(glm::vec3(0, 0, - 1*(d)), glm::vec3(0));
+	float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad / 2.0f));
+	float d = r / glm::max(sin(fovyRad / 2), sin(fovXrad / 2));
+
+	freeCamera->setupCameraProjection(0.1f, 2 * (d + r), aspectRatio, fovyDeg);
+	freeCamera->positionCamera(glm::vec3(0, 0, -1 * (d)), glm::vec3(0));
 }
 
+//=================================================================================
 bool Application::addModelFileToScene(const char* fileToLoad, std::shared_ptr<Scene> scene, const glm::mat4& transform)
 {
     std::unique_ptr<SceneLoader> sl = std::unique_ptr<SceneLoader>(new SceneLoader);
@@ -137,6 +143,7 @@ bool Application::addModelFileToScene(const char* fileToLoad, std::shared_ptr<Sc
     return true;
 }
 
+//=================================================================================
 void Application::_splitPathToFilenameAndDirectory(const std::string& path, std::string& directoryPath, std::string& fileName)
 {
 	std::size_t found = path.find_last_of("/\\");
@@ -153,19 +160,29 @@ Application& Application::Instance()
 	return instance;
 }
 
+//=================================================================================
 bool Application::Run()
 {
     if(!Init())
         return false;
 
     //Enter Your model path HERE
-	if (!addModelFileToScene("models/terrain/terrain.obj", _scene, glm::translate(glm::vec3(0.0f, 0.0f, 0.0f))))
+	if (!addModelFileToScene("models/scene.obj", _scene, glm::translate(glm::vec3(0.0f, 0.0f, 0.0f))))
 	{
 		std::cerr << "Failed to load scene: " << std::string("models/terrain/terrain.obj") << std::endl;
 		return false;
 	}
 
-    setupCamera(_camera);
+	GetCamManager();
+
+	m_camera = std::make_shared<T_Camera>();
+	auto debugCam = std::make_shared<T_Camera>();
+
+	GetCamManager()->SetActiveCamera(debugCam);
+	GetCamManager()->SetDebugCamera(m_camera);
+
+	setupCamera(m_camera);
+	setupCamera(debugCam);
 
     //Prepare rendering data
     if(!_renderer.init(_scene, SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -176,9 +193,16 @@ bool Application::Run()
     SDL_Event e;
 
     while (!quit)
-    {
+	{
+		auto renderCamera = GetCamManager()->GetViewCamera();
+		auto controledCamera = renderCamera;
+		if (m_controlMainCam) {
+			controledCamera = GetCamManager()->GetActiveCamera();
+		}
+		
         while (SDL_PollEvent(&e) != 0)
         {
+			controledCamera->Input(e);
             switch (e.type)
             {
             case SDL_QUIT:
@@ -187,57 +211,41 @@ bool Application::Run()
 
             case SDL_KEYDOWN:
                 if (e.key.keysym.sym == SDLK_ESCAPE)
-                    quit = true;
-#if !defined(USE_ORBITAL_CAMERA)
-                else if (e.key.keysym.sym == SDLK_w)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_FORWARD_DOWN);
-                else if(e.key.keysym.sym == SDLK_s)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_BACKWARD_DOWN);
-                else if(e.key.keysym.sym == SDLK_a)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_LEFT_DOWN);
-                else if(e.key.keysym.sym == SDLK_d)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_RIGHT_DOWN);
-#endif
+					quit = true;
+				else if (e.key.keysym.sym == SDLK_v) {
+					m_controlMainCam = true;
+				}
+				else if (e.key.keysym.sym == SDLK_TAB) {
+					GetCamManager()->UseDebugCam(!GetCamManager()->IsUsingDebugCam());
+				}
                 else
                     _renderer.onKeyPressed(e.key.keysym.sym);
                 break;
 
-            case SDL_KEYUP:
-#if !defined(USE_ORBITAL_CAMERA)
-                if (e.key.keysym.sym == SDLK_w)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_FORWARD_UP);
-                else if(e.key.keysym.sym == SDLK_s)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_BACKWARD_UP);
-                else if(e.key.keysym.sym == SDLK_a)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_LEFT_UP);
-                else if(e.key.keysym.sym == SDLK_d)
-                    _camera.handleInputMessage(CameraMessage::CAMERA_RIGHT_UP);
-#endif
-                break;
+			case SDL_KEYUP:
+				if (e.key.keysym.sym == SDLK_v) {
+					m_controlMainCam = false;
+				}
+				break;
 
             case SDL_MOUSEMOTION:
                 //Adjust camera only if left mouse button is pressed
                 if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
                 {
-                    _camera.adjustOrientation(static_cast<float>(e.motion.xrel), static_cast<float>(e.motion.yrel));
+                    controledCamera->adjustOrientation(static_cast<float>(e.motion.xrel), static_cast<float>(e.motion.yrel));
                 }
-                break;
-            
-            case SDL_MOUSEWHEEL:
-#ifdef USE_ORBITAL_CAMERA
-                _camera.adjustZoom(e.wheel.y);
-#endif
                 break;
 
             default:
                 break;
             }
         }
-
-        _camera.update();
+		renderCamera->update();
+		if(renderCamera!=controledCamera)
+			controledCamera->update();
         _renderer.onUpdate(float(_timer.getElapsedTimeFromLastQueryMilliseconds()));
 
-        _renderer.onWindowRedraw(_camera, _camera.getPosition());
+        _renderer.onWindowRedraw(*(renderCamera.get()), renderCamera->getPosition());
 
         SDL_GL_SwapWindow(_window);
     }

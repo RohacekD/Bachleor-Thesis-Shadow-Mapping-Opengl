@@ -60,14 +60,26 @@ public:
     virtual glm::vec3 getPosition() const override;
     virtual glm::mat4 getViewProjectionMatrix() const override;
     virtual glm::mat4 getViewMatrix() const override;
-    virtual glm::mat4 getProjectionMatrix() const override;
+	virtual glm::mat4 getProjectionMatrix() const override;
+
+	// Inherited via I_Camera
+	virtual glm::vec3 getDirection() const override;
+	virtual void debugDraw() const override;
+
+	virtual glm::quat getRotation() const override;
     float     getMovementSpeed() const;
 
-
+	// from I_Camera
 	virtual float GetFar() const override;
-
-
 	virtual float GetNear() const override;
+	virtual float GetFov() const override;
+	virtual float GetAspectRatio() const override;
+
+
+	virtual bool Input(SDL_Event event) override;
+
+
+	virtual AABB GetAABB() const override;
 
 private:
 	float               _cameraMovementSpeed;
@@ -81,8 +93,13 @@ private:
     glm::vec3           _left;
     glm::vec3           _view;
 
-	float m_nearZ;
-	float m_farZ;
+	glm::quat			m_rotation;
+
+	float				m_nearZ;
+	float				m_farZ;
+	float				m_fov;
+
+	float				m_aspectRatio;
 
 	glm::mat4           _viewMatrix;
     glm::mat4           _projectionMatrix;

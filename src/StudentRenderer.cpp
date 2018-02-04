@@ -14,6 +14,8 @@
 
 #include "ShaderManager.h"
 #include "Camera/ICamera.h"
+#include "CameraManager.h"
+#include "Application.hpp"
 
 #include <glm/gtx/string_cast.hpp>
 
@@ -50,7 +52,7 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	m_avg = 0.0f;
 	m_frameID = 0;
 
-	m_CSM = std::make_shared<C_ShadowMapCascade>(gs_shadowMapsize, 4, 0.1f, 134.0f);
+	m_CSM = std::make_shared<C_ShadowMapCascade>(gs_shadowMapsize, 4, 0.1f, 134.0f, 1.0f);
 
 	if (!initFBO()) {
 		return false;
@@ -105,6 +107,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 {
 	m_CSM->SetNearPlane(camera.GetNear());
 	m_CSM->SetFarPlane(camera.GetFar());
+	m_CSM->SetFov(camera.GetFov());
 	m_CSM->PrintSplittingDepths();
 	renderToFBO(camera.getViewProjectionMatrix());
 	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Render pass");
@@ -122,10 +125,15 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	glm::mat4 projection = GetShadowProjectionMat();
 
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
-	params.m_toShadowMapSpaceMatrix = ScreenToTextureCoord()*projection*view;
+	params.m_toShadowMapSpaceMatrix = ScreenToTextureCoord()*m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
+	params.m_planes = m_CSM->GetPlanes();
 
 	m_renderScene->Render(params);
+	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 10, "DebugDraw");
+	m_CSM->DebugDrawAABBs(camera.getViewProjectionMatrix());
+	Application::Instance().GetCamManager()->DebugDraw();
+	glPopDebugGroup();
 	glPopDebugGroup();
 }
 
@@ -152,7 +160,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 
 	glm::mat4 projection = GetShadowProjectionMat();
 
-	params.m_cameraViewProjectionMatrix = projection*view;
+	params.m_cameraViewProjectionMatrix = m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
 
 	m_renderScene->Render(params);

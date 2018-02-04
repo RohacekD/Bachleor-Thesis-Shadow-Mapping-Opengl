@@ -1,5 +1,7 @@
 #include "OrbitalCamera.hpp"
 
+#include <stdexcept>
+
 OrbitalCamera::OrbitalCamera()
 {
 	_pos = _view = _up = _left = glm::vec3(0);
@@ -64,21 +66,57 @@ void OrbitalCamera::update()
 	_projectionMatrix = glm::perspective(_fovy, _aspect, GetNear(), GetFar());
 }
 
+//=================================================================================
+float OrbitalCamera::GetFov() const
+{
+	return _fovy;
+}
+
+//=================================================================================
+float OrbitalCamera::GetAspectRatio() const
+{
+	return _aspect;
+}
+
+//=================================================================================
+bool OrbitalCamera::Input(SDL_Event event)
+{
+	switch (event.type)
+	{
+	case SDL_MOUSEWHEEL:
+		adjustZoom(event.wheel.y);
+		break;
+	default:
+		break;
+	}
+	return true;
+}
+
+//=================================================================================
+glm::quat OrbitalCamera::getRotation() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+//=================================================================================
 glm::mat4 OrbitalCamera::getViewProjectionMatrix() const
 {
      return _projectionMatrix * _viewMatrix;
 }
 
+//=================================================================================
 glm::mat4 OrbitalCamera::getProjectionMatrix() const
 {
      return _projectionMatrix;
 }
 
+//=================================================================================
 glm::mat4 OrbitalCamera::getViewMatrix() const
 {
 	return _viewMatrix;
 }
 
+//=================================================================================
 glm::vec3 OrbitalCamera::getPosition() const
 {
     return _pos;

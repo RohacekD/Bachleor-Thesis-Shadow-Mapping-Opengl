@@ -102,6 +102,44 @@ C_DebugDraw::~C_DebugDraw()
 }
 
 //=================================================================================
+void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectionMatrix, const glm::vec3 & color, const glm::mat4 & modelMatrix)
+{
+	m_program->useProgram();
+
+	glBindVertexArray(m_VAOline);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOline);
+
+	glPointSize(5.0f);
+	ErrorCheck();
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4), glm::value_ptr(point), GL_DYNAMIC_DRAW);
+	ErrorCheck();
+
+	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
+	ErrorCheck();
+
+	glEnableVertexAttribArray(0);
+
+	glDrawArrays(GL_POINTS, 0, 1);
+	ErrorCheck();
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	m_program->disableProgram();
+	ErrorCheck();
+}
+
+//=================================================================================
+void C_DebugDraw::DrawPoint(const glm::vec3 & point, const glm::mat4 & projectionMatrix, const glm::vec3 & color, const glm::mat4 & modelMatrix)
+{
+	DrawPoint(glm::vec4(point, 1.0f), projectionMatrix, color, modelMatrix);
+}
+
+//=================================================================================
 void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& modelMatrix, const glm::mat4& projectionMatrix, const glm::vec3& color)
 {
 	m_program->useProgram();

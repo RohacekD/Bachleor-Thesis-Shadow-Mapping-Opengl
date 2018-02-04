@@ -31,6 +31,17 @@ public:
 
 	virtual float GetFar() const override { return _farZ; }
 	virtual float GetNear() const override { return _nearZ; }
+
+	virtual float GetFov() const override;
+
+	virtual float GetAspectRatio() const override;
+
+
+	virtual bool Input(SDL_Event) override;
+
+
+	virtual glm::quat getRotation() const override;
+
 private:
     glm::vec3 _pos;
     glm::vec3 _view;
