@@ -21,12 +21,13 @@ out vec4 toLight;
 out vec4 worldCoord;
 out vec4 shadowCoords;
 out vec4 limits;
-out float camDistance;
+out vec4 camPosition;
 
 void main()
 {
 	normalOUT = normal;
 	limits = PSSMLimits;
+	camPosition = CameraPosition;
 	//texCoordOUT = texCoord;
 
 	//to light should be counted from world space
@@ -34,7 +35,7 @@ void main()
 	shadowCoords = toShadowMapSpaceMatrix * vertex;// so far I don't have model matrix
 
 	toLight = normalize(lightPos - vertex);
-	worldCoord = projectionMatrix * modelMatrix * vertex;
-	camDistance = distance(vertex, projectionMatrix * CameraPosition);
-    gl_Position = worldCoord;
+	worldCoord = modelMatrix * vertex;
+	//camDistance = distance(vertex, CameraPosition);
+    gl_Position = projectionMatrix * worldCoord;
 }

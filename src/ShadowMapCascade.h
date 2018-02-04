@@ -21,7 +21,7 @@ struct S_SplitInfo {
 class C_ShadowMapCascade {
 public:
 	// not sure about near and far...
-	C_ShadowMapCascade(float resolution, int levels, float nearPlane, float farPlane, float fov, float m_lambda = 0.5f);
+	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, float resolution, int levels, float m_lambda = 0.5f);
 
 	unsigned int	GetNumLevels() const { return m_levels; }
 	void			SetNumLevels(unsigned int val) { m_levels = val; }
@@ -30,10 +30,6 @@ public:
 	void			SetLambda(float val);
 	void			ChangeLambda(float diff);
 
-	float			GetFarPlane() const { return m_farPlane; }
-	void			SetFarPlane(float val);
-	float			GetNearPlane() const { return m_nearPlane; }
-	void			SetNearPlane(float val);
 	//TODO set split resolution etc
 
 	glm::vec4 GetPlanes() const;
@@ -42,18 +38,12 @@ public:
 	void	DebugDrawAABBs(const glm::mat4& projectionMatrix) const;
 
 	glm::mat4 GetViewProjection() const { return m_lighInfo->GetViewProjectionMatrix(); }
-
-	float	GetFov() const;
-	void	SetFov(float val);
-private:
 	void CalcSplitPlanes();
+private:
 	void CalcViewMatrices();
 
 	unsigned int									m_levels;
 	float											m_resolution;
-	float											m_nearPlane;
-	float											m_farPlane;
-	float											m_fov;
 	float											m_lambda;
 	std::shared_ptr<GLW::C_Framebuffer>				m_framebuffer;
 	std::vector<std::shared_ptr<GLW::C_Texture>>	m_depthMaps;

@@ -71,8 +71,11 @@ public:
 
 	// from I_Camera
 	virtual float GetFar() const override;
+	virtual void  SetFar(float far) override;
 	virtual float GetNear() const override;
+	virtual void  SetNear(float near) override;
 	virtual float GetFov() const override;
+	virtual void  SetFov(float fov) override;
 	virtual float GetAspectRatio() const override;
 
 
@@ -81,7 +84,14 @@ public:
 
 	virtual AABB GetAABB() const override;
 
+
+
+
+
+
+
 private:
+	void CreateProjection();
 	float               _cameraMovementSpeed;
     float               _yaw, _pitch;   //camera angles
     unsigned int        _flags;

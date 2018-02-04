@@ -12,15 +12,12 @@
 #include <sstream>
 
 //=================================================================================
-C_ShadowMapCascade::C_ShadowMapCascade(float resolution, int levels, float nearPlane, float farPlane, float fov, float m_lambda /*= 0.5f*/) : m_resolution(resolution)
+C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, float resolution, int levels, float m_lambda /*= 0.5f*/) 
+	: m_resolution(resolution)
 	, m_levels(levels)
-	, m_nearPlane(nearPlane)
-	, m_farPlane(farPlane)
-	, m_fov(fov)
 	, m_lambda(m_lambda)
+	, m_lighInfo(lightInfo)
 {
-	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
-	m_lighInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(-1.0f, 3.0f, 2.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 }
 
 //=================================================================================
@@ -45,18 +42,6 @@ void C_ShadowMapCascade::PrintSplittingDepths() const
 }
 
 //=================================================================================
-void C_ShadowMapCascade::SetFarPlane(float val) {
-	m_farPlane = val; 
-	CalcSplitPlanes();
-}
-
-//=================================================================================
-void C_ShadowMapCascade::SetNearPlane(float val) {
-	m_nearPlane = val;
-	CalcSplitPlanes();
-}
-
-//=================================================================================
 glm::vec4 C_ShadowMapCascade::GetPlanes() const
 {
 	//todo change to different sizes
@@ -73,37 +58,26 @@ void C_ShadowMapCascade::DebugDrawAABBs(const glm::mat4& projectionMatrix) const
 		ss << "Cascade level: " << i;
 		std::string s = ss.str();
 		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(s.length()), s.c_str());
-		C_DebugDraw::Instance().DrawAABB(aabb, glm::mat4(1.0), projectionMatrix , glm::vec3(1.0f, 0.5f, 1.f));
+		C_DebugDraw::Instance().DrawAABB(aabb, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 		glPopDebugGroup();
 		++i;
 	}
 }
 
 //=================================================================================
-float C_ShadowMapCascade::GetFov() const { 
-	return m_fov;
-}
-
-//=================================================================================
-void C_ShadowMapCascade::SetFov(float val) {
-	m_fov = val;
-	CalcSplitPlanes();
-	CalcViewMatrices();
-}
-
-//=================================================================================
 void C_ShadowMapCascade::CalcSplitPlanes()
 {
+	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	m_splitingPlanes = std::vector<double>();
 	m_splitingPlanes.resize(m_levels + 1);
-	m_splitingPlanes[0] = m_nearPlane;
-	float logArgument = (GetFarPlane() / GetNearPlane());
-	float uniArgument = (GetFarPlane() - GetNearPlane());
+	m_splitingPlanes[0] = camera->GetNear();
+	float logArgument = (camera->GetFar() / camera->GetNear());
+	float uniArgument = (camera->GetFar() - camera->GetNear());
 	for (unsigned int i = 1; i <= m_levels - 1; ++i) {
 		float parameter = static_cast<float>(i) / static_cast<float>(m_levels);
-		m_splitingPlanes[i] = (GetLambda() *(GetNearPlane() * std::pow(logArgument, parameter))) + ((1.0 - GetLambda())*(GetNearPlane() + uniArgument * parameter));
+		m_splitingPlanes[i] = (GetLambda() *(camera->GetNear() * std::pow(logArgument, parameter))) + ((1.0 - GetLambda())*(camera->GetNear() + uniArgument * parameter));
 	}
-	m_splitingPlanes[m_levels] = m_farPlane;
+	m_splitingPlanes[m_levels] = camera->GetFar();
 }
 
 //=================================================================================

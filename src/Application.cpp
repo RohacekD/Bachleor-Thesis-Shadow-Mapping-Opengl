@@ -178,11 +178,14 @@ bool Application::Run()
 	m_camera = std::make_shared<T_Camera>();
 	auto debugCam = std::make_shared<T_Camera>();
 
-	GetCamManager()->SetMainCamera(debugCam);
-	GetCamManager()->SetDebugCamera(m_camera);
+	GetCamManager()->SetMainCamera(m_camera);
+	GetCamManager()->SetDebugCamera(debugCam);
 
 	setupCamera(m_camera);
 	setupCamera(debugCam);
+
+	m_camera->SetFov((60));
+	m_camera->SetFar(m_camera->GetFar() / 3);
 
     //Prepare rendering data
     if(!_renderer.init(_scene, SCREEN_WIDTH, SCREEN_HEIGHT))

@@ -12,7 +12,6 @@
 #include <iostream>
 
 
-
 //=================================================================================
 bool _glErrorCheck(const std::string file, const int line) {
 
@@ -136,11 +135,11 @@ void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectio
 //=================================================================================
 void C_DebugDraw::DrawPoint(const glm::vec3 & point, const glm::mat4 & projectionMatrix, const glm::vec3 & color, const glm::mat4 & modelMatrix)
 {
-	DrawPoint(glm::vec4(point, 1.0f), projectionMatrix, color, modelMatrix);
+	DrawPoint(toVec4(point), projectionMatrix, color, modelMatrix);
 }
 
 //=================================================================================
-void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& modelMatrix, const glm::mat4& projectionMatrix, const glm::vec3& color)
+void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/, const glm::mat4& modelMatrix /*= glm::mat4(1.0f)*/)
 {
 	m_program->useProgram();
 	glm::vec3 size = bbox.maxPoint - bbox.minPoint;
@@ -206,6 +205,7 @@ void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, con
 	ErrorCheck();
 }
 
+//=================================================================================
 void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4 & projectionMatrix, const glm::vec3 & color)
 {
 	m_program->useProgram();
@@ -231,4 +231,14 @@ void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4
 	glBindVertexArray(0);
 	m_program->disableProgram();
 	ErrorCheck();
+}
+
+void C_DebugDraw::DrawAxis(const glm::vec4 & origin, const glm::vec4 & up, const glm::vec4 & foreward, const glm::mat4 & projectionMatrix, glm::mat4 & modelMatrix)
+{
+	glm::vec4 forewardVec = glm::normalize(foreward - origin);
+	glm::vec4 upVec = glm::normalize(up - origin);
+	glm::vec4 rightVec = toVec4(glm::normalize(glm::cross(glm::vec3(upVec), glm::vec3(forewardVec))));
+	DrawLine(origin, origin + forewardVec,	projectionMatrix, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawLine(origin, origin + upVec,		projectionMatrix, glm::vec3(0.0f, 1.0f, 0.0f));
+	DrawLine(origin, origin + rightVec,		projectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f));
 }

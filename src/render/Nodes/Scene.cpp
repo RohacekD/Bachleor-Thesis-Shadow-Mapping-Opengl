@@ -16,7 +16,7 @@ namespace render {
 	void C_Scene::Render(const S_RenderParams& params)
 	{
 		if (params.m_pass == render::S_RenderParams::E_PassType::E_P_RenderPass) {
-			C_DebugDraw::Instance().DrawAABB(m_bbox, glm::mat4(1.0f), params.m_cameraViewProjectionMatrix, glm::vec3(0.0f, 1.0f, 0.0f));
+			C_DebugDraw::Instance().DrawAABB(m_bbox, params.m_cameraViewProjectionMatrix, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
 
 		T_Base::Render(params);

@@ -30,7 +30,11 @@ public:
 	virtual glm::quat getRotation() const = 0;
 
 	virtual float GetFar() const = 0;
+	virtual void  SetFar(float far) = 0;
+
 	virtual float GetNear() const = 0;
+	virtual void  SetNear(float near) = 0;
 	virtual float GetFov() const = 0;
+	virtual void  SetFov(float fov) = 0;
 	virtual float GetAspectRatio() const = 0;
 };

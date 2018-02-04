@@ -10,7 +10,7 @@ in vec4 worldCoord;
 //varying vec2 texCoordOUT;
 in vec4 shadowCoords;
 in vec4 limits;
-in float camDistance;
+in vec4 camPosition;
 
 in vec4 gl_FragCoord;;
 
@@ -32,7 +32,7 @@ void main()
 
 	//vec4 MaterialDiffuseColor = texture(tex, texCoordOUT);
 
-	float realZ = camDistance;
+	float realZ = distance(worldCoord, camPosition);;
 
 	if(realZ < limits.x){
 		MaterialDiffuseColor = vec4(1.0, 0.0, 0.0, 1.0);

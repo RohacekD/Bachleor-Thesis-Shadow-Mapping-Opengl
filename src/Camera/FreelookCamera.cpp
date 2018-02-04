@@ -26,9 +26,9 @@ void FreelookCamera::setupCameraProjection(float nearZ, float farZ, float aspect
 {
 	m_farZ = farZ;
 	m_nearZ = nearZ;
-    _projectionMatrix = glm::perspective(glm::radians(fovYDeg), aspectRatio, nearZ, farZ);
 	m_fov = fovYDeg;
-	m_aspectRatio = aspectRatio;
+	m_aspectRatio = aspectRatio; 
+	CreateProjection();
 }
 
 //=================================================================================
@@ -315,6 +315,33 @@ AABB FreelookCamera::GetAABB() const
 		bbox.updateWithVertex(frb);
 		return bbox;
 	}
+}
+
+//=================================================================================
+void FreelookCamera::CreateProjection()
+{
+	_projectionMatrix = glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearZ, m_farZ);
+}
+
+//=================================================================================
+void FreelookCamera::SetFar(float far)
+{
+	m_farZ = far;
+	CreateProjection();
+}
+
+//=================================================================================
+void FreelookCamera::SetNear(float near)
+{
+	m_nearZ = near;
+	CreateProjection();
+}
+
+//=================================================================================
+void FreelookCamera::SetFov(float fov)
+{
+	m_fov = fov;
+	CreateProjection();
 }
 
 //=================================================================================

@@ -112,6 +112,8 @@ GLuint C_ShaderManager::LoadShader(const pugi::xml_node& node) const
 	else if (stageAttribute == "compute") stage = GL_COMPUTE_SHADER;
 
 	if (!s_Compiler.compileShader(shader, std::string(s_ShadersFolder + std::string(node.first_child().value())).c_str(), stage, str)) {
+		std::cerr << "--Compilation error" << std::endl;
+		std::cerr << s_ShadersFolder + std::string(node.first_child().value()) << std::endl;
 		std::cerr << str << std::endl;
 		return 0;
 	}

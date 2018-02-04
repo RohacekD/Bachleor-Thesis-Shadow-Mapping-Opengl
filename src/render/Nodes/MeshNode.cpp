@@ -159,7 +159,7 @@ namespace render {
 		glm::vec4 light(0, 15.0f, 0.f, 1.0f);
 		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "lightPos"), 1, glm::value_ptr(light));
 		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "PSSMLimits"), 1, glm::value_ptr(params.m_planes));
-		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "CameraPosition"), 1, glm::value_ptr(Application::Instance().GetCamManager()->GetMainCamera()->getPosition()));
+		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "CameraPosition"), 1, glm::value_ptr(params.m_cameraPosition));
 
 		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "toShadowMapSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_toShadowMapSpaceMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_cameraViewProjectionMatrix));
@@ -180,6 +180,6 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::RenderBBox(const glm::mat4& projectionMatrix) const
 	{
-		C_DebugDraw::Instance().DrawAABB(m_bbox, m_modelMatrix * m_animation->GetTRSMatrix(), projectionMatrix);
+		C_DebugDraw::Instance().DrawAABB(m_bbox, projectionMatrix, glm::vec3(0.0f), m_modelMatrix * m_animation->GetTRSMatrix());
 	}
 };
