@@ -17,6 +17,16 @@ namespace render {
 	//=================================================================================
 	std::shared_ptr<C_Scene> C_SceneBuilder::LoadScene(std::shared_ptr<Scene> scene)
 	{
+		m_scene = scene;
+		m_nullTexture = std::make_shared<GLW::C_Texture>();
+		m_nullTexture->StartGroupOp();
+		m_nullTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+		m_nullTexture->setWrap(GL_REPEAT, GL_REPEAT);
+		GLubyte data[] = { 255, 255, 255, 255 };
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		m_nullTexture->EndGroupOp();
+
+
 		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>();
 		for (const auto&texture : scene->textures) {
 			m_textures.push_back(LoadTexture(texture));
@@ -42,7 +52,13 @@ namespace render {
 	{
 		auto node = std::make_shared<C_MeshNode>();
 		node->LoadMesh(mesh);
-		//node->SetTexture(m_textures[mesh.materialIndex]);
+		auto material = m_scene->materials[mesh.materialIndex];
+		if(material.textureIndex != -1)
+		node->SetTexture(m_textures[material.textureIndex]);
+		else
+		{
+			node->SetTexture(m_nullTexture);
+		}
 		return node;
 	}
 

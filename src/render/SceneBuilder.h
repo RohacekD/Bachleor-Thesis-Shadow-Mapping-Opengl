@@ -23,5 +23,7 @@ namespace render {
 		std::shared_ptr<GLW::C_Texture> LoadTexture(const Texture& texture) const;
 	private:
 		std::vector<std::shared_ptr<GLW::C_Texture>> m_textures;
+		std::shared_ptr<GLW::C_Texture> m_nullTexture;
+		std::shared_ptr<Scene> m_scene;
 	};
 };

@@ -150,11 +150,16 @@ namespace render {
 		// bind VBOs for vertex array and index array
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		//glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(2);
 
 
 		glActiveTexture(GL_TEXTURE0);
 		params.m_shadowMap->bind();
+		glActiveTexture(GL_TEXTURE1);
+		if (m_texture) {
+			m_texture->bind();
+			glUniform1i(glGetUniformLocation(m_program->GetProgram(), "tex"), 1);
+		}
 		glUniform1i(glGetUniformLocation(m_program->GetProgram(), "shadowMap"), 0);
 		glm::vec4 light(0, 15.0f, 0.f, 1.0f);
 		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "lightPos"), 1, glm::value_ptr(light));
@@ -169,12 +174,17 @@ namespace render {
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
-		//glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(2);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 		m_program->disableProgram();
+		
 		params.m_shadowMap->unbind();
+		if (m_texture)
+		{
+			m_texture->unbind();
+		}
 	}
 
 	//=================================================================================
