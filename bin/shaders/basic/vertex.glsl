@@ -2,7 +2,7 @@
 
 attribute vec4 vertex;
 attribute vec3 normal;
-//attribute vec2 texCoord;
+attribute vec2 texCoord;
 
 //per frame
 uniform mat4 toShadowMapSpaceMatrix;
@@ -17,7 +17,7 @@ uniform mat4 modelMatrix;
 out vec3 normalOUT;
 out vec4 lightOUT;
 out vec4 toLight;
-//out vec2 texCoordOUT;
+out vec2 texCoordOUT;
 out vec4 worldCoord;
 out vec4 shadowCoords;
 out vec4 limits;
@@ -28,7 +28,7 @@ void main()
 	normalOUT = normal;
 	limits = PSSMLimits;
 	camPosition = CameraPosition;
-	//texCoordOUT = texCoord;
+	texCoordOUT = texCoord;
 
 	//to light should be counted from world space
 

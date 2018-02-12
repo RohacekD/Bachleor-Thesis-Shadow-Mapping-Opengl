@@ -161,6 +161,7 @@
     <ClCompile Include="..\src\Camera\ICamera.cpp" />
     <ClCompile Include="..\src\Camera\OrbitalCamera.cpp" />
     <ClCompile Include="..\src\Debug.cpp" />
+    <ClCompile Include="..\src\Frustum.cpp" />
     <ClCompile Include="..\src\GLW\Framebuffer.cpp" />
     <ClCompile Include="..\src\GLW\ShaderProgram.cpp" />
     <ClCompile Include="..\src\GLW\Texture.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\src\Camera\ICamera.h" />
     <ClInclude Include="..\src\Camera\OrbitalCamera.hpp" />
     <ClInclude Include="..\src\Debug.h" />
+    <ClInclude Include="..\src\Frustum.h" />
     <ClInclude Include="..\src\GLW\Framebuffer.h" />
     <ClInclude Include="..\src\GLW\ShaderProgram.h" />
     <ClInclude Include="..\src\GLW\Texture.h" />

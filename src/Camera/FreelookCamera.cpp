@@ -1,4 +1,7 @@
 #include "FreelookCamera.hpp"
+
+#include "Frustum.h"
+
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -278,43 +281,8 @@ bool FreelookCamera::Input(SDL_Event event)
 //=================================================================================
 AABB FreelookCamera::GetAABB() const
 {
-	glm::vec3 forward = _view;
-
-	glm::vec3 nearCenter = glm::vec3(_position + (forward * m_nearZ));
-	glm::vec3 farCenter = glm::vec3(_position + (forward * m_farZ));
-
-	const float ar = GetAspectRatio();
-	const float fov = GetFov();
-
-	float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
-	float tanHalfVFOV = tanf(glm::radians((fov * ar) / 2.0f));
-
-	{
-		float xn = m_nearZ * tanHalfVFOV;
-		float xf = m_farZ * tanHalfVFOV;
-		float yn = m_nearZ * tanHalfHFOV;
-		float yf = m_farZ * tanHalfHFOV;
-
-		glm::vec4 nlt = glm::vec4(nearCenter + (xn * _left) + _up * yn, 1.0f);
-		glm::vec4 nrt = glm::vec4(nearCenter - (xn * _left) + _up * yn, 1.0f);
-		glm::vec4 nlb = glm::vec4(nearCenter + (xn * _left) - _up * yn, 1.0f);
-		glm::vec4 nrb = glm::vec4(nearCenter - (xn * _left) - _up * yn, 1.0f);
-		glm::vec4 flt = glm::vec4(farCenter + (xf * _left) + _up * yf, 1.0f);
-		glm::vec4 frt = glm::vec4(farCenter - (xf * _left) + _up * yf, 1.0f);
-		glm::vec4 flb = glm::vec4(farCenter + (xf * _left) - _up * yf, 1.0f);
-		glm::vec4 frb = glm::vec4(farCenter - (xf * _left) - _up * yf, 1.0f);
-
-		AABB bbox;
-		bbox.updateWithVertex(nlt);
-		bbox.updateWithVertex(nrt);
-		bbox.updateWithVertex(nlb);
-		bbox.updateWithVertex(nrb);
-		bbox.updateWithVertex(flt);
-		bbox.updateWithVertex(frt);
-		bbox.updateWithVertex(flb);
-		bbox.updateWithVertex(frb);
-		return bbox;
-	}
+	C_Frustum frust(_position, _up, _view, m_nearZ, m_farZ, GetAspectRatio(), GetFov());
+	return frust.GetAABB();
 }
 
 //=================================================================================
@@ -353,49 +321,7 @@ glm::vec3 FreelookCamera::getDirection() const
 //=================================================================================
 void FreelookCamera::debugDraw() const
 {
-	glm::vec3 forward = _view;
-
-	glm::vec3 nearCenter = glm::vec3(_position + (forward * m_nearZ));
-	glm::vec3 farCenter = glm::vec3(_position + (forward * m_farZ));
-
-	const float ar = this->GetAspectRatio();
-	const float fov = this->GetFov();
-
-	float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
-	float tanHalfVFOV = tanf(glm::radians((fov * ar) / 2.0f));
-
-	{
-		float xn = m_nearZ * tanHalfVFOV;
-		float xf = m_farZ * tanHalfVFOV;
-		float yn = m_nearZ * tanHalfHFOV;
-		float yf = m_farZ * tanHalfHFOV;
-
-		glm::vec4 nlt = glm::vec4(nearCenter + (xn * _left) + _up * yn, 1.0f);
-		glm::vec4 nrt = glm::vec4(nearCenter - (xn * _left) + _up * yn, 1.0f);
-		glm::vec4 nlb = glm::vec4(nearCenter + (xn * _left) - _up * yn, 1.0f);
-		glm::vec4 nrb = glm::vec4(nearCenter - (xn * _left) - _up * yn, 1.0f);
-		glm::vec4 flt = glm::vec4(farCenter + (xf * _left) + _up * yf, 1.0f);
-		glm::vec4 frt = glm::vec4(farCenter - (xf * _left) + _up * yf, 1.0f);
-		glm::vec4 flb = glm::vec4(farCenter + (xf * _left) - _up * yf, 1.0f);
-		glm::vec4 frb = glm::vec4(farCenter - (xf * _left) - _up * yf, 1.0f);
-
-		std::vector<glm::vec4> lines;
-		lines.push_back(nlt); lines.push_back(nrt);
-		lines.push_back(nlb); lines.push_back(nrb);
-		lines.push_back(nlt); lines.push_back(nlb);
-		lines.push_back(nrt); lines.push_back(nrb);
-
-		lines.push_back(flt); lines.push_back(frt);
-		lines.push_back(flb); lines.push_back(frb);
-		lines.push_back(flt); lines.push_back(flb);
-		lines.push_back(frt); lines.push_back(frb);
-		
-		lines.push_back(nlt); lines.push_back(flt);
-		lines.push_back(nrt); lines.push_back(frt);
-		lines.push_back(nlb); lines.push_back(flb);
-		lines.push_back(nrb); lines.push_back(frb);
-
-		C_DebugDraw::Instance().DrawLines(lines, Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix());
-	}
-	C_DebugDraw::Instance().DrawLine(glm::vec4(nearCenter, 1.0f), glm::vec4(farCenter, 1.0f), Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix());
+	C_Frustum frust(_position, _up, _view, m_nearZ, m_farZ, GetAspectRatio(), GetFov());
+	frust.DebugDraw(glm::vec3(0.0f,1.0f,0.0f));
+	C_DebugDraw::Instance().DrawAABB(frust.GetAABB(), Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix());
 }

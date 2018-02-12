@@ -1,0 +1,28 @@
+﻿  FreelookCamera.cpp
+  Debug.cpp
+  Frustum.cpp
+  Framebuffer.cpp
+  Texture.cpp
+  LightInfo.cpp
+  ShadowMapCascade.cpp
+  StudentRenderer.cpp
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\memory(901): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\memory(971): note: see reference to function template instantiation 'std::_Ref_count_obj<_Ty>::_Ref_count_obj<std::shared_ptr<C_DirectionalLight>&,const int&,int>(std::shared_ptr<C_DirectionalLight> &,const int &,int &&)' being compiled
+          with
+          [
+              _Ty=C_ShadowMapCascade
+          ]
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\memory(971): note: see reference to function template instantiation 'std::_Ref_count_obj<_Ty>::_Ref_count_obj<std::shared_ptr<C_DirectionalLight>&,const int&,int>(std::shared_ptr<C_DirectionalLight> &,const int &,int &&)' being compiled
+          with
+          [
+              _Ty=C_ShadowMapCascade
+          ]
+  ..\src\StudentRenderer.cpp(61): note: see reference to function template instantiation 'std::shared_ptr<C_ShadowMapCascade> std::make_shared<C_ShadowMapCascade,std::shared_ptr<C_DirectionalLight>&,const int&,int>(std::shared_ptr<C_DirectionalLight> &,const int &,int &&)' being compiled
+  MeshNode.cpp
+  Scene.cpp
+  SceneBuilder.cpp
+  Generating code
+  All 2885 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Computer Graphics Project.exe
+  Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Computer Graphics Project.pdb (Full PDB)

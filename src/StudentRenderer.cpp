@@ -35,7 +35,9 @@ StudentRenderer::StudentRenderer()
 
 //=================================================================================
 StudentRenderer::~StudentRenderer() {
+	ErrorCheck();
 	printFrameStatistics();
+	ErrorCheck();
 }
 
 //=================================================================================
@@ -109,7 +111,7 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
-	m_CSM->PrintSplittingDepths();
+	//m_CSM->PrintSplittingDepths();
 	renderToFBO(camera.getViewProjectionMatrix());
 	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Render pass");
 	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
@@ -123,7 +125,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
 	params.m_toShadowMapSpaceMatrix = ScreenToTextureCoord()*m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
-	m_CSM->CalcSplitPlanes();
+	m_CSM->RecalcAll();
 	params.m_planes = m_CSM->GetPlanes();
 
 	m_renderScene->Render(params);
@@ -139,6 +141,9 @@ void StudentRenderer::clearStudentData()
 {
 	m_framebuffer.reset();
 	m_scene.reset();
+	m_CSM.reset();
+	m_renderScene.reset();
+	ErrorCheck();
 }
 
 //=================================================================================
@@ -153,9 +158,6 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 
 
 	render::S_RenderParams params;
-	glm::mat4 view = GetShadowViewMat();
-
-	glm::mat4 projection = GetShadowProjectionMat();
 
 	params.m_cameraViewProjectionMatrix = m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;

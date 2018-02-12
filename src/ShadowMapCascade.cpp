@@ -42,6 +42,12 @@ void C_ShadowMapCascade::PrintSplittingDepths() const
 }
 
 //=================================================================================
+void C_ShadowMapCascade::RecalcAll()
+{
+	CalcSplitPlanes();
+}
+
+//=================================================================================
 glm::vec4 C_ShadowMapCascade::GetPlanes() const
 {
 	//todo change to different sizes
@@ -81,13 +87,6 @@ void C_ShadowMapCascade::CalcSplitPlanes()
 }
 
 //=================================================================================
-void C_ShadowMapCascade::CalcViewMatrices()
+void C_ShadowMapCascade::CalcCropMatrices()
 {
-	m_LightClippingMatrices = std::vector<glm::mat4>();
-	m_LightClippingMatrices.resize(m_levels);
-	m_bboxes = std::vector<AABB>();
-
-	for (unsigned int i = 0; i < m_levels; ++i) {
-
-	}
 }

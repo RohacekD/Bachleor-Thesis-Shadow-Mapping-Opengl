@@ -1,13 +1,13 @@
 #version 430
 
-//uniform sampler2D tex;
+uniform sampler2D tex;
 uniform sampler2D shadowMap;
 
 in vec3 normalOUT;
 in vec4 lightOUT;
 in vec4 toLight;
 in vec4 worldCoord;
-//varying vec2 texCoordOUT;
+varying vec2 texCoordOUT;
 in vec4 shadowCoords;
 in vec4 limits;
 in vec4 camPosition;
@@ -22,32 +22,29 @@ void main()
 	float objectNearestLight = texture(shadowMap, shadowCoords.xy).r;
 	float lightFactor = 1.0f;
 
-	vec4 MaterialDiffuseColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
-
 	float lightDistance = length(toLight);
 	vec4 ligthDirection = toLight;
 	vec3 n = normalize( normalOUT );
 	float cosTheta = clamp( dot( n,ligthDirection.xyz ), 0,1 );
 
-	//vec4 MaterialDiffuseColor = texture(tex, texCoordOUT);
+	vec4 MaterialDiffuseColor = texture(tex, texCoordOUT);
 
 	float realZ = distance(worldCoord, camPosition);;
 
 	if(realZ < limits.x){
-		MaterialDiffuseColor = vec4(1.0, 0.0, 0.0, 1.0);
+		MaterialDiffuseColor += vec4(1.0, 0.0, 0.0, 1.0)/5;
 	}
 	else if(realZ < limits.y){
-		MaterialDiffuseColor = vec4(0.0, 1.0, 0.0, 1.0);
+		MaterialDiffuseColor += vec4(0.0, 1.0, 0.0, 1.0)/5;
 	}
 	else if(realZ < limits.z){
-		MaterialDiffuseColor = vec4(0.0, 0.0, 1.0, 1.0);
+		MaterialDiffuseColor += vec4(0.0, 0.0, 1.0, 1.0)/5;
 	}
 	else if(realZ < limits.w){
-		MaterialDiffuseColor = vec4(0.0, 1.0, 1.0, 1.0);
+		MaterialDiffuseColor += vec4(0.0, 1.0, 1.0, 1.0)/5;
 	}
 	else{
-		MaterialDiffuseColor = vec4(1.0, 1.0, 0.0, 1.0);
+		MaterialDiffuseColor += vec4(1.0, 1.0, 0.0, 1.0)/5;
 	}
 
 
