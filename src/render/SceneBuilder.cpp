@@ -22,7 +22,7 @@ namespace render {
 		m_nullTexture->StartGroupOp();
 		m_nullTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		m_nullTexture->setWrap(GL_REPEAT, GL_REPEAT);
-		GLubyte data[] = { 255, 255, 255, 255 };
+		GLubyte data[] = { 0, 0, 0, 255 };
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		m_nullTexture->EndGroupOp();
 

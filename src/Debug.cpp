@@ -22,7 +22,7 @@ bool _glErrorCheck(const std::string file, const int line) {
 		 << status << "): " << glewGetErrorString(status)
 		 << std::dec
 		 << std::endl;
-#if _DEBUG
+#if _DEBUG && 0
 	 __debugbreak();
 #endif
 	 return true;

@@ -141,7 +141,7 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::RenderPass(const S_RenderParams& params) const
 	{
-		RenderBBox(params.m_cameraViewProjectionMatrix);
+		//RenderBBox(params.m_cameraViewProjectionMatrix);
 
 
 		glBindVertexArray(m_VAO);
