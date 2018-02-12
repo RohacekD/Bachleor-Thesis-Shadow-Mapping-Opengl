@@ -15,14 +15,16 @@
 //=================================================================================
 bool _glErrorCheck(const std::string file, const int line) {
 
- GLenum status = glGetError();
- if (status != 0x0000) {
+ GLenum status;
+ while ((status = glGetError()) != 0x0000) {
 	 std::cout << "[" << file.substr(file.rfind("\\") + 1) << ":" << line << "] Error (0x"
 		 << std::hex << std::setfill('0') << std::setw(4)
 		 << status << "): " << glewGetErrorString(status)
 		 << std::dec
 		 << std::endl;
+#if _DEBUG
 	 __debugbreak();
+#endif
 	 return true;
  }
  return false;
@@ -35,7 +37,7 @@ C_DebugDraw & C_DebugDraw::Instance()
 									// Instantiated on first use.
 	return instance;
 }
-
+#if _DEBUG
 //=================================================================================
 void C_DebugDraw::SetupAABB()
 {
@@ -242,3 +244,5 @@ void C_DebugDraw::DrawAxis(const glm::vec4 & origin, const glm::vec4 & up, const
 	DrawLine(origin, origin + upVec,		projectionMatrix, glm::vec3(0.0f, 1.0f, 0.0f));
 	DrawLine(origin, origin + rightVec,		projectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f));
 }
+
+#endif
