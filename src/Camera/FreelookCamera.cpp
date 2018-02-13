@@ -286,6 +286,12 @@ AABB FreelookCamera::GetAABB() const
 }
 
 //=================================================================================
+C_Frustum FreelookCamera::getFrustum() const
+{
+	return C_Frustum(_position, _up, _view, m_nearZ, m_farZ, m_aspectRatio, m_fov);
+}
+
+//=================================================================================
 void FreelookCamera::CreateProjection()
 {
 	_projectionMatrix = glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearZ, m_farZ);

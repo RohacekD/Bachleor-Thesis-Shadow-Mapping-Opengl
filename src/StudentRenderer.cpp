@@ -22,7 +22,7 @@
 #include "Debug.h"
 
 
-const int gs_shadowMapsize = 2048*2;
+const float gs_shadowMapsize = 2048*2.0f;
 
 //=================================================================================
 // StudentRenderer

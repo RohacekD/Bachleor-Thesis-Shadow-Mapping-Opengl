@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "Scene.hpp"
+#include "Frustum.h"
 #include <SDL/SDL_events.h>
 
 class I_Camera {
@@ -21,6 +22,8 @@ public:
 	virtual glm::mat4 getProjectionMatrix() const = 0;
 	virtual glm::vec3 getPosition() const = 0;
 	virtual glm::vec3 getDirection() const = 0;
+
+	virtual C_Frustum getFrustum() const = 0;
 
 	// In world space!!
 	virtual AABB	  GetAABB() const = 0;

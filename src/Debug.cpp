@@ -208,6 +208,12 @@ void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, con
 }
 
 //=================================================================================
+void C_DebugDraw::DrawLine(const glm::vec3& pointA, const glm::vec3& pointB, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/)
+{
+	DrawLine(toVec4(pointA), toVec4(pointB), projectionMatrix, color);
+}
+
+//=================================================================================
 void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4 & projectionMatrix, const glm::vec3 & color)
 {
 	m_program->useProgram();

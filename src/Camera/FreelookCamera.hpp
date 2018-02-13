@@ -90,6 +90,9 @@ public:
 
 
 
+
+	virtual C_Frustum getFrustum() const override;
+
 private:
 	void CreateProjection();
 	float               _cameraMovementSpeed;

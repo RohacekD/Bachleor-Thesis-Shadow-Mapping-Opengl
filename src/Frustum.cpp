@@ -93,5 +93,20 @@ void C_Frustum::DebugDraw(const glm::vec3& color) const
 	lines.push_back(nlb); lines.push_back(flb);
 	lines.push_back(nrb); lines.push_back(frb);
 
-	C_DebugDraw::Instance().DrawLines(lines, Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix(), color);
+	C_DebugDraw& dd = C_DebugDraw::Instance();
+	auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
+	dd.DrawLines(lines, viewProjectionMatrix, color);
+	dd.DrawPoint(m_position, viewProjectionMatrix);
+	dd.DrawLine(m_position, m_position + m_foreward, viewProjectionMatrix, glm::vec3(0,1,0));
+	dd.DrawLine(m_position, m_position + m_upVector, viewProjectionMatrix, glm::vec3(1, 0, 0));
+}
+
+//=================================================================================
+void C_Frustum::UpdateWithMatrix(const glm::mat4& matrix)
+{
+	auto newPosition = glm::vec3((matrix * glm::vec4(m_position, 1.0f)));
+	m_upVector = glm::vec3((matrix * glm::vec4(m_position + m_upVector, 1.0f))) - newPosition;
+	m_foreward = glm::vec3((matrix * glm::vec4(m_position + m_foreward, 1.0f))) - newPosition;
+
+	m_position = newPosition;
 }

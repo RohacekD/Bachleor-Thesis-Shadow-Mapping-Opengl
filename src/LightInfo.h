@@ -6,6 +6,8 @@
 
 class I_Camera;
 
+class C_Frustum;
+
 // still have no idea how to represent power
 
 class C_LightInfo {

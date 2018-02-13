@@ -1,6 +1,7 @@
 #include "ShadowMapCascade.h"
 
 #include "Debug.h"
+#include "Frustum.h"
 #include "Scene.hpp"
 #include "Application.hpp"
 #include "LightInfo.h"
@@ -45,6 +46,7 @@ void C_ShadowMapCascade::PrintSplittingDepths() const
 void C_ShadowMapCascade::RecalcAll()
 {
 	CalcSplitPlanes();
+	CalcCropMatrices();
 }
 
 //=================================================================================
@@ -57,7 +59,6 @@ glm::vec4 C_ShadowMapCascade::GetPlanes() const
 //=================================================================================
 void C_ShadowMapCascade::DebugDrawAABBs(const glm::mat4& projectionMatrix) const
 {
-	m_lighInfo->GetProjectionMatrix();
 	int i = 0;
 	for (const auto & aabb : m_bboxes) {
 		std::stringstream ss;
@@ -89,4 +90,37 @@ void C_ShadowMapCascade::CalcSplitPlanes()
 //=================================================================================
 void C_ShadowMapCascade::CalcCropMatrices()
 {
+	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
+	auto projectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
+	C_Frustum frust = camera->getFrustum();
+	frust.UpdateWithMatrix(m_lighInfo->GetViewMatrix());
+	frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
+	m_splitInfos = std::vector<S_SplitInfo>();
+	m_splitInfos.reserve(m_levels);
+	for (unsigned int i = 0; i < m_levels; ++i) {
+		frust.SetNear(m_splitingPlanes[i]);
+		frust.SetFar(m_splitingPlanes[i+1]);
+		AABB subFrustBBox = frust.GetAABB();
+
+
+		subFrustBBox.minPoint.z = 0.0f;
+		// Create the crop matrix
+		float scaleX, scaleY, scaleZ;
+		float offsetX, offsetY, offsetZ;
+		scaleX = 2.0f / (subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x);
+		scaleY = 2.0f / (subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y);
+		offsetX = -0.5f * (subFrustBBox.maxPoint.x + subFrustBBox.minPoint.x) * scaleX;
+		offsetY = -0.5f * (subFrustBBox.maxPoint.y + subFrustBBox.minPoint.y) * scaleY;
+		scaleZ = 1.0f / (subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z);
+		offsetZ = -subFrustBBox.minPoint.z * scaleZ;
+
+		m_splitInfos[i].m_cropMat = glm::mat4
+		   (scaleX,	0.0f,	0.0f,	offsetX,
+			0.0f,	scaleY, 0.0f,	offsetY,
+			0.0f,	0.0f,	scaleZ, offsetZ,
+			0.0f,	0.0f,	0.0f,	1.0f);
+
+		frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
+		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
+	}
 }

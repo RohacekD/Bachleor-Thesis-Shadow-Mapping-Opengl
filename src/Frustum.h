@@ -12,6 +12,7 @@ public:
 	C_Frustum(const glm::vec3& position, const glm::vec3& upVectro, const glm::vec3& foreward, float near, float far, float aspect, float fov);
 	AABB GetAABB() const;
 	void DebugDraw(const glm::vec3& color) const;
+	void UpdateWithMatrix(const glm::mat4& matrix);
 
 	const glm::vec3& GetForeward() const { return m_foreward; }
 	void			SetForeward(const glm::vec3& val) { m_foreward = val; }
