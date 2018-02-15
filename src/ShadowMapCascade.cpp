@@ -96,14 +96,16 @@ void C_ShadowMapCascade::CalcCropMatrices()
 	frust.UpdateWithMatrix(m_lighInfo->GetViewMatrix());
 	frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
 	m_splitInfos = std::vector<S_SplitInfo>();
-	m_splitInfos.reserve(m_levels);
+	m_splitInfos.resize(m_levels);
 	for (unsigned int i = 0; i < m_levels; ++i) {
 		frust.SetNear(m_splitingPlanes[i]);
 		frust.SetFar(m_splitingPlanes[i+1]);
 		AABB subFrustBBox = frust.GetAABB();
 
 
-		subFrustBBox.minPoint.z = 0.0f;
+		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
+		//here was z but IMHO y is correct
+		subFrustBBox.minPoint.y = 0.0f;
 		// Create the crop matrix
 		float scaleX, scaleY, scaleZ;
 		float offsetX, offsetY, offsetZ;
@@ -120,7 +122,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 			0.0f,	0.0f,	scaleZ, offsetZ,
 			0.0f,	0.0f,	0.0f,	1.0f);
 
-		frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
-		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
+		//frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
+		//C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 	}
 }

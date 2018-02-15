@@ -65,8 +65,8 @@ glm::mat4 C_DirectionalLight::GetProjectionMatrix() const
 	//C_DebugDraw::Instance().DrawAABB(cameraAABBInLigthSpace, glm::mat4(1.0f), viewProjectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f));
 	//C_DebugDraw::Instance().DrawAABB(camerasAABB, glm::mat4(1.0f), viewProjectionMatrix, glm::vec3(0.0f, 1.0f, 0.0f));//aabb kamery
 	//C_DebugDraw::Instance().DrawAABB(camerasAABB, viewProjectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f), rotation); // aabb kamery ve light view space 
-	C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, glm::vec3(0.0f, 0.0f, 1.0f));//aabb n world space
-	C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f), glm::inverse(GetViewMatrix()));//aabb n light space
+	//C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, glm::vec3(0.0f, 0.0f, 1.0f));//aabb n world space
+	//C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, glm::vec3(1.0f, 0.0f, 0.0f), glm::inverse(GetViewMatrix()));//aabb n light space
 
 
 	//C_DebugDraw::Instance().DrawAABB(transformedAABB1, viewProjectionMatrix, glm::vec3(0.0f, 0.0f, 1.0f));//aabb n world space
@@ -76,10 +76,10 @@ glm::mat4 C_DirectionalLight::GetProjectionMatrix() const
 
 	float width = transformedAABB.maxPoint.z - transformedAABB.minPoint.z;
 	float height = transformedAABB.maxPoint.x - transformedAABB.minPoint.x;
-	return glm::ortho(-width / 2.0f,
-						width / 2.0f,
-					    height/2.0f, 
-					   -height / 2.0f,
+	return glm::ortho(-height / 2.0f,
+						height / 2.0f,
+						width /2.0f,
+					   -width / 2.0f,
 						s_near, 
 						s_near + transformedAABB.maxPoint.y - transformedAABB.minPoint.y);
 }
@@ -90,14 +90,14 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 	using namespace glm;
 	AABB camerasAABB = m_camera->GetAABB();
 	vec4 normal = normalize(vec4((m_direciton - m_origin), 1.0f));
-	quat q(vec3(normal), vec3(0, 1, 0));
+	quat q(vec3(normal), vec3(0, 0, 1));
 	mat4 rotation = mat4(1.0f) * mat4_cast(normalize(q));
 
 	AABB transformedAABB = camerasAABB.getTransformedAABB(rotation);
 
 	vec3 center = (transformedAABB.maxPoint + transformedAABB.minPoint) / 2.0f;
 	
-	vec3 midPointOnBottom = vec3(center.x, transformedAABB.minPoint.y - s_near, center.z);
+	vec3 midPointOnBottom = vec3(center.x, center.y, transformedAABB.minPoint.z - s_near);
 
 	vec4 eye(inverse(rotation) * vec4(midPointOnBottom, 1.0f));
 
@@ -111,14 +111,17 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 
 	//C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, vec3(0.0f, 0.0f, 1.0f), inverse(rotation));//aabb n world
 	//C_DebugDraw::Instance().DrawPoint(eye, viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
-	//C_DebugDraw::Instance().DrawPoint(vec3(eye + normal), viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
-	//C_DebugDraw::Instance().DrawPoint(eye, viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
 	//
 	//C_DebugDraw::Instance().DrawAxis(eye, up, foreward, viewProjectionMatrix);
 
 
 	//vec3 color = vec3(1.0f, 0.0f, 0.0f);
 	//C_DebugDraw::Instance().DrawPoint(eye, viewProjectionMatrix, color);
+	//C_DebugDraw::Instance().DrawPoint(vec3(eye + normal), viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
+	//C_DebugDraw::Instance().DrawLine(vec3(eye), vec3(eye + normal), viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
+	//C_DebugDraw::Instance().DrawPoint(eye + up, viewProjectionMatrix, vec3(0.0f, 1.0f, 0.0f));
+	//C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, glm::vec3(0, 0, 0));
+	//C_DebugDraw::Instance().DrawAABB(camerasAABB, viewProjectionMatrix, glm::vec3(0, 0, 0));
 
 	return lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
 }

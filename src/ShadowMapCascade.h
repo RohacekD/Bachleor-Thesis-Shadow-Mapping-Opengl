@@ -41,6 +41,8 @@ public:
 	void	DebugDrawAABBs(const glm::mat4& projectionMatrix) const;
 
 	glm::mat4 GetViewProjection() const { return m_lighInfo->GetViewProjectionMatrix(); }
+
+	const S_SplitInfo& GetSplitInfo(int i) { return m_splitInfos[i]; }
 private:
 	void CalcSplitPlanes();
 	void CalcCropMatrices();

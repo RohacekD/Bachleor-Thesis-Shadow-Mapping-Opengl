@@ -56,7 +56,7 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 
 
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
-	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(-1.0f, 3.0f, 2.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
+	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 
 	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, gs_shadowMapsize, 4);
 
@@ -111,12 +111,13 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
-	//m_CSM->PrintSplittingDepths();
-	renderToFBO(camera.getViewProjectionMatrix());
-	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Render pass");
 	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	m_CSM->RecalcAll();
+	renderToFBO(camera.getViewProjectionMatrix());
+	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Render pass");
+
 	glViewport(0, 0, m_screenWidht, m_screenHeight);
 
 	render::S_RenderParams params;
@@ -125,7 +126,6 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
 	params.m_toShadowMapSpaceMatrix = ScreenToTextureCoord()*m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
-	m_CSM->RecalcAll();
 	params.m_planes = m_CSM->GetPlanes();
 
 	m_renderScene->Render(params);
@@ -150,6 +150,34 @@ void StudentRenderer::clearStudentData()
 void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const
 {
 	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Shadow pass");
+	for (unsigned int i = 0; i < m_CSM->GetNumLevels(); ++i) {
+		std::stringstream ss;
+		ss << "Cascade level: " << i;
+		std::string s = ss.str();
+		const auto& splitInfo = m_CSM->GetSplitInfo(i);
+		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(s.length()), s.c_str());
+
+
+		m_framebuffer->Bind();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
+		glDrawBuffer(GL_NONE);
+
+
+		render::S_RenderParams params;
+
+		params.m_cameraViewProjectionMatrix =  m_CSM->GetViewProjection() * splitInfo.m_cropMat;
+		params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
+
+		m_renderScene->Render(params);
+
+		m_framebuffer->Unbind();
+		glDrawBuffer(GL_BACK);
+		glPopDebugGroup();
+	}
+
+
 	m_framebuffer->Bind();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
