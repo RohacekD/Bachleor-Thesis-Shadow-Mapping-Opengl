@@ -34,9 +34,11 @@ int PSSMPlane(){
 		return 1;
 	}
 	else if(linDepth < limits[2]){
-		MaterialDiffuseColor += vec4(0.0, 0.0, 1.0, 1.0)/5;
+		MaterialDiffuseColor += vec4(0.0, 0.0, 1.0  , 1.0)/5;
 		return 2;
 	} 
+	else if(linDepth < limits[3]){
+		MaterialDiffuseColor += vec4(0.0, 1.0, 1.0, 1.0)/5;
 		return 3;
 	}
 	else{
@@ -56,8 +58,7 @@ void main()
 
 	MaterialDiffuseColor = texture(tex, texCoordOUT);
 
-	float zfar = 7.59345436/3.0;
-	IsInPSSMShadow();
+	bool is = IsInPSSMShadow();
 
 	if(shadowCoords.z - (1.0f/1024.0f)>objectNearestLight){
 		MaterialDiffuseColor *= 0.1f;

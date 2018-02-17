@@ -11,6 +11,12 @@ uniform mat4 toShadowMapSpaceMatrix;
 uniform mat4 projectionMatrix;
 uniform vec4 CameraPosition;
 
+layout (std140, row_major) uniform PSSM{
+	mat4 PSSM_CameraViewProjection;
+	float[PSSM_SPLITS] PSSM_Limits;
+	mat4[PSSM_SPLITS] m_LightViewProjection;
+} pssm;
+
 //PSSM dependet things
 //camera
 uniform mat4 PSSM_CameraViewProjection;
