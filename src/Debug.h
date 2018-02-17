@@ -1,12 +1,14 @@
 #pragma once
-#include <string>
-#include <memory>
 
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
 
 #include "Scene.hpp"
+
+#include <string>
+#include <memory>
+
 
 //=================================================================================
 //= returns true if error occurs

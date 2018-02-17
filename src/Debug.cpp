@@ -22,7 +22,7 @@ bool _glErrorCheck(const std::string file, const int line) {
 		 << status << "): " << glewGetErrorString(status)
 		 << std::dec
 		 << std::endl;
-#if _DEBUG && 0
+#if _DEBUG
 	 __debugbreak();
 #endif
 	 return true;
@@ -117,10 +117,9 @@ void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectio
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4), glm::value_ptr(point), GL_DYNAMIC_DRAW);
 	ErrorCheck();
 
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
-	ErrorCheck();
+	m_program->SetUniform("modelMatrix", modelMatrix);
+	m_program->SetUniform("projectionMatrix", projectionMatrix);
+	m_program->SetUniform("colorIN", color);
 
 	glEnableVertexAttribArray(0);
 
@@ -149,9 +148,9 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, 
 	glm::mat4 transform = glm::translate(glm::mat4(1), center) * glm::scale(glm::mat4(1), size);
 
 	/* Apply object's transformation matrix */
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix*transform));
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
+	m_program->SetUniform("modelMatrix", modelMatrix*transform);
+	m_program->SetUniform("projectionMatrix", projectionMatrix);
+	m_program->SetUniform("colorIN", color);
 
 	glBindVertexArray(m_VAOaabb);
 
@@ -192,9 +191,9 @@ void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, con
 
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec4), vertices.data(), GL_DYNAMIC_DRAW);
 
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
+	m_program->SetUniform("modelMatrix", glm::mat4(1.0f));
+	m_program->SetUniform("projectionMatrix", projectionMatrix);
+	m_program->SetUniform("colorIN", color);
 
 	glEnableVertexAttribArray(0);
 
@@ -226,13 +225,13 @@ void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4
 
 	glBufferData(GL_ARRAY_BUFFER, pairs.size() * sizeof(glm::vec4), pairs.data(), GL_DYNAMIC_DRAW);
 
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-	glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3fv(glGetUniformLocation(m_program->GetProgram(), "colorIN"), 1, glm::value_ptr(color));
+	m_program->SetUniform("modelMatrix", glm::mat4(1.0f));
+	m_program->SetUniform("projectionMatrix", projectionMatrix);
+	m_program->SetUniform("colorIN", color);
 
 	glEnableVertexAttribArray(0);
 
-	glDrawArrays(GL_LINES, 0, pairs.size());
+	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(pairs.size()));
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
