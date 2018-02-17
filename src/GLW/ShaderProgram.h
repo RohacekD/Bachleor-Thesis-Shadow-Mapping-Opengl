@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -27,12 +28,13 @@ namespace GLW {
 		template<class N> void SetUniform(N name, const std::vector<int> & value);
 		template<class N> void SetUniform(N name, const std::vector<float> & value);
 
-		template<class T> int FindLocation(T name) const;
-		template<> int FindLocation(const char* name) const;
-		template<> int FindLocation(const std::string& name) const;
+		template<class T> int FindLocation(T name);
+		template<> int FindLocation(const char* name);
+		template<> int FindLocation(const std::string& name);
 
 	private:
 		GLuint m_Program;
+		std::map<std::string, GLint> m_uniformMap;
 	};
 }
 #include "GLW/ShaderProgram.inl"

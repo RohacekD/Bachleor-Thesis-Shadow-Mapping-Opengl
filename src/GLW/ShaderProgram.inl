@@ -7,9 +7,17 @@ namespace GLW {
 
 	//=================================================================================
 	template<>
-	inline int C_ShaderProgram::FindLocation(const char* name) const
+	inline int C_ShaderProgram::FindLocation(const char* name)
 	{
-		GLint location = glGetUniformLocation(m_Program, name);
+		GLint location = -1;
+		const auto it = m_uniformMap.find(name);
+		if (it != m_uniformMap.end()) {
+			location = it->second;
+		}
+		else {
+			location = glGetUniformLocation(m_Program, name);
+			m_uniformMap[std::string(name)] = location;
+		}
 #if _DEBUG
 		if (location < 0) {
 			std::cerr << "Program number #" << m_Program << " doesn't have uniform: " << name << std::endl;
@@ -20,9 +28,17 @@ namespace GLW {
 
 	//=================================================================================
 	template<>
-	inline int C_ShaderProgram::FindLocation(const std::string& name) const
+	inline int C_ShaderProgram::FindLocation(const std::string& name)
 	{
-		GLint location = glGetUniformLocation(m_Program, name.c_str());
+		GLint location = -1;
+		const auto it = m_uniformMap.find(name);
+		if (it != m_uniformMap.end()) {
+			location = it->second;
+		}
+		else {
+			location = glGetUniformLocation(m_Program, name.c_str());
+			m_uniformMap[name] = location;
+		}
 #if _DEBUG
 		if (location < 0) {
 			std::cerr << "Program number #" << m_Program << " doesn't have uniform: " << name << std::endl;

@@ -1,26 +1,12 @@
-﻿  Application.cpp
-  CameraManager.cpp
-  FreelookCamera.cpp
-  Debug.cpp
-  Frustum.cpp
-  UniformBuffer.cpp
-  Framebuffer.cpp
+﻿  Debug.cpp
   ShaderProgram.cpp
-  Texture.cpp
-  LightInfo.cpp
+  ShaderManager.cpp
   MeshNode.cpp
   RenderNode.cpp
-  Scene.cpp
-  SceneBuilder.cpp
-  ShadowMapCascade.cpp
-  StudentRenderer.cpp
-..\src\StudentRenderer.cpp(166): warning C4244: 'argument': conversion from 'const float' to 'GLsizei', possible loss of data
-..\src\StudentRenderer.cpp(186): warning C4244: 'argument': conversion from 'const float' to 'GLsizei', possible loss of data
-..\src\StudentRenderer.cpp(213): warning C4244: 'argument': conversion from 'const float' to 'GLsizei', possible loss of data
   Generating code
-  342 of 2977 functions (11.5%) were compiled, the rest were copied from previous compilation.
-    182 functions were new in current compilation
-    158 functions had inline decision re-evaluated but remain unchanged
+  256 of 3115 functions ( 8.2%) were compiled, the rest were copied from previous compilation.
+    139 functions were new in current compilation
+    246 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Computer Graphics Project.exe
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Computer Graphics Project.pdb (Full PDB)
