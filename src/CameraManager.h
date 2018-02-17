@@ -6,6 +6,7 @@
 class C_CameraManager {
 public:
 	C_CameraManager();
+	~C_CameraManager();
 
 	std::shared_ptr<I_Camera> GetActiveCamera() const;
 

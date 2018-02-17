@@ -218,6 +218,7 @@
     <ClInclude Include="..\src\TextureLoader.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\src\GLW\ShaderProgram.inl" />
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>

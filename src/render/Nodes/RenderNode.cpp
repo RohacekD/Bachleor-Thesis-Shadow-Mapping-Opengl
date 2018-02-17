@@ -2,6 +2,7 @@
 #include "render/RenderParams.h"
 #include "animation/Animation.h"
 #include "GLW/ShaderProgram.h"
+#include "Debug.h"
 #include "ShaderManager.h"
 
 #include "ShaderCompiler.hpp"
@@ -31,6 +32,7 @@ namespace render {
 
 	//=================================================================================
 	inline I_RenderNode::~I_RenderNode() {
+		DestructorFullCheck();
 	}
 
 	//=================================================================================

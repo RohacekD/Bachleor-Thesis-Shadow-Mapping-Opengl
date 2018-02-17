@@ -18,7 +18,7 @@ namespace GLW {
 	//=================================================================================
 	C_Framebuffer::~C_Framebuffer()
 	{
-
+		DestructorFullCheck();
 	}
 
 	//=================================================================================
@@ -43,7 +43,7 @@ namespace GLW {
 			std::cerr << "Attaching multiple textures to one attach point in framebuffer" << std::endl;
 		}
 		Bind();
-		glFramebufferTexture2D(GL_FRAMEBUFFER, attachement, texture->GetTarget(), texture->GetTexture(), 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, attachement, texture->GetTexture(), 0);
 		Unbind();
 
 		ErrorCheck();

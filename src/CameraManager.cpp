@@ -1,4 +1,5 @@
 #include "CameraManager.h"
+#include "Debug.h"
 
 
 //=================================================================================
@@ -6,6 +7,12 @@ C_CameraManager::C_CameraManager()
 	: m_debugCamera(nullptr)
 	, m_mainCamera(nullptr)
 {
+}
+
+//=================================================================================
+C_CameraManager::~C_CameraManager()
+{
+	DestructorFullCheck();
 }
 
 //=================================================================================

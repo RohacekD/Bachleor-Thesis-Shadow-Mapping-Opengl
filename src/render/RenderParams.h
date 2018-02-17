@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <vector>
 #include <memory>
 
 #include "GLW/Texture.h"
@@ -16,7 +17,7 @@ namespace render {
 		glm::mat4 m_toShadowMapSpaceMatrix;
 		std::shared_ptr<GLW::C_Texture> m_shadowMap;
 		E_PassType m_pass;
-		glm::vec4	m_planes;
+		std::vector<float>	m_planes;
 
 	};
 }

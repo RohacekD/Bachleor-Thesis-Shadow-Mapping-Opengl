@@ -18,6 +18,7 @@ namespace render {
 
 	class C_SceneBuilder {
 	public:
+		~C_SceneBuilder();
 		std::shared_ptr<C_Scene> LoadScene(std::shared_ptr<Scene> scene);
 		std::shared_ptr<I_RenderNode> LoadMesh(const Mesh& mesh);
 		std::shared_ptr<GLW::C_Texture> LoadTexture(const Texture& texture) const;

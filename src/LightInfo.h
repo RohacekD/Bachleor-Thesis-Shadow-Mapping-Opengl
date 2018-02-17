@@ -13,7 +13,7 @@ class C_Frustum;
 class C_LightInfo {
 public:
 	C_LightInfo() = default;
-	virtual ~C_LightInfo() = default;
+	virtual ~C_LightInfo();
 
 	virtual glm::mat4 GetProjectionMatrix() const = 0;
 	virtual glm::mat4 GetViewProjectionMatrix() const = 0;

@@ -13,13 +13,32 @@
 
 
 //=================================================================================
+const char* glErrorCodeToString(unsigned int code) {
+#define codeToStr(c) case c: return #c; break
+	switch (code)
+	{
+		codeToStr(GL_INVALID_ENUM);
+		codeToStr(GL_INVALID_VALUE);
+		codeToStr(GL_INVALID_OPERATION);
+		codeToStr(GL_STACK_OVERFLOW);
+		codeToStr(GL_STACK_UNDERFLOW);
+		codeToStr(GL_OUT_OF_MEMORY);
+	default:
+		return "bad value";
+		break;
+	}
+
+}
+
+//=================================================================================
 bool _glErrorCheck(const std::string file, const int line) {
 
  GLenum status;
- while ((status = glGetError()) != 0x0000) {
+ while ((status = glGetError()) != GL_NO_ERROR) {
 	 std::cout << "[" << file.substr(file.rfind("\\") + 1) << ":" << line << "] Error (0x"
 		 << std::hex << std::setfill('0') << std::setw(4)
-		 << status << "): " << glewGetErrorString(status)
+		 << status << ":"<< glErrorCodeToString(status) << "): "
+		 << glewGetErrorString(status)
 		 << std::dec
 		 << std::endl;
 #if _DEBUG
@@ -92,14 +111,18 @@ C_DebugDraw::C_DebugDraw()
 //=================================================================================
 C_DebugDraw::~C_DebugDraw()
 {
-	//we cannot do this because OpenGL contex is already death now
-	//ErrorCheck();
-	//glDeleteBuffers(1, &m_VBO);
-	//ErrorCheck();
-	//glDeleteBuffers(1, &m_IBO);
-	//ErrorCheck();
-	//glDeleteVertexArrays(1, &m_VAO);
-	//ErrorCheck();
+}
+
+//=================================================================================
+void C_DebugDraw::Clear()
+{
+	m_program.reset();
+	glDeleteBuffers(1, &m_VBOline);
+	glDeleteBuffers(1, &m_IBOaabb);
+	glDeleteVertexArrays(1, &m_VAOline);
+	glDeleteBuffers(1, &m_VBOaabb);
+	glDeleteVertexArrays(1, &m_VAOaabb);
+	ErrorCheck();
 }
 
 //=================================================================================

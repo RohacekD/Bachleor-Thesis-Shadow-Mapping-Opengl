@@ -23,6 +23,7 @@ class C_ShadowMapCascade {
 public:
 	// not sure about near and far...
 	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, float resolution, int levels, float m_lambda = 0.5f);
+	~C_ShadowMapCascade();
 
 	unsigned int	GetNumLevels() const { return m_levels; }
 	void			SetNumLevels(unsigned int val) { m_levels = val; }
@@ -35,7 +36,7 @@ public:
 
 	void RecalcAll();
 
-	glm::vec4 GetPlanes() const;
+	const std::vector<float> GetPlanes() const;
 
 	void	PrintSplittingDepths() const;
 	void	DebugDrawAABBs(const glm::mat4& projectionMatrix) const;
@@ -52,7 +53,7 @@ private:
 	float											m_lambda;
 	std::shared_ptr<GLW::C_Framebuffer>				m_framebuffer;
 	std::vector<std::shared_ptr<GLW::C_Texture>>	m_depthMaps;
-	std::vector<double>								m_splitingPlanes;
+	std::vector<float>								m_splitingPlanes;
 	std::vector<S_SplitInfo>						m_splitInfos;
 	std::vector<glm::mat4>							m_LightClippingMatrices;
 	std::shared_ptr<C_LightInfo>					m_lighInfo;

@@ -12,9 +12,8 @@ namespace GLW {
 	//=================================================================================
 	C_ShaderProgram::~C_ShaderProgram()
 	{
-		ErrorCheck();
 		glDeleteProgram(m_Program);
-		ErrorCheck();
+		DestructorFullCheck();
 	}
 
 	//=================================================================================

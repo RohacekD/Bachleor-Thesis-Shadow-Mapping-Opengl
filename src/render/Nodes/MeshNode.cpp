@@ -36,6 +36,7 @@ namespace render {
 	//=================================================================================
 	C_MeshNode::~C_MeshNode()
 	{
+		DestructorFullCheck();
 	}
 
 	//=================================================================================
@@ -125,9 +126,8 @@ namespace render {
 		glEnableVertexAttribArray(0);
 		ErrorCheck();
 
-		glUniformMatrix4fv(glGetUniformLocation(m_shadowProgram->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_cameraViewProjectionMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(m_shadowProgram->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix * m_animation->GetTRSMatrix()));
-		ErrorCheck();
+		m_shadowProgram->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
+		m_shadowProgram->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
@@ -155,20 +155,21 @@ namespace render {
 
 		glActiveTexture(GL_TEXTURE0);
 		params.m_shadowMap->bind();
+		m_program->SetUniform("shadowMap", 0);
 		glActiveTexture(GL_TEXTURE1);
 		if (m_texture) {
 			m_texture->bind();
-			glUniform1i(glGetUniformLocation(m_program->GetProgram(), "tex"), 1);
+			m_program->SetUniform("tex", 1);
 		}
-		glUniform1i(glGetUniformLocation(m_program->GetProgram(), "shadowMap"), 0);
-		glm::vec4 light(0, 15.0f, 0.f, 1.0f);
-		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "lightPos"), 1, glm::value_ptr(light));
-		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "PSSMLimits"), 1, glm::value_ptr(params.m_planes));
-		glUniform4fv(glGetUniformLocation(m_program->GetProgram(), "CameraPosition"), 1, glm::value_ptr(params.m_cameraPosition));
+		//m_program->SetUniform("PSSM_CameraPosition", glm::vec4(Application::Instance().GetCamManager()->GetMainCamera()->getPosition(), 1.0f));
+		m_program->SetUniform("PSSM_CameraViewProjection", Application::Instance().GetCamManager()->GetMainCamera()->getViewProjectionMatrix());
 
-		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "toShadowMapSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_toShadowMapSpaceMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(params.m_cameraViewProjectionMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(m_program->GetProgram(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix * m_animation->GetTRSMatrix()));
+		m_program->SetUniform("PSSM_Limits", params.m_planes);
+		//m_program->SetUniform("CameraPosition", params.m_cameraPosition);
+
+		m_program->SetUniform("toShadowMapSpaceMatrix", params.m_toShadowMapSpaceMatrix);
+		m_program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
+		m_program->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 

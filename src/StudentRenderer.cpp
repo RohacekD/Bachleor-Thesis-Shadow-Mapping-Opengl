@@ -35,9 +35,8 @@ StudentRenderer::StudentRenderer()
 
 //=================================================================================
 StudentRenderer::~StudentRenderer() {
-	ErrorCheck();
 	printFrameStatistics();
-	ErrorCheck();
+	DestructorFullCheck();
 }
 
 //=================================================================================
@@ -143,6 +142,9 @@ void StudentRenderer::clearStudentData()
 	m_scene.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
+	C_ShaderManager::Instance().Clear();
+	C_DebugDraw::Instance().Clear();
+	std::cout << C_ShaderManager::Instance().ShadersStatistics();
 	ErrorCheck();
 }
 
@@ -167,7 +169,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 
 		render::S_RenderParams params;
 
-		params.m_cameraViewProjectionMatrix =  m_CSM->GetViewProjection() * splitInfo.m_cropMat;
+		params.m_cameraViewProjectionMatrix = splitInfo.m_cropMat * m_CSM->GetViewProjection();
 		params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
 
 		m_renderScene->Render(params);
@@ -206,9 +208,9 @@ bool StudentRenderer::initFBO()
 
 	m_framebuffer = std::make_shared<GLW::C_Framebuffer>();
 
-	auto depthTexture = std::make_shared<GLW::C_Texture>("depthTexture", GL_TEXTURE_2D);
+	auto depthTexture = std::make_shared<GLW::C_Texture>("depthTexture", GL_TEXTURE_2D_ARRAY);
 	depthTexture->StartGroupOp();
-	glTexImage2D(depthTexture->GetTarget(), 0, GL_DEPTH_COMPONENT16, gs_shadowMapsize, gs_shadowMapsize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexStorage3D(depthTexture->GetTarget(), 1, GL_DEPTH_COMPONENT32, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
 
 	ErrorCheck();
 	depthTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);

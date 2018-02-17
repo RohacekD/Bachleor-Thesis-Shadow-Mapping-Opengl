@@ -15,6 +15,12 @@
 namespace render {
 
 	//=================================================================================
+	C_SceneBuilder::~C_SceneBuilder()
+	{
+		DestructorFullCheck();
+	}
+
+	//=================================================================================
 	std::shared_ptr<C_Scene> C_SceneBuilder::LoadScene(std::shared_ptr<Scene> scene)
 	{
 		m_scene = scene;

@@ -24,6 +24,8 @@ public:
 	void operator=(C_ShaderManager const&) = delete;
 	static C_ShaderManager& Instance();
 
+	void Clear();
+
 
 	T_ShaderPtr GetProgram(const std::string& name);
 	bool		ShaderLoaded(const std::string& name);

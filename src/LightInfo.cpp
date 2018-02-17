@@ -30,6 +30,12 @@ C_DirectionalLight::C_DirectionalLight(std::shared_ptr<I_Camera> camera, const g
 }
 
 //=================================================================================
+C_LightInfo::~C_LightInfo()
+{
+	DestructorFullCheck();
+}
+
+//=================================================================================
 glm::mat4 C_DirectionalLight::GetViewProjectionMatrix() const
 {
 	return GetProjectionMatrix() * GetViewMatrix();

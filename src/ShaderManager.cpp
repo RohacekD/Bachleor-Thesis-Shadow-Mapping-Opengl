@@ -19,6 +19,12 @@ C_ShaderManager & C_ShaderManager::Instance()
 }
 
 //=================================================================================
+void C_ShaderManager::Clear()
+{
+	m_Programs.clear();
+}
+
+//=================================================================================
 C_ShaderManager::T_ShaderPtr C_ShaderManager::GetProgram(const std::string& name)
 {
 	if (ShaderLoaded(name)) {

@@ -22,6 +22,12 @@ C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, f
 }
 
 //=================================================================================
+C_ShadowMapCascade::~C_ShadowMapCascade()
+{
+	DestructorFullCheck();
+}
+
+//=================================================================================
 void C_ShadowMapCascade::SetLambda(float val) {
 	m_lambda = val;
 	m_lambda = std::min(std::max(m_lambda, 0.0f), 1.0f);
@@ -50,10 +56,10 @@ void C_ShadowMapCascade::RecalcAll()
 }
 
 //=================================================================================
-glm::vec4 C_ShadowMapCascade::GetPlanes() const
+const std::vector<float> C_ShadowMapCascade::GetPlanes() const
 {
 	//todo change to different sizes
-	return glm::vec4(m_splitingPlanes[1], m_splitingPlanes[2], m_splitingPlanes[3], m_splitingPlanes[4]);
+	return std::vector<float>(++(m_splitingPlanes.begin()), m_splitingPlanes.end());
 }
 
 //=================================================================================
@@ -75,14 +81,15 @@ void C_ShadowMapCascade::DebugDrawAABBs(const glm::mat4& projectionMatrix) const
 void C_ShadowMapCascade::CalcSplitPlanes()
 {
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
-	m_splitingPlanes = std::vector<double>();
+	m_splitingPlanes = std::vector<float>();
 	m_splitingPlanes.resize(m_levels + 1);
 	m_splitingPlanes[0] = camera->GetNear();
 	float logArgument = (camera->GetFar() / camera->GetNear());
 	float uniArgument = (camera->GetFar() - camera->GetNear());
 	for (unsigned int i = 1; i <= m_levels - 1; ++i) {
 		float parameter = static_cast<float>(i) / static_cast<float>(m_levels);
-		m_splitingPlanes[i] = (GetLambda() *(camera->GetNear() * std::pow(logArgument, parameter))) + ((1.0 - GetLambda())*(camera->GetNear() + uniArgument * parameter));
+		double result = (GetLambda() *(camera->GetNear() * std::pow(logArgument, parameter))) + ((1.0 - GetLambda())*(camera->GetNear() + uniArgument * parameter));
+		m_splitingPlanes[i] = static_cast<float>(result);
 	}
 	m_splitingPlanes[m_levels] = camera->GetFar();
 }
@@ -105,7 +112,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 
 		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 		//here was z but IMHO y is correct
-		subFrustBBox.minPoint.y = 0.0f;
+		subFrustBBox.minPoint.z = 0.0f;
 		// Create the crop matrix
 		float scaleX, scaleY, scaleZ;
 		float offsetX, offsetY, offsetZ;

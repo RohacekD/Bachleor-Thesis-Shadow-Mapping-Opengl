@@ -25,9 +25,8 @@ namespace GLW {
 	//=================================================================================
 	C_Texture::~C_Texture()
 	{
-		ErrorCheck();
 		glDeleteTextures(1, &m_texture);
-		ErrorCheck();
+		DestructorFullCheck();
 	}
 
 	//=================================================================================
