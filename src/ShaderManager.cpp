@@ -7,6 +7,7 @@
 #include <sstream>
 
 
+//=================================================================================
 const std::string C_ShaderManager::s_ShadersFolder = "shaders/";
 ShaderCompiler C_ShaderManager::s_Compiler;
 
@@ -104,6 +105,7 @@ bool C_ShaderManager::LoadDoc(pugi::xml_document & document, const std::string &
 	return false;
 }
 
+//=================================================================================
 GLuint C_ShaderManager::LoadShader(const pugi::xml_node& node) const
 {
 	GLuint shader = 0;

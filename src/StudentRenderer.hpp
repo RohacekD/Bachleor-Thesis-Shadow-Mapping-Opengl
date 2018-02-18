@@ -5,6 +5,7 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
+#include "PSSMUBO.h"
 #include "Scene.hpp"
 #include "ShaderCompiler.hpp"
 #include "HighResolutionTimer.hpp"
@@ -44,6 +45,9 @@ private:
 
 	std::shared_ptr<Scene> m_scene;
 	std::shared_ptr<render::C_Scene> m_renderScene;
+
+	std::shared_ptr<C_PSSMUBO<4>> m_PSSSMUBO;
+	static const int gs_splits;
 
 	std::shared_ptr<GLW::C_Framebuffer> m_framebuffer;
 

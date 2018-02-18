@@ -7,14 +7,19 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace GLW {
+	class C_UniformBuffer;
+
 	class C_ShaderProgram {
 	public:
 		C_ShaderProgram(GLuint program);
 		virtual ~C_ShaderProgram();
 		void useProgram() const;
 		void disableProgram() const;
+
+		void BindUBO(std::shared_ptr<C_UniformBuffer>) const;
 
 		// replace this
 		inline GLuint GetProgram() const { return m_Program; }
@@ -32,9 +37,14 @@ namespace GLW {
 		template<> int FindLocation(const char* name);
 		template<> int FindLocation(const std::string& name);
 
+		template<class T> int FindUniformBlockLocation(T name) const;
+		template<> int FindUniformBlockLocation(const char* name) const;
+		template<> int FindUniformBlockLocation(const std::string& name) const;
+
 	private:
 		GLuint m_Program;
 		std::map<std::string, GLint> m_uniformMap;
 	};
+
 }
 #include "GLW/ShaderProgram.inl"

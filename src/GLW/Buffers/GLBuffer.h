@@ -11,8 +11,8 @@ namespace GLW {
 		C_GLBuffer();
 		virtual ~C_GLBuffer();
 
-		void bind() const;
-		void unbind() const;
+		virtual void bind() const;
+		virtual void unbind() const;
 	protected:
 		GLuint m_id;
 	};

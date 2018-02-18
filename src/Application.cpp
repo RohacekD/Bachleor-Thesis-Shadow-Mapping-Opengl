@@ -1,10 +1,13 @@
 #include "Application.hpp"
 
+
+//=================================================================================
 Application::Application()
 {
     _window = nullptr;
 }
 
+//=================================================================================
 bool Application::Init()
 {
     if (!initWindow())
@@ -77,6 +80,7 @@ void Application::clearSDLWindow()
 	SDL_Quit();
 }
 
+//=================================================================================
 void Application::Clear()
 {
     _renderer.clearStudentData();

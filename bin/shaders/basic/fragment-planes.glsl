@@ -10,11 +10,10 @@ in vec4 lightOUT;
 in vec4 toLight;
 in vec4 worldCoord;
 varying vec2 texCoordOUT;
-in vec4 shadowCoords;
-in float[PSSM_SPLITS] limits;
+//in vec4 shadowCoords;
+//in float[PSSM_SPLITS] limits;
 in vec4 camPosition;
 
-in vec4 PSSM_CameraDependentPos;
 
 in vec4 gl_FragCoord;;
 
@@ -22,22 +21,30 @@ out vec4 fragColor;
 
 vec4 MaterialDiffuseColor;
 
+
+in vec4 PSSM_CameraDependentPos;
+uniform PSSM{
+	float[PSSM_SPLITS] PSSM_Limits;
+	mat4 PSSM_CameraViewProjection;
+	mat4[PSSM_SPLITS] m_LightViewProjection;
+} pssm;
+
 int PSSMPlane(){
 	float linDepth = PSSM_CameraDependentPos.z;
 
-	if(linDepth < limits[0]){
+	if(linDepth < pssm.PSSM_Limits[0]){
 		MaterialDiffuseColor += vec4(1.0, 0.0, 0.0, 1.0)/5;
 		return 0;
 	}
-	else if(linDepth < limits[1]){
+	else if(linDepth < pssm.PSSM_Limits[1]){
 		MaterialDiffuseColor += vec4(0.0, 1.0, 0.0, 1.0)/5;
 		return 1;
 	}
-	else if(linDepth < limits[2]){
+	else if(linDepth < pssm.PSSM_Limits[2]){
 		MaterialDiffuseColor += vec4(0.0, 0.0, 1.0  , 1.0)/5;
 		return 2;
 	} 
-	else if(linDepth < limits[3]){
+	else if(linDepth < pssm.PSSM_Limits[3]){
 		MaterialDiffuseColor += vec4(0.0, 1.0, 1.0, 1.0)/5;
 		return 3;
 	}
@@ -49,20 +56,24 @@ int PSSMPlane(){
 
 bool IsInPSSMShadow(){
 	int split = PSSMPlane();
-	return split < 3;
+	vec4 shadowCoords = pssm.m_LightViewProjection[split] * worldCoord;
+	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
+	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;
+	return (shadowCoords.z - (1.0f/1024.0f) > objectNearestLight);
+}
+
+void ApplyPSSM(){
+	if(IsInPSSMShadow()){
+		MaterialDiffuseColor = vec4(0,0,0,1);
+	}
 }
 
 void main()
 {
-	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, 0)).r;
 
 	MaterialDiffuseColor = texture(tex, texCoordOUT);
 
-	bool is = IsInPSSMShadow();
-
-	if(shadowCoords.z - (1.0f/1024.0f)>objectNearestLight){
-		MaterialDiffuseColor *= 0.1f;
-	}
+	ApplyPSSM();
 
 	fragColor = MaterialDiffuseColor;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderDocTools.h"
+
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>

@@ -170,6 +170,8 @@
     <ClCompile Include="..\src\LightInfo.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\ModelLoader.cpp" />
+    <ClCompile Include="..\src\PSSMUBO.cpp" />
+    <ClCompile Include="..\src\RenderDocTools.cpp" />
     <ClCompile Include="..\src\render\Nodes\MeshNode.cpp" />
     <ClCompile Include="..\src\render\Nodes\RenderNode.cpp" />
     <ClCompile Include="..\src\render\Nodes\Scene.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="..\src\ShadowMapCascade.cpp" />
     <ClCompile Include="..\src\StudentRenderer.cpp" />
     <ClCompile Include="..\src\TextureLoader.cpp" />
+    <ClCompile Include="..\src\UniformBuffersManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\animation\Animation.h" />
@@ -207,6 +210,8 @@
     <ClInclude Include="..\src\IRenderer.h" />
     <ClInclude Include="..\src\LightInfo.h" />
     <ClInclude Include="..\src\ModelLoader.hpp" />
+    <ClInclude Include="..\src\PSSMUBO.h" />
+    <ClInclude Include="..\src\RenderDocTools.h" />
     <ClInclude Include="..\src\render\Nodes\MeshNode.h" />
     <ClInclude Include="..\src\render\Nodes\RenderNode.h" />
     <ClInclude Include="..\src\render\Nodes\Scene.h" />
@@ -219,6 +224,7 @@
     <ClInclude Include="..\src\ShadowMapCascade.h" />
     <ClInclude Include="..\src\StudentRenderer.hpp" />
     <ClInclude Include="..\src\TextureLoader.hpp" />
+    <ClInclude Include="..\src\UniformBuffersManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\GLW\Buffers\GLBuffer.inl" />

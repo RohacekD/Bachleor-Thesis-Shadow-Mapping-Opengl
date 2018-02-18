@@ -61,6 +61,7 @@ namespace render {
 		glDeleteBuffers(1, &m_VBOs[1]);
 		glDeleteBuffers(1, &m_VBOs[2]);
 		glDeleteVertexArrays(1, &m_VAO);
+		DestructorFullCheck();
 	}
 
 	//=================================================================================
@@ -98,6 +99,11 @@ namespace render {
 		glBufferData(GL_ARRAY_BUFFER, mesh.texcoords.size() * sizeof(glm::vec2), mesh.texcoords.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
@@ -118,21 +124,18 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ShadowPass(const S_RenderParams& params) const
 	{
+		ErrorCheck();
 		m_shadowProgram->useProgram();
 
-		ErrorCheck();
 		glBindVertexArray(m_VAO);
-		// bind VBOs for vertex array and index array
-		glEnableVertexAttribArray(0);
 		ErrorCheck();
 
-		m_shadowProgram->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
+		//m_shadowProgram->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
 		m_shadowProgram->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
 
-		glDisableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		m_shadowProgram->disableProgram();
 		ErrorCheck();
@@ -144,40 +147,24 @@ namespace render {
 		//RenderBBox(params.m_cameraViewProjectionMatrix);
 
 
-		glBindVertexArray(m_VAO);
 		m_program->useProgram();
-
-		// bind VBOs for vertex array and index array
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-
+		glBindVertexArray(m_VAO);
 
 		glActiveTexture(GL_TEXTURE0);
 		params.m_shadowMap->bind();
 		m_program->SetUniform("shadowMap", 0);
+
 		glActiveTexture(GL_TEXTURE1);
 		if (m_texture) {
 			m_texture->bind();
 			m_program->SetUniform("tex", 1);
 		}
-		//m_program->SetUniform("PSSM_CameraPosition", glm::vec4(Application::Instance().GetCamManager()->GetMainCamera()->getPosition(), 1.0f));
-		m_program->SetUniform("PSSM_CameraViewProjection", Application::Instance().GetCamManager()->GetMainCamera()->getViewProjectionMatrix());
 
-		m_program->SetUniform("PSSM_Limits", params.m_planes);
-		//m_program->SetUniform("CameraPosition", params.m_cameraPosition);
-
-		m_program->SetUniform("toShadowMapSpaceMatrix", params.m_toShadowMapSpaceMatrix);
 		m_program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
 		m_program->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 		m_program->disableProgram();
 		

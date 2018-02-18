@@ -9,20 +9,23 @@
 
 #include "GLW/Texture.h"
 #include "GLW/Framebuffer.h"
-#include <iostream>
-#include <iterator>
 
 #include "ShaderManager.h"
 #include "Camera/ICamera.h"
 #include "CameraManager.h"
 #include "Application.hpp"
+#include "UniformBuffersManager.h"
 
 #include <glm/gtx/string_cast.hpp>
 
 #include "Debug.h"
 
+#include <iostream>
+#include <iterator>
 
-const float gs_shadowMapsize = 2048*2.0f;
+
+const int gs_shadowMapsize = 2048 * 2;
+const int StudentRenderer::gs_splits = 4;
 
 //=================================================================================
 // StudentRenderer
@@ -57,7 +60,9 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 
-	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, gs_shadowMapsize, 4);
+	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, gs_shadowMapsize, gs_splits);
+	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO<gs_splits>>("PSSM");	ErrorCheck();
+	m_PSSSMUBO->m_splits = gs_splits;
 
 	if (!initFBO()) {
 		return false;
@@ -114,8 +119,22 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	m_CSM->RecalcAll();
+	m_PSSSMUBO->m_cameraViewProjection = Application::Instance().GetCamManager()->GetMainCamera()->getViewProjectionMatrix();
+	auto splits = m_CSM->GetPlanes();
+	m_PSSSMUBO->m_splitPlanes = splits;
+	glm::mat4 CSMviewProjection = m_CSM->GetViewProjection();
+
+	for (unsigned int i = 0; i < m_CSM->GetNumLevels(); ++i) {
+		const auto& splitInfo = m_CSM->GetSplitInfo(i);
+		m_PSSSMUBO->m_lightViewProjections[i] = splitInfo.m_cropMat * CSMviewProjection;
+	}
+	m_PSSSMUBO->UploadData();
 	renderToFBO(camera.getViewProjectionMatrix());
-	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Render pass");
+
+
+	RenderDoc::C_DebugScope scope("Render pass");
+
+	m_PSSSMUBO->Activate();
 
 	glViewport(0, 0, m_screenWidht, m_screenHeight);
 
@@ -125,14 +144,17 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
 	params.m_toShadowMapSpaceMatrix = ScreenToTextureCoord()*m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
-	params.m_planes = m_CSM->GetPlanes();
+	params.m_planes = splits;
 
 	m_renderScene->Render(params);
-	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 10, "DebugDraw");
-	m_CSM->DebugDrawAABBs(camera.getViewProjectionMatrix());
-	Application::Instance().GetCamManager()->DebugDraw();
-	glPopDebugGroup();
-	glPopDebugGroup();
+	ErrorCheck();
+	m_PSSSMUBO->Activate(false);
+
+	{
+		RenderDoc::C_DebugScope scope("DebugDraw");
+		m_CSM->DebugDrawAABBs(camera.getViewProjectionMatrix());
+		Application::Instance().GetCamManager()->DebugDraw();
+	}
 }
 
 //=================================================================================
@@ -141,71 +163,45 @@ void StudentRenderer::clearStudentData()
 	m_framebuffer.reset();
 	m_scene.reset();
 	m_CSM.reset();
+	m_PSSSMUBO.reset();
 	m_renderScene.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
 	std::cout << C_ShaderManager::Instance().ShadersStatistics();
-	ErrorCheck();
+	C_UniformBuffersManager::Instance().Clear();
+	DestructorFullCheck();
 }
 
 //=================================================================================
 void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const
 {
-	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, 12, "Shadow pass");
-	for (unsigned int i = 0; i < m_CSM->GetNumLevels(); ++i) {
-		std::stringstream ss;
-		ss << "Cascade level: " << i;
-		std::string s = ss.str();
-		const auto& splitInfo = m_CSM->GetSplitInfo(i);
-		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(s.length()), s.c_str());
+	RenderDoc::C_DebugScope scope("Shadow pass");
 
-
-		m_framebuffer->Bind();
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-		glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
-		glDrawBuffer(GL_NONE);
-
-
-		render::S_RenderParams params;
-
-		params.m_cameraViewProjectionMatrix = splitInfo.m_cropMat * m_CSM->GetViewProjection();
-		params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
-
-		m_renderScene->Render(params);
-
-		m_framebuffer->Unbind();
-		glDrawBuffer(GL_BACK);
-		glPopDebugGroup();
-	}
-
-
-	m_framebuffer->Bind();
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
+	m_framebuffer->Bind(); 
+	m_PSSSMUBO->Activate();
 	glDrawBuffer(GL_NONE);
 
 
-	render::S_RenderParams params;
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
 
-	params.m_cameraViewProjectionMatrix = m_CSM->GetViewProjection();
+	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
 
 	m_renderScene->Render(params);
+	ErrorCheck();
+	
 
 	m_framebuffer->Unbind();
+	m_PSSSMUBO->Activate(false);
+
 	glDrawBuffer(GL_BACK);
-	glPopDebugGroup();
 }
 
 //=================================================================================
 bool StudentRenderer::initFBO()
 {
-	ErrorCheck();
-	//static const int textureWidth = 1024;
-	//static const int textureHeight = 1024;
-
 	m_framebuffer = std::make_shared<GLW::C_Framebuffer>();
 
 	auto depthTexture = std::make_shared<GLW::C_Texture>("depthTexture", GL_TEXTURE_2D_ARRAY);

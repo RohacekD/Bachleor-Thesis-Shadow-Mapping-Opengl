@@ -153,6 +153,15 @@
     <ClCompile Include="..\src\GLW\Buffers\UniformBuffer.cpp">
       <Filter>Source Files\GLW\Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\UniformBuffersManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PSSMUBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RenderDocTools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -262,6 +271,15 @@
     </ClInclude>
     <ClInclude Include="..\src\GLW\Buffers\GLBuffer.h">
       <Filter>Header Files\GLW\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\UniformBuffersManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PSSMUBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RenderDocTools.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

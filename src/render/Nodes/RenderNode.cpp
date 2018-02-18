@@ -19,9 +19,7 @@ namespace render {
 	{
 	}
 
-
 	//=================================================================================
-
 	inline I_RenderNode::I_RenderNode(const glm::vec3 & pos, const glm::vec3 & rot)
 		: m_position(pos)
 		, m_rotation(rot)

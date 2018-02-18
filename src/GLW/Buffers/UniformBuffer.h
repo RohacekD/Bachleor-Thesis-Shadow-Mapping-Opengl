@@ -9,10 +9,21 @@
 namespace GLW {
 	class C_UniformBuffer : public C_GLBuffer<GL_UNIFORM_BUFFER> {
 	public:
-		C_UniformBuffer(const std::string& blockName);
+		C_UniformBuffer(const std::string& blockName, unsigned int index);
 		virtual ~C_UniformBuffer();
+
+		virtual void bind() const override;
+
+		virtual void UploadData() const = 0;
+
+		void Activate(bool activate = true);
+		inline bool IsActive() const { return m_active; }
+
+		const std::string& GetBlockName() const { return m_blockName; }
+		int GetBinding() const { return m_index; }
 	private:
-		GLuint m_location;
+		GLuint m_index;
 		std::string m_blockName;
+		bool m_active;
 	};
 }

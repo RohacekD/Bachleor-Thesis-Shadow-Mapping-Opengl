@@ -13,7 +13,7 @@
 #include <sstream>
 
 //=================================================================================
-C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, float resolution, int levels, float m_lambda /*= 0.5f*/) 
+C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, int resolution, int levels, float m_lambda /*= 0.5f*/) 
 	: m_resolution(resolution)
 	, m_levels(levels)
 	, m_lambda(m_lambda)
@@ -67,12 +67,8 @@ void C_ShadowMapCascade::DebugDrawAABBs(const glm::mat4& projectionMatrix) const
 {
 	int i = 0;
 	for (const auto & aabb : m_bboxes) {
-		std::stringstream ss;
-		ss << "Cascade level: " << i;
-		std::string s = ss.str();
-		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(s.length()), s.c_str());
+		RenderDoc::C_DebugScope scope("Cascade level: " + i);
 		C_DebugDraw::Instance().DrawAABB(aabb, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
-		glPopDebugGroup();
 		++i;
 	}
 }

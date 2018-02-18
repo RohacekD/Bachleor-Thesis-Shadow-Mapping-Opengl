@@ -34,6 +34,7 @@ namespace GLW {
 		ErrorCheck();
 		// switch back to window-system-provided framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		ErrorCheck();
 	}
 
 	//=================================================================================

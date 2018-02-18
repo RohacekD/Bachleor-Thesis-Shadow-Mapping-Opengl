@@ -10,5 +10,5 @@ uniform mat4 modelMatrix;
 
 void main()
 {
-    gl_Position = projectionMatrix * modelMatrix * vertex;
+    gl_Position = modelMatrix * vertex;
 }

@@ -98,4 +98,18 @@ namespace GLW {
 	{
 		glUniform1f(FindLocation(name), static_cast<GLfloat>(value));
 	}
+
+	//=================================================================================
+	template<>
+	int C_ShaderProgram::FindUniformBlockLocation(const std::string& name) const
+	{
+		return glGetUniformBlockIndex(m_Program, name.c_str());
+	}
+
+	//=================================================================================
+	template<>
+	int C_ShaderProgram::FindUniformBlockLocation(const char* name) const
+	{
+		return glGetUniformBlockIndex(m_Program, name);
+	}
 }

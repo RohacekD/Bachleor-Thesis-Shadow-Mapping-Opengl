@@ -28,10 +28,13 @@ std::shared_ptr<I_Camera> C_CameraManager::GetMainCamera() const {
 	return m_mainCamera;
 }
 
+//=================================================================================
 void C_CameraManager::SetMainCamera(std::shared_ptr<I_Camera> camera) { m_mainCamera = camera; }
 
+//=================================================================================
 void C_CameraManager::SetDebugCamera(std::shared_ptr<I_Camera> camera) { m_debugCamera = camera; }
 
+//=================================================================================
 void C_CameraManager::DebugDraw() const
 {
 	m_debugCamera->debugDraw();
