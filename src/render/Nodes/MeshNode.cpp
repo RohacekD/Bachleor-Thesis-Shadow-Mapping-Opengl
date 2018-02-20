@@ -25,12 +25,10 @@ namespace render {
 	C_MeshNode::C_MeshNode()
 	{
 		glGenVertexArrays(1, &m_VAO);
-		glBindVertexArray(m_VAO);
 
 		glGenBuffers(1, &m_VBOs[0]);
 		glGenBuffers(1, &m_VBOs[1]);
 		glGenBuffers(1, &m_VBOs[2]);
-		glBindVertexArray(0);
 	}
 
 	//=================================================================================
