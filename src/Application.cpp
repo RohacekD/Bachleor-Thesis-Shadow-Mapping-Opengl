@@ -1,5 +1,8 @@
-#include "Application.hpp"
-
+﻿#include "Application.hpp"
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl_gl3.h>
+#include "Debug.h"
+#include "DebugCallbacks.h"
 
 //=================================================================================
 Application::Application()
@@ -15,6 +18,15 @@ bool Application::Init()
 
     if (!initGlew())
         return false;
+
+	glDebugMessageCallback(debugFunc, nullptr);
+
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	ImGui_ImplSdlGL3_Init(_window);
+
+	ImGui::StyleColorsDark();
 
 	m_cameraManager = std::make_shared<C_CameraManager>();
 	_scene = std::make_shared<Scene>();
@@ -32,7 +44,7 @@ bool Application::initWindow()
         return false;
     }
 
-    _window = SDL_CreateWindow("PGRe Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    _window = SDL_CreateWindow("Shadows", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     if(_window == nullptr)
     {
         std::cerr << "Failed to create SDL window!\n";
@@ -42,7 +54,7 @@ bool Application::initWindow()
     //Set OpenGL version to 4.4, core profile
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #ifdef _DEBUG
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 #endif
@@ -201,6 +213,7 @@ bool Application::Run()
 
     while (!quit)
 	{
+
 		auto renderCamera = GetCamManager()->GetActiveCamera();
 		auto controledCamera = renderCamera;
 		if (m_controlMainCam) {
@@ -208,7 +221,8 @@ bool Application::Run()
 		}
 		
         while (SDL_PollEvent(&e) != 0)
-        {
+		{
+			ImGui_ImplSdlGL3_ProcessEvent(&e);
 			controledCamera->Input(e);
             switch (e.type)
             {
@@ -246,17 +260,40 @@ bool Application::Run()
             default:
                 break;
             }
-        }
+		}
+		ErrorCheck();
+		ImGui_ImplSdlGL3_NewFrame(_window);
+		ErrorCheck();
+
+		{
+			ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+			static float f = 0.0f;
+			static int counter = 0;
+			ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
+			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+		}
+		ErrorCheck();
+
 		renderCamera->update();
 		if(renderCamera!=controledCamera)
 			controledCamera->update();
         _renderer.onUpdate(float(_timer.getElapsedTimeFromLastQueryMilliseconds()));
 
         _renderer.onWindowRedraw(*(renderCamera.get()), renderCamera->getPosition());
-
+		{
+			glUseProgram(0);
+			RenderDoc::C_DebugScope a("imGUI-render");
+			ImGui::Render();
+			ErrorCheck();
+			ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
+			ErrorCheck();
+		}
+		ErrorCheck();
         SDL_GL_SwapWindow(_window);
     }
 
+	ImGui_ImplSdlGL3_Shutdown();
     Clear();
 
     return true;
