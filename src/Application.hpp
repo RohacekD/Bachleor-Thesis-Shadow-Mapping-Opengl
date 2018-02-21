@@ -78,6 +78,15 @@ public:
 private:
 	Application();
 
+	struct {
+		bool m_active;
+		bool m_controlScene;
+		bool m_controlMainCam;
+		bool m_useMainCam;
+	} m_controlPanel;
+
+	void ShowGUI();
+
 	void _splitPathToFilenameAndDirectory(const std::string& path, std::string& directoryPath, std::string& fileName);
 
     //SDL window and OpenGL context

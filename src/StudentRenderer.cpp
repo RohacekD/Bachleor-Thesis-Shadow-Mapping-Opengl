@@ -16,6 +16,8 @@
 #include "Application.hpp"
 #include "UniformBuffersManager.h"
 
+#include "imgui/imgui.h"
+
 #include <glm/gtx/string_cast.hpp>
 
 #include "Debug.h"
@@ -115,6 +117,7 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
+	ShowGUI();
 	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -218,6 +221,17 @@ bool StudentRenderer::initFBO()
 	m_framebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, depthTexture);
 
 	return true;
+}
+
+//=================================================================================
+void StudentRenderer::ShowGUI()
+{
+	ImGui::Begin("Settings", &m_ControlPanel.m_active);
+	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
+	ImGui::SliderInt("Splits", &m_ControlPanel.m_lambda, 1, 6);
+	ImGui::End();
+
+	m_CSM->SetLambda(m_ControlPanel.m_lambda);
 }
 
 //=================================================================================

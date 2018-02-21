@@ -31,6 +31,11 @@ bool Application::Init()
 	m_cameraManager = std::make_shared<C_CameraManager>();
 	_scene = std::make_shared<Scene>();
 
+	m_controlPanel.m_active = true;
+	m_controlPanel.m_controlMainCam = false;
+	m_controlPanel.m_controlScene = true;
+	m_controlPanel.m_useMainCam = false;
+
     return true;
 }
 
@@ -160,6 +165,18 @@ bool Application::addModelFileToScene(const char* fileToLoad, std::shared_ptr<Sc
 }
 
 //=================================================================================
+void Application::ShowGUI()
+{
+	// Create a window called "My First Tool", with a menu bar.
+	ImGui::Begin("Controls", &m_controlPanel.m_active);
+	ImGui::Checkbox("Disable Controls", &m_controlPanel.m_controlScene);
+	ImGui::Checkbox("Use main camera", &m_controlPanel.m_useMainCam);
+	ImGui::Checkbox("Control main camera", &m_controlPanel.m_controlMainCam);
+	ImGui::End();
+
+}
+
+//=================================================================================
 void Application::_splitPathToFilenameAndDirectory(const std::string& path, std::string& directoryPath, std::string& fileName)
 {
 	std::size_t found = path.find_last_of("/\\");
@@ -197,11 +214,14 @@ bool Application::Run()
 	GetCamManager()->SetMainCamera(m_camera);
 	GetCamManager()->SetDebugCamera(debugCam);
 
+
 	setupCamera(m_camera);
 	setupCamera(debugCam);
 
 	m_camera->SetFov((60));
 	m_camera->SetFar(m_camera->GetFar() / 3);
+	m_camera->update();
+	debugCam->update();
 
     //Prepare rendering data
     if(!_renderer.init(_scene, SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -216,13 +236,14 @@ bool Application::Run()
 
 		auto renderCamera = GetCamManager()->GetActiveCamera();
 		auto controledCamera = renderCamera;
-		if (m_controlMainCam) {
+		if (m_controlPanel.m_controlMainCam) {
 			controledCamera = GetCamManager()->GetMainCamera();
 		}
 		
         while (SDL_PollEvent(&e) != 0)
 		{
 			ImGui_ImplSdlGL3_ProcessEvent(&e);
+			if(m_controlPanel.m_controlScene) continue;
 			controledCamera->Input(e);
             switch (e.type)
             {
@@ -234,10 +255,10 @@ bool Application::Run()
                 if (e.key.keysym.sym == SDLK_ESCAPE)
 					quit = true;
 				else if (e.key.keysym.sym == SDLK_v) {
-					m_controlMainCam = true;
+					m_controlPanel.m_controlMainCam = true;
 				}
 				else if (e.key.keysym.sym == SDLK_TAB) {
-					GetCamManager()->UseDebugCam(!GetCamManager()->IsUsingDebugCam());
+					m_controlPanel.m_useMainCam = !m_controlPanel.m_useMainCam;
 				}
                 else
                     _renderer.onKeyPressed(e.key.keysym.sym);
@@ -245,7 +266,7 @@ bool Application::Run()
 
 			case SDL_KEYUP:
 				if (e.key.keysym.sym == SDLK_v) {
-					m_controlMainCam = false;
+					m_controlPanel.m_controlMainCam = false;
 				}
 				break;
 
@@ -261,18 +282,8 @@ bool Application::Run()
                 break;
             }
 		}
-		ErrorCheck();
 		ImGui_ImplSdlGL3_NewFrame(_window);
-		ErrorCheck();
-
-		{
-			ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-			static float f = 0.0f;
-			static int counter = 0;
-			ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
-			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-		}
+		GetCamManager()->UseDebugCam(!m_controlPanel.m_useMainCam);
 		ErrorCheck();
 
 		renderCamera->update();
@@ -281,15 +292,14 @@ bool Application::Run()
         _renderer.onUpdate(float(_timer.getElapsedTimeFromLastQueryMilliseconds()));
 
         _renderer.onWindowRedraw(*(renderCamera.get()), renderCamera->getPosition());
+		ShowGUI();
 		{
-			glUseProgram(0);
+			glUseProgram(0);//just to be sure
 			RenderDoc::C_DebugScope a("imGUI-render");
 			ImGui::Render();
-			ErrorCheck();
 			ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
 			ErrorCheck();
 		}
-		ErrorCheck();
         SDL_GL_SwapWindow(_window);
     }
 

@@ -38,6 +38,12 @@ public:
 private:
 	void renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const;
 	bool initFBO();
+	void ShowGUI();
+	struct {
+		bool m_active;
+		float m_lambda;
+		int m_splits;
+	} m_ControlPanel;
 
 	glm::mat4 GetShadowViewMat() const;
 	glm::mat4 GetShadowProjectionMat() const;
