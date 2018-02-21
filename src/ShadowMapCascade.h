@@ -22,7 +22,7 @@ struct S_SplitInfo {
 class C_ShadowMapCascade {
 public:
 	// not sure about near and far...
-	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, int resolution, int levels, float m_lambda = 0.5f);
+	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, unsigned int defaultResolution, unsigned int levels, float m_lambda = 0.5f);
 	~C_ShadowMapCascade();
 
 	unsigned int	GetNumLevels() const { return m_levels; }
@@ -49,7 +49,7 @@ private:
 	void CalcCropMatrices();
 
 	unsigned int									m_levels;
-	int												m_resolution;
+	unsigned int									m_resolution;
 	float											m_lambda;
 	std::shared_ptr<GLW::C_Framebuffer>				m_framebuffer;
 	std::vector<std::shared_ptr<GLW::C_Texture>>	m_depthMaps;

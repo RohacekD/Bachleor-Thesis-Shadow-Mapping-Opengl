@@ -63,7 +63,8 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 
 	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, gs_shadowMapsize, gs_splits);
-	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO<gs_splits>>("PSSM");	ErrorCheck();
+	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO<gs_splits>>("PSSM");	
+	ErrorCheck();
 	m_PSSSMUBO->m_splits = gs_splits;
 
 	if (!initFBO()) {
@@ -228,7 +229,7 @@ void StudentRenderer::ShowGUI()
 {
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
-	ImGui::SliderInt("Splits", &m_ControlPanel.m_lambda, 1, 6);
+	//ImGui::SliderInt("Splits", &m_ControlPanel.m_lambda, 1, 6);
 	ImGui::End();
 
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);

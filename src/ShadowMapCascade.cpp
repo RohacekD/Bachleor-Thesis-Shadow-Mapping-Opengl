@@ -13,8 +13,8 @@
 #include <sstream>
 
 //=================================================================================
-C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, int resolution, int levels, float m_lambda /*= 0.5f*/) 
-	: m_resolution(resolution)
+C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, unsigned int defaultResolution, unsigned int levels, float m_lambda /*= 0.5f*/) 
+	: m_resolution(defaultResolution)
 	, m_levels(levels)
 	, m_lambda(m_lambda)
 	, m_lighInfo(lightInfo)

@@ -96,8 +96,6 @@ private:
     //Timer
     HighResolutionTimer  _timer;
 
-	bool m_controlMainCam;
-
 	std::shared_ptr<C_CameraManager>		m_cameraManager;
 
 	std::shared_ptr<T_Camera> m_camera;

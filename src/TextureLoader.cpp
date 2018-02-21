@@ -16,12 +16,14 @@ bool TextureLoader::loadTexture(const char* path, Texture& t)
     ILuint image;
     ilGenImages(1, &image);
     ilBindImage(image);
-
+#pragma warning(push)  
+#pragma warning(disable : 4996) // I trust Ing. Kobrtek's code
     wchar_t* wpath = new wchar_t[strlen(path)+1];
     std::mbstowcs(wpath, path, strlen(path));
     wpath[strlen(path)] = 0;
     ilLoadImage(wpath);
-    delete[] wpath;
+	delete[] wpath;
+#pragma warning(pop) // but not mine code!
 
     ILenum Error;
     Error = ilGetError();

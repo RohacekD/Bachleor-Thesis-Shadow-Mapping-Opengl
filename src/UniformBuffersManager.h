@@ -33,7 +33,7 @@ private:
 template<class T>
 std::shared_ptr<T> C_UniformBuffersManager::CreateUniformBuffer(const std::string& name)
 {
-	auto ubo = std::make_shared<T>(name, m_UBOs.size());
+	auto ubo = std::make_shared<T>(name, static_cast<unsigned int>(m_UBOs.size()));
 	m_UBOs.push_back(ubo);
 
 	return ubo;
