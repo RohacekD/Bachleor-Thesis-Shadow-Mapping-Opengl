@@ -8,6 +8,9 @@
 #include "CameraManager.h"
 #include "Camera/ICamera.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 #include <iostream>
 #include <algorithm>
 #include <sstream>
@@ -93,39 +96,53 @@ void C_ShadowMapCascade::CalcSplitPlanes()
 //=================================================================================
 void C_ShadowMapCascade::CalcCropMatrices()
 {
+	using namespace glm;
+	const static float nearPlane = 0.0f;
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	auto projectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
 	C_Frustum frust = camera->getFrustum();
-	frust.UpdateWithMatrix(m_lighInfo->GetViewMatrix());
+	glm::mat4 lightViewMatrix = m_lighInfo->GetViewMatrix();
+	frust.UpdateWithMatrix(lightViewMatrix);
 	frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
 	m_splitInfos = std::vector<S_SplitInfo>();
 	m_splitInfos.resize(m_levels);
+
+	glm::mat4 rotation = glm::mat4_cast(m_lighInfo->GetRotation());
 	for (unsigned int i = 0; i < m_levels; ++i) {
 		frust.SetNear(m_splitingPlanes[i]);
 		frust.SetFar(m_splitingPlanes[i+1]);
 		AABB subFrustBBox = frust.GetAABB();
-
-
 		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
-		//here was z but IMHO y is correct
-		subFrustBBox.minPoint.z = 0.0f;
-		// Create the crop matrix
-		float scaleX, scaleY, scaleZ;
-		float offsetX, offsetY, offsetZ;
-		scaleX = 2.0f / (subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x);
-		scaleY = 2.0f / (subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y);
-		offsetX = -0.5f * (subFrustBBox.maxPoint.x + subFrustBBox.minPoint.x) * scaleX;
-		offsetY = -0.5f * (subFrustBBox.maxPoint.y + subFrustBBox.minPoint.y) * scaleY;
-		scaleZ = 1.0f / (subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z);
-		offsetZ = -subFrustBBox.minPoint.z * scaleZ;
 
-		m_splitInfos[i].m_cropMat = glm::mat4
-		   (scaleX,	0.0f,	0.0f,	offsetX,
-			0.0f,	scaleY, 0.0f,	offsetY,
-			0.0f,	0.0f,	scaleZ, offsetZ,
-			0.0f,	0.0f,	0.0f,	1.0f);
+		float width = subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y;
+		float height = subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x;
+		glm::mat4 lightProjectionMatrix = glm::ortho(-height / 2.0f,
+			height / 2.0f,
+			width / 2.0f,
+			-width / 2.0f,
+			nearPlane,
+			nearPlane + subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z);
 
-		//frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
-		//C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
+		vec4 normal = m_lighInfo->GetNormal();
+
+		vec3 center = (subFrustBBox.maxPoint + subFrustBBox.minPoint) / 2.0f;
+
+		vec3 midPointOnBottom = vec3(center.x, center.y, subFrustBBox.maxPoint.z - nearPlane);
+
+		vec4 eye(inverse(lightViewMatrix) * vec4(midPointOnBottom, 1.0f));
+
+		glm::vec4 up(inverse(lightViewMatrix) * vec4(center.x, subFrustBBox.maxPoint.y - nearPlane, center.z - 1.0f, 1.0f));
+
+		up = normalize(up);
+
+
+		glm::mat4 lightViewMatrix = lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
+
+		C_DebugDraw::Instance().DrawPoint(eye, projectionMatrix, glm::vec3(1, 0, 0));
+		C_DebugDraw::Instance().DrawPoint(eye + normal, projectionMatrix, glm::vec3(0, 0, 0));
+		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(0.0f));
+		
+
+		m_splitInfos[i].m_lightViewProjectionMatrix = lightProjectionMatrix * lightViewMatrix;
 	}
 }

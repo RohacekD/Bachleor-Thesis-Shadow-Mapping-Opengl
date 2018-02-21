@@ -95,8 +95,8 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 {
 	using namespace glm;
 	AABB camerasAABB = m_camera->GetAABB();
-	vec4 normal = normalize(vec4((m_direciton - m_origin), 1.0f));
-	quat q(vec3(normal), vec3(0, 0, 1));
+	vec4 normal = GetNormal();
+	quat q = GetRotation();
 	mat4 rotation = mat4(1.0f) * mat4_cast(normalize(q));
 
 	AABB transformedAABB = camerasAABB.getTransformedAABB(rotation);
@@ -130,4 +130,20 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 	//C_DebugDraw::Instance().DrawAABB(camerasAABB, viewProjectionMatrix, glm::vec3(0, 0, 0));
 
 	return lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
+}
+
+//=================================================================================
+glm::quat C_DirectionalLight::GetRotation() const
+{
+	using namespace glm;
+	vec4 normal = GetNormal();
+	quat q(vec3(normal), vec3(0, 0, 1));
+	return q;
+}
+
+//=================================================================================
+glm::vec4 C_DirectionalLight::GetNormal() const
+{
+	using namespace glm;
+	return normalize(vec4((m_direciton - m_origin), 1.0f));
 }

@@ -19,6 +19,10 @@ public:
 	virtual glm::mat4 GetViewProjectionMatrix() const = 0;
 	virtual glm::mat4 GetViewMatrix() const = 0;
 
+	//this is here just for now, because I am going to skip idea about perspective light
+	virtual glm::quat GetRotation() const = 0;
+	virtual glm::vec4 GetNormal() const = 0;
+
 
 	virtual glm::vec3 GetColor() const = 0;
 	virtual float	  GetPower() const = 0;
@@ -43,6 +47,12 @@ public:
 	virtual glm::mat4	GetProjectionMatrix() const override;
 
 	virtual glm::mat4	GetViewMatrix() const override;
+
+
+	virtual glm::quat GetRotation() const override;
+
+
+	virtual glm::vec4 GetNormal() const override;
 
 private:
 	float		m_power;

@@ -130,7 +130,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 
 	for (unsigned int i = 0; i < m_CSM->GetNumLevels(); ++i) {
 		const auto& splitInfo = m_CSM->GetSplitInfo(i);
-		m_PSSSMUBO->m_lightViewProjections[i] = splitInfo.m_cropMat * CSMviewProjection;
+		m_PSSSMUBO->m_lightViewProjections[i] = splitInfo.m_lightViewProjectionMatrix;
 	}
 	m_PSSSMUBO->UploadData();
 	renderToFBO(camera.getViewProjectionMatrix());
@@ -183,7 +183,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 
 	m_framebuffer->Bind(); 
 	m_PSSSMUBO->Activate();
-	glDrawBuffer(GL_NONE);
+	//glDrawBuffer(GL_NONE);
 
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -200,7 +200,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	m_framebuffer->Unbind();
 	m_PSSSMUBO->Activate(false);
 
-	glDrawBuffer(GL_BACK);
+	//glDrawBuffer(GL_BACK);
 }
 
 //=================================================================================
@@ -220,6 +220,19 @@ bool StudentRenderer::initFBO()
 	depthTexture->EndGroupOp();
 
 	m_framebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, depthTexture);
+
+	auto colorTexture = std::make_shared<GLW::C_Texture>("colorTexture", GL_TEXTURE_2D_ARRAY);
+	colorTexture->StartGroupOp();
+	glTexStorage3D(colorTexture->GetTarget(), 1, GL_RGBA32F, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
+
+	ErrorCheck();
+	colorTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	colorTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	ErrorCheck();
+
+	colorTexture->EndGroupOp();
+
+	m_framebuffer->AttachTexture(GL_COLOR_ATTACHMENT0, colorTexture);
 
 	return true;
 }

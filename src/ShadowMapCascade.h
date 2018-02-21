@@ -17,6 +17,7 @@ class C_LightInfo;
 struct S_SplitInfo {
 	double m_depth;
 	glm::mat4 m_cropMat;
+	glm::mat4 m_lightViewProjectionMatrix;
 };
 
 class C_ShadowMapCascade {
