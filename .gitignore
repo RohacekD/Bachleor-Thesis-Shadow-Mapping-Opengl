@@ -42,6 +42,9 @@ bin/models/sopwith/sopwith.mtl
 Computer Graphics Project/Computer Graphics Project.vcxproj
 *.opendb
 *.suo
+*/.suo
 *.db
 *.suo
 .vs/Computer Graphics Project/v14/.suo
+*.db
+Computer Graphics Project.VC.db
