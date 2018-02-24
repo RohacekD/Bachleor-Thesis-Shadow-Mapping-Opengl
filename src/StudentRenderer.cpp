@@ -58,18 +58,16 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	m_avg = 0.0f;
 	m_frameID = 0;
 
-
+	// I should pass camera just to CSM
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 
-	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, gs_shadowMapsize, gs_splits);
-	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO<gs_splits>>("PSSM");	
-	ErrorCheck();
-	m_PSSSMUBO->m_splits = gs_splits;
+	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits);
 
 	if (!initFBO()) {
 		return false;
 	}
+	glEnable(GL_CULL_FACE);
 
 	std::cout << C_ShaderManager::Instance().ShadersStatistics();
 
@@ -84,6 +82,8 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
+
+	m_CSM->Update();
 }
 
 //=================================================================================
@@ -122,37 +122,24 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-	m_CSM->RecalcAll();
-	m_PSSSMUBO->m_cameraViewProjection = Application::Instance().GetCamManager()->GetMainCamera()->getViewProjectionMatrix();
-	auto splits = m_CSM->GetPlanes();
-	m_PSSSMUBO->m_splitPlanes = splits;
-	glm::mat4 CSMviewProjection = m_CSM->GetViewProjection();
-
-	for (unsigned int i = 0; i < m_CSM->GetNumLevels(); ++i) {
-		const auto& splitInfo = m_CSM->GetSplitInfo(i);
-		m_PSSSMUBO->m_lightViewProjections[i] = splitInfo.m_lightViewProjectionMatrix;
-	}
-	m_PSSSMUBO->UploadData();
 	renderToFBO(camera.getViewProjectionMatrix());
 
 
 	RenderDoc::C_DebugScope scope("Render pass");
 
-	m_PSSSMUBO->Activate();
+	m_CSM->ActivateUBO();
 
 	glViewport(0, 0, m_screenWidht, m_screenHeight);
 
 	render::S_RenderParams params;
 	params.m_cameraViewProjectionMatrix = camera.getViewProjectionMatrix();
-	params.m_cameraPosition = Application::Instance().GetCamManager()->GetMainCamera()->getPosition();
+	params.m_cameraPosition = m_CSM->GetBoundCamera()->getPosition();
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
-	params.m_toShadowMapSpaceMatrix = ScreenToTextureCoord()*m_CSM->GetViewProjection();
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
-	params.m_planes = splits;
 
 	m_renderScene->Render(params);
 	ErrorCheck();
-	m_PSSSMUBO->Activate(false);
+	m_CSM->ActivateUBO(false);
 
 	{
 		RenderDoc::C_DebugScope scope("DebugDraw");
@@ -167,7 +154,6 @@ void StudentRenderer::clearStudentData()
 	m_framebuffer.reset();
 	m_scene.reset();
 	m_CSM.reset();
-	m_PSSSMUBO.reset();
 	m_renderScene.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
@@ -181,9 +167,11 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 {
 	RenderDoc::C_DebugScope scope("Shadow pass");
 
-	m_framebuffer->Bind(); 
-	m_PSSSMUBO->Activate();
-	//glDrawBuffer(GL_NONE);
+	m_framebuffer->Bind();
+	m_CSM->ActivateUBO();
+#ifdef FBO_COLOR
+	glDrawBuffer(GL_NONE);
+#endif
 
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -193,14 +181,17 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
 
+	glCullFace(GL_FRONT);
 	m_renderScene->Render(params);
+	glCullFace(GL_BACK);
 	ErrorCheck();
 	
 
 	m_framebuffer->Unbind();
-	m_PSSSMUBO->Activate(false);
-
-	//glDrawBuffer(GL_BACK);
+	m_CSM->ActivateUBO(false);
+#ifdef FBO_COLOR
+	glDrawBuffer(GL_BACK);
+#endif
 }
 
 //=================================================================================
@@ -213,14 +204,17 @@ bool StudentRenderer::initFBO()
 	glTexStorage3D(depthTexture->GetTarget(), 1, GL_DEPTH_COMPONENT32, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
 
 	ErrorCheck();
-	depthTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	depthTexture->setWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
 	depthTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	glm::vec4 borderColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(borderColor));
 	ErrorCheck();
 
 	depthTexture->EndGroupOp();
 
 	m_framebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, depthTexture);
 
+#ifdef FBO_COLOR
 	auto colorTexture = std::make_shared<GLW::C_Texture>("colorTexture", GL_TEXTURE_2D_ARRAY);
 	colorTexture->StartGroupOp();
 	glTexStorage3D(colorTexture->GetTarget(), 1, GL_RGBA32F, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
@@ -233,7 +227,7 @@ bool StudentRenderer::initFBO()
 	colorTexture->EndGroupOp();
 
 	m_framebuffer->AttachTexture(GL_COLOR_ATTACHMENT0, colorTexture);
-
+#endif
 	return true;
 }
 

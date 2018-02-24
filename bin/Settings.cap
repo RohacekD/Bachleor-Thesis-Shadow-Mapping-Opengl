@@ -11,7 +11,7 @@
     <HookIntoChildren>false</HookIntoChildren>
     <RefAllResources>false</RefAllResources>
     <SaveAllInitials>false</SaveAllInitials>
-    <CaptureAllCmdLists>true</CaptureAllCmdLists>
+    <CaptureAllCmdLists>false</CaptureAllCmdLists>
     <DebugOutputMute>true</DebugOutputMute>
   </Options>
   <Inject>false</Inject>

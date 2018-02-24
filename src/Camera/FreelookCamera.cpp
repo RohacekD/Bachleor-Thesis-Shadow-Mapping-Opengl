@@ -12,7 +12,7 @@
 //=================================================================================
 FreelookCamera::FreelookCamera()
 {
-    _cameraMovementSpeed = 5;
+    _cameraMovementSpeed = 1;
     _yaw = _pitch = 0;
     _flags = 0;
 	m_rotation = glm::quat();

@@ -14,7 +14,6 @@ namespace render {
 		};
 		glm::mat4 m_cameraViewProjectionMatrix;
 		glm::vec3 m_cameraPosition;
-		glm::mat4 m_toShadowMapSpaceMatrix;
 		std::shared_ptr<GLW::C_Texture> m_shadowMap;
 		E_PassType m_pass;
 		std::vector<float>	m_planes;

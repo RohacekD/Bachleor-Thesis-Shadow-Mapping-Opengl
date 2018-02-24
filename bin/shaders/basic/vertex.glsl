@@ -7,9 +7,15 @@ attribute vec3 normal;
 attribute vec2 texCoord;
 
 //per frame
-//uniform mat4 toShadowMapSpaceMatrix;
 uniform mat4 projectionMatrix;
 uniform vec4 CameraPosition;
+
+//per model
+uniform mat4 modelMatrix;
+
+
+//=================================================================================
+out vec4 PSSM_CameraDependentPos;
 
 uniform PSSM{
 	float[PSSM_SPLITS] PSSM_Limits;
@@ -17,25 +23,19 @@ uniform PSSM{
 	mat4[PSSM_SPLITS] m_LightViewProjection;
 } pssm;
 
-//per model
-uniform mat4 modelMatrix;
-
-
-out vec4 PSSM_CameraDependentPos;
-
 out vec3 normalOUT;
 out vec4 lightOUT;
 out vec4 toLight;
 out vec2 texCoordOUT;
 out vec4 worldCoord;
-//out vec4 shadowCoords;
-//out float[PSSM_SPLITS] limits;
 out vec4 camPosition;
 
+
+//=================================================================================
 void main()
 {
 	normalOUT = normal;
-	camPosition = CameraPosition;
+	camPosition = pssm.PSSM_CameraViewProjection * CameraPosition;
 	texCoordOUT = texCoord;
 
 	//to light should be counted from world space

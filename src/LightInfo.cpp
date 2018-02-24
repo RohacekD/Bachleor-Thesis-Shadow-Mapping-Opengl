@@ -87,7 +87,7 @@ glm::mat4 C_DirectionalLight::GetProjectionMatrix() const
 						width /2.0f,
 					   -width / 2.0f,
 						s_near, 
-						s_near + transformedAABB.maxPoint.y - transformedAABB.minPoint.y);
+						s_near + transformedAABB.maxPoint.z - transformedAABB.minPoint.z);
 }
 
 //=================================================================================
@@ -103,13 +103,13 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 
 	vec3 center = (transformedAABB.maxPoint + transformedAABB.minPoint) / 2.0f;
 	
-	vec3 midPointOnBottom = vec3(center.x, center.y, transformedAABB.minPoint.z - s_near);
+	vec3 midPointOnBottom = vec3(center.x, center.y, transformedAABB.maxPoint.z - s_near);
 
 	vec4 eye(inverse(rotation) * vec4(midPointOnBottom, 1.0f));
 
 	//vec4 foreward(inverse(rotation) * vec4(center.x, transformedAABB.minPoint.y - s_near + 1.0f, center.z, 1.0f));
 
-	vec4 up(inverse(rotation) * vec4(center.x, transformedAABB.minPoint.y - s_near, center.z - 1.0f, 1.0f));
+	vec4 up(inverse(rotation) * vec4(center.x, transformedAABB.maxPoint.y - s_near, center.z - 1.0f, 1.0f));
 
 	up = normalize(up);
 

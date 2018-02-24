@@ -287,8 +287,7 @@ bool Application::Run()
 		ErrorCheck();
 
 		renderCamera->update();
-		if(renderCamera!=controledCamera)
-			controledCamera->update();
+		m_camera->update();
         _renderer.onUpdate(float(_timer.getElapsedTimeFromLastQueryMilliseconds()));
 
         _renderer.onWindowRedraw(*(renderCamera.get()), renderCamera->getPosition());

@@ -126,9 +126,7 @@ namespace render {
 		m_shadowProgram->useProgram();
 
 		glBindVertexArray(m_VAO);
-		ErrorCheck();
 
-		//m_shadowProgram->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
 		m_shadowProgram->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
@@ -136,7 +134,6 @@ namespace render {
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		m_shadowProgram->disableProgram();
-		ErrorCheck();
 	}
 
 	//=================================================================================
