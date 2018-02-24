@@ -62,15 +62,10 @@ void C_ShadowMapCascade::Update()
 	};
 
 	RecalcAll();
-	auto splits = GetPlanes();
 
-
-	for (auto& split : splits) {
-		split = func(split, m_boundCamera->GetNear(), m_boundCamera->GetFar(), 0.0f, m_boundCamera->GetFar());
-	}
-
-	m_PSSSMUBO->m_splitPlanes = splits;
-	m_PSSSMUBO->m_cameraViewProjection = m_boundCamera->getViewProjectionMatrix();
+	m_PSSSMUBO->m_splitPlanes = GetPlanes();
+	m_PSSSMUBO->m_cameraView = m_boundCamera->getViewMatrix();
+	m_PSSSMUBO->m_cameraProjection = m_boundCamera->getProjectionMatrix();
 	for (unsigned int i = 0; i < GetNumLevels(); ++i) {
 		const auto& splitInfo = GetSplitInfo(i);
 		m_PSSSMUBO->m_lightViewProjections[i] = splitInfo.m_lightViewProjectionMatrix;//splitInfo.m_cropMat * CSMviewProjection

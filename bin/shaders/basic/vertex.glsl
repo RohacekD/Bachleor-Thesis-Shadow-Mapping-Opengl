@@ -19,10 +19,12 @@ out vec4 PSSM_CameraDependentPos;
 
 uniform PSSM{
 	float[PSSM_SPLITS] PSSM_Limits;
-	mat4 PSSM_CameraViewProjection;
+	mat4 PSSM_CameraView;
+	mat4 PSSM_CameraProjection;
 	mat4[PSSM_SPLITS] m_LightViewProjection;
 } pssm;
 
+//=================================================================================
 out vec3 normalOUT;
 out vec4 lightOUT;
 out vec4 toLight;
@@ -35,7 +37,7 @@ out vec4 camPosition;
 void main()
 {
 	normalOUT = normal;
-	camPosition = pssm.PSSM_CameraViewProjection * CameraPosition;
+	camPosition = pssm.PSSM_CameraView * CameraPosition;
 	texCoordOUT = texCoord;
 
 	//to light should be counted from world space
@@ -45,5 +47,5 @@ void main()
 	worldCoord = modelMatrix * vertex;
 
     gl_Position = projectionMatrix * worldCoord; //tohle je reálná hloubka
-    PSSM_CameraDependentPos = pssm.PSSM_CameraViewProjection * worldCoord; //tohle je na odvozeni hloubek
+    PSSM_CameraDependentPos = pssm.PSSM_CameraView * worldCoord; //tohle je na odvozeni hloubek
 }

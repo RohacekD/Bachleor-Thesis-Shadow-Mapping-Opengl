@@ -16,7 +16,8 @@ public:
 	C_PSSMUBO(const std::string& blockName, unsigned int index);
 
 	unsigned int m_splits;
-	glm::mat4 m_cameraViewProjection; // view projection of bound camera
+	glm::mat4 m_cameraView; // view projection of bound camera
+	glm::mat4 m_cameraProjection;
 	std::vector<float> m_splitPlanes;
 	std::array<glm::mat4, SPLITS> m_lightViewProjections;
 
@@ -33,7 +34,7 @@ C_PSSMUBO<SPLITS>::C_PSSMUBO(const std::string& blockName, unsigned int index)
 	const auto matSize = sizeof(glm::mat4);
 	const auto splitPlanesSize = sizeof(float) * SPLITS;
 
-	const auto bytes = matSize + splitPlanesSize + matSize * SPLITS;
+	const auto bytes = 2*matSize + splitPlanesSize + matSize * SPLITS;
 
 	ErrorCheck();
 	GLW::C_UniformBuffer::bind();
@@ -52,8 +53,9 @@ void C_PSSMUBO<SPLITS>::UploadData() const
 	const auto splitPlanesSize = sizeof(float);
 
 	memcpy(data, m_splitPlanes.data(), splitPlanesSize * m_splits);
-	memcpy(data + splitPlanesSize * m_splits, glm::value_ptr(m_cameraViewProjection), matSize);
-	memcpy(data + matSize + splitPlanesSize * m_splits, m_lightViewProjections.data(), matSize*SPLITS);
+	memcpy(data + splitPlanesSize * m_splits, glm::value_ptr(m_cameraView), matSize);
+	memcpy(data + splitPlanesSize * m_splits + matSize, glm::value_ptr(m_cameraProjection), matSize);
+	memcpy(data + splitPlanesSize * m_splits + (2 * matSize), m_lightViewProjections.data(), matSize*SPLITS);
 
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 }

@@ -25,13 +25,14 @@ in vec4 PSSM_CameraDependentPos;
 
 uniform PSSM{
 	float[PSSM_SPLITS] PSSM_Limits;
-	mat4 PSSM_CameraViewProjection;
+	mat4 PSSM_CameraView;
+	mat4 PSSM_CameraProjection;
 	mat4[PSSM_SPLITS] m_LightViewProjection;
 } pssm;
 
 //=================================================================================
 int PSSMPlane(){
-	float linDepth = gl_FragCoord.z / gl_FragCoord.w;
+	float linDepth = abs(PSSM_CameraDependentPos.z - camPosition.z);
 
 	if(linDepth < 0.0f){
 		MaterialDiffuseColor += vec4(0.5, 0.5, 0.0, 1.0)/5;
