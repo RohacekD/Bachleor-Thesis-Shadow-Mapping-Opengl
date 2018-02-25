@@ -37,8 +37,8 @@ namespace Animation {
 	class C_ElipseTranslateAnim : public C_TranslationAnim {
 	public:
 		C_ElipseTranslateAnim(double x, double y) {
-			SetXAnimation(std::make_shared<C_CosAxisComponent>(x));
-			SetZAnimation(std::make_shared<C_SinAxisComponent>(y));
+			SetXAnimation(std::make_shared<Decorators::C_CompMultiplication>(x, std::make_shared<C_CosAxisComponent>()));
+			SetZAnimation(std::make_shared<Decorators::C_CompMultiplication>(y, std::make_shared<C_SinAxisComponent>()));
 			SetYAnimation(std::make_shared<Decorators::C_CompMultiplication>(1.0 / 2.0, std::make_shared<C_SinAxisComponent>(1.0 / 2.0)));
 		}
 		virtual ~C_ElipseTranslateAnim() {};
