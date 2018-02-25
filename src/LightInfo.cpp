@@ -1,5 +1,6 @@
 #include "LightInfo.h"
 
+#include "animation/Animation.h"
 #include "Application.hpp"
 #include "Debug.h"
 #include "CameraManager.h"
@@ -19,9 +20,10 @@
 const float C_DirectionalLight::s_near = 0.1f;
 
 //=================================================================================
-C_DirectionalLight::C_DirectionalLight(std::shared_ptr<I_Camera> camera, const glm::vec3& origin, const glm::vec3& direction, float power, const glm::vec3& color /*= glm::vec3(1.0f, 1.0f, 1.0f)*/)
-	: m_origin(origin)
-	, m_direciton(direction)
+C_DirectionalLight::C_DirectionalLight(std::shared_ptr<I_Camera> camera, const glm::vec3& origin, const glm::vec3& focusPoint, float power, const glm::vec3& color /*= glm::vec3(1.0f, 1.0f, 1.0f)*/) : m_originAnimation(nullptr)
+	, m_directionAnimation(nullptr)
+	, m_origin(origin)
+	, m_focusPoint(focusPoint)
 	, m_power(power)
 	, m_color(color)
 	, m_camera(camera)
@@ -55,10 +57,26 @@ float C_DirectionalLight::GetPower() const
 }
 
 //=================================================================================
+glm::vec3 C_DirectionalLight::GetPosition() const
+{
+	if(m_originAnimation)
+		return glm::vec3(m_originAnimation->GetParam3f(Animation::E_A_Translation) + m_origin);
+	return m_origin;
+}
+
+//=================================================================================
+glm::vec3 C_DirectionalLight::GetFocusPoint() const
+{
+	if (m_directionAnimation)
+		return glm::vec3(m_directionAnimation->GetParam3f(Animation::E_A_Translation) + m_focusPoint);
+	return m_focusPoint;
+}
+
+//=================================================================================
 glm::mat4 C_DirectionalLight::GetProjectionMatrix() const
 {
 	AABB camerasAABB = m_camera->GetAABB();
-	//glm::vec4 normal = glm::normalize(glm::vec4((m_direciton - m_origin), 1.0f));
+	//glm::vec4 normal = GetNormal();
 	//glm::quat q(glm::vec3(normal), glm::vec3(0, 1, 0));
 	//glm::mat4 rotation = glm::mat4(1.0f) * glm::mat4_cast(glm::normalize(q));
 
@@ -78,6 +96,7 @@ glm::mat4 C_DirectionalLight::GetProjectionMatrix() const
 	//C_DebugDraw::Instance().DrawAABB(transformedAABB1, viewProjectionMatrix, glm::vec3(0.0f, 0.0f, 1.0f));//aabb n world space
 	//C_DebugDraw::Instance().DrawAABB(transformedAABB1, viewProjectionMatrix, glm::vec3(1.0f, 1.0f, 0.0f), glm::inverse(GetViewMatrix()));//aabb n light space
 
+	// incorect because of animations
 	//C_DebugDraw::Instance().DrawLine(glm::vec4(m_origin, 1.0f), glm::vec4(m_direciton, 1.0f), viewProjectionMatrix, glm::vec3(1.0f, 1.0f, 0.0f));
 
 	float width = transformedAABB.maxPoint.z - transformedAABB.minPoint.z;
@@ -113,13 +132,15 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 
 	up = normalize(up);
 
-	//auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
+	auto viewProjectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
 
 	//C_DebugDraw::Instance().DrawAABB(transformedAABB, viewProjectionMatrix, vec3(0.0f, 0.0f, 1.0f), inverse(rotation));//aabb n world
 	//C_DebugDraw::Instance().DrawPoint(eye, viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
 	//
 	//C_DebugDraw::Instance().DrawAxis(eye, up, foreward, viewProjectionMatrix);
 
+
+	C_DebugDraw::Instance().DrawPoint(GetFocusPoint(), viewProjectionMatrix, vec3(1.0f, 1.0f, 1.0f));
 
 	//vec3 color = vec3(1.0f, 0.0f, 0.0f);
 	//C_DebugDraw::Instance().DrawPoint(eye, viewProjectionMatrix, color);
@@ -145,5 +166,17 @@ glm::quat C_DirectionalLight::GetRotation() const
 glm::vec4 C_DirectionalLight::GetNormal() const
 {
 	using namespace glm;
-	return normalize(vec4((m_direciton - m_origin), 1.0f));
+	return normalize(vec4((GetFocusPoint() - GetPosition()), 1.0f));
+}
+
+//=================================================================================
+void C_DirectionalLight::SetOriginAnimation(std::shared_ptr<Animation::C_Animation> anim)
+{
+	m_originAnimation = anim;
+}
+
+//=================================================================================
+void C_DirectionalLight::SetDirectionAnimation(std::shared_ptr<Animation::C_Animation> anim)
+{
+	m_directionAnimation = anim;
 }

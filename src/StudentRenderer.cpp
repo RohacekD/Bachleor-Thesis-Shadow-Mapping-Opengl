@@ -1,6 +1,8 @@
 ﻿#include "StudentRenderer.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "animation/Animation.h"
+#include "animation/TranslationAnimations.h"
 #include "HighResolutionTimer.hpp"
 #include "render/Nodes/Scene.h"
 #include "render/Nodes/MeshNode.h"
@@ -25,6 +27,8 @@
 #include <iostream>
 #include <iterator>
 
+//if I want to do this properly I need also make changes to the shaders
+//#define FBO_COLOR
 
 const int gs_shadowMapsize = 2048 * 2;
 const int StudentRenderer::gs_splits = 4;
@@ -60,7 +64,10 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 
 	// I should pass camera just to CSM
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
-	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 1000.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
+	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 15.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
+	m_animation = std::make_shared<Animation::C_Animation>(50000.0f);
+	m_animation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10000.0f, 10000.0f));
+	lightInfo->SetDirectionAnimation(m_animation);
 
 	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits);
 
@@ -68,6 +75,7 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 		return false;
 	}
 	glEnable(GL_CULL_FACE);
+	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 
 	std::cout << C_ShaderManager::Instance().ShadersStatistics();
 
@@ -82,7 +90,8 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
-
+	std::cout << timeSinceLastUpdateMs << std::endl;
+	m_animation->Update(timeSinceLastUpdateMs);
 	m_CSM->Update();
 }
 
@@ -119,7 +128,6 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
 	ShowGUI();
-	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	renderToFBO(camera.getViewProjectionMatrix());

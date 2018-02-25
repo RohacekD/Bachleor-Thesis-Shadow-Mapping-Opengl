@@ -22,6 +22,11 @@ namespace render {
 	class C_Scene;
 }
 
+
+namespace Animation {
+	class C_Animation;
+}
+
 class StudentRenderer : public I_Renderer
 {
 public:
@@ -71,4 +76,5 @@ private:
 
 
 	HighResolutionTimer  m_timer;
+	std::shared_ptr<Animation::C_Animation> m_animation;
 };
