@@ -12,7 +12,7 @@ C_CameraManager::C_CameraManager()
 //=================================================================================
 C_CameraManager::~C_CameraManager()
 {
-	DestructorFullCheck();
+	//DestructorFullCheck(); Don't call it here because singleton is destroyed on the end of program execution
 }
 
 //=================================================================================

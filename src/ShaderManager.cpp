@@ -22,6 +22,7 @@ C_ShaderManager & C_ShaderManager::Instance()
 //=================================================================================
 void C_ShaderManager::Clear()
 {
+	std::cout << ShadersStatistics();
 	m_Programs.clear();
 }
 

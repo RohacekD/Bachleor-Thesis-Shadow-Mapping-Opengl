@@ -11,5 +11,5 @@ uniform mat4 modelMatrix;
 
 void main()
 {
-    gl_Position = modelMatrix * (vertex - vec4(normal, 1.0)*(1.5f/1024.0f));
+    gl_Position = modelMatrix * (vertex - vec4(normal, 1.0)*(3.0f/1024.0f));
 }
