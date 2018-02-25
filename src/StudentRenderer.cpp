@@ -30,7 +30,7 @@
 //if I want to do this properly I need also make changes to the shaders
 //#define FBO_COLOR
 
-const int gs_shadowMapsize = 2048 * 2;
+const int gs_shadowMapsize = 2048;
 const int StudentRenderer::gs_splits = 4;
 
 //=================================================================================
@@ -65,8 +65,8 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	// I should pass camera just to CSM
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 15.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
-	m_animation = std::make_shared<Animation::C_Animation>(50000.0f);
-	m_animation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10000.0f, 10000.0f));
+	m_animation = std::make_shared<Animation::C_Animation>(5000.0f);
+	m_animation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10.0f, 10.0f));
 	lightInfo->SetDirectionAnimation(m_animation);
 
 	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits);
@@ -87,6 +87,8 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 //=================================================================================
 void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
@@ -128,8 +130,6 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
 	ShowGUI();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
 	renderToFBO(camera.getViewProjectionMatrix());
 
 
