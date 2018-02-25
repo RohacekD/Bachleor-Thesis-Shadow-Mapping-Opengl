@@ -45,7 +45,6 @@ StudentRenderer::StudentRenderer()
 //=================================================================================
 StudentRenderer::~StudentRenderer() {
 	printFrameStatistics();
-	DestructorFullCheck();
 }
 
 //=================================================================================
@@ -165,9 +164,10 @@ void StudentRenderer::clearStudentData()
 	m_renderScene.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
-	std::cout << C_ShaderManager::Instance().ShadersStatistics();
 	C_UniformBuffersManager::Instance().Clear();
-	DestructorFullCheck();
+	DestructorFullCheck(); // I have to call it here because destructor is called after OpenGL context is destroyed
+
+	std::cout << "Clear ended after this NO OpenGL should be call" << std::endl;
 }
 
 //=================================================================================
