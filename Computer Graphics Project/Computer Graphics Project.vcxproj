@@ -179,6 +179,7 @@
     <ClCompile Include="..\src\render\Nodes\MeshNode.cpp" />
     <ClCompile Include="..\src\render\Nodes\RenderNode.cpp" />
     <ClCompile Include="..\src\render\Nodes\Scene.cpp" />
+    <ClCompile Include="..\src\render\Nodes\Terrain.cpp" />
     <ClCompile Include="..\src\render\RenderParams.cpp" />
     <ClCompile Include="..\src\render\SceneBuilder.cpp" />
     <ClCompile Include="..\src\SceneLoader.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="..\src\render\Nodes\MeshNode.h" />
     <ClInclude Include="..\src\render\Nodes\RenderNode.h" />
     <ClInclude Include="..\src\render\Nodes\Scene.h" />
+    <ClInclude Include="..\src\render\Nodes\Terrain.h" />
     <ClInclude Include="..\src\render\RenderParams.h" />
     <ClInclude Include="..\src\render\SceneBuilder.h" />
     <ClInclude Include="..\src\Scene.hpp" />

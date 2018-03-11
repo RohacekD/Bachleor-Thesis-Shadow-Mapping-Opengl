@@ -180,6 +180,9 @@
     <ClCompile Include="..\include\imgui\imgui_impl_sdl_gl3.cpp">
       <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\render\Nodes\Terrain.cpp">
+      <Filter>Source Files\render\Nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="..\src\DebugCallbacks.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\render\Nodes\Terrain.h">
+      <Filter>Header Files\render\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
