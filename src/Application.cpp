@@ -143,8 +143,8 @@ void Application::setupCamera(std::shared_ptr<FreelookCamera>& freeCamera)
 	float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad / 2.0f));
 	float d = r / glm::max(sin(fovyRad / 2), sin(fovXrad / 2));
 
-	freeCamera->setupCameraProjection(0.1f, 2 * (d + r), aspectRatio, fovyDeg);
-	freeCamera->positionCamera(glm::vec3(0, 0, -1 * (d)), glm::vec3(0));
+	freeCamera->setupCameraProjection(0.1f, 100.0f, aspectRatio, fovyDeg);
+	freeCamera->positionCamera(glm::vec3(0, 0, -1), glm::vec3(0));
 }
 
 //=================================================================================
@@ -200,11 +200,11 @@ bool Application::Run()
         return false;
 
     //Enter Your model path HERE
-	if (!addModelFileToScene("models/scene.obj", _scene, glm::translate(glm::vec3(0.0f, 0.0f, 0.0f))))
-	{
-		std::cerr << "Failed to load scene: " << std::string("models/terrain/terrain.obj") << std::endl;
-		return false;
-	}
+	//if (!addModelFileToScene("models/scene.obj", _scene, glm::translate(glm::vec3(0.0f, 0.0f, 0.0f))))
+	//{
+	//	std::cerr << "Failed to load scene: " << std::string("models/terrain/terrain.obj") << std::endl;
+	//	return false;
+	//}
 
 	GetCamManager();
 

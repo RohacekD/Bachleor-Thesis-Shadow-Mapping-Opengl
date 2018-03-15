@@ -56,7 +56,7 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	m_screenWidht = screenWidth;
 	m_screenHeight = screenHeight;
 	render::C_SceneBuilder sceneBuilder;
-	m_renderScene = sceneBuilder.LoadModel(scene);
+	m_renderScene = sceneBuilder.LoadScene("models/scene.xml");
 	m_renderScene->m_bbox = scene->bbox;
 	m_avg = 0.0f;
 	m_frameID = 0;

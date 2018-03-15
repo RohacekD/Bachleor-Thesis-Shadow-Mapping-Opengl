@@ -10,6 +10,8 @@
 #include "SceneLoader.hpp"
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Scene.hpp"
 #include "Debug.h"
@@ -17,6 +19,18 @@
 #include <iostream>
 
 namespace render {
+
+	//=================================================================================
+	C_SceneBuilder::C_SceneBuilder()
+	{
+		m_nullTexture = std::make_shared<GLW::C_Texture>();
+		m_nullTexture->StartGroupOp();
+		m_nullTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+		m_nullTexture->setWrap(GL_REPEAT, GL_REPEAT);
+		GLubyte data[] = { 0, 0, 0, 255 };
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		m_nullTexture->EndGroupOp();
+	}
 
 	//=================================================================================
 	C_SceneBuilder::~C_SceneBuilder()
@@ -38,14 +52,16 @@ namespace render {
 		}
 		auto scene = std::make_shared<render::C_Scene>();
 
-		for (auto& child : document.children()) {
-			if (strcmp(child.name(), "terrain")) {
+		for (auto& child : document.child("scene").children()) {
+			if (!strcmp(child.name(), "terrain")) {
 				scene->emplace_back(LoadTerrain(child));
 			}
-			else if (strcmp(child.name(), "model")) {
+			else if (!strcmp(child.name(), "model")) {
 				scene->emplace_back(LoadModel(child));
 			}
 		}
+
+		return scene;
 	}
 
 	//=================================================================================
@@ -57,7 +73,7 @@ namespace render {
 		TextureLoader tl;
 
 		Texture t;
-		bool retval = tl.loadTexture(node.attribute("file").as_string(), t);
+		bool retval = tl.loadTexture((m_sceneFolder + "/" + node.attribute("file").as_string()).c_str(), t);
 
 
 		if (!retval)
@@ -65,7 +81,7 @@ namespace render {
 			throw std::exception("terrain height map does not exists");
 		}
 
-		return std::make_shared<render::C_Terrain>();
+		return std::make_shared<render::C_Terrain>(node.attribute("tile-size").as_float(1.0f), t);
 	}
 
 	//=================================================================================
@@ -73,38 +89,21 @@ namespace render {
 	{
 		std::unique_ptr<SceneLoader> sl = std::unique_ptr<SceneLoader>(new SceneLoader);
 
-		std::string pth(node.attribute("file").as_string()), directory, filename;
-		_splitPathToFilenameAndDirectory(pth, directory, filename);
+		std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
-		if (!sl->addModelFromFileToScene(m_sceneFolder.c_str(), node.attribute("file").as_string(), _scene, transform))
-		{
-			Clear();
-			return false;
+		glm::mat4 modelMatrix = glm::mat4(1.0f);
+		auto positionNode = node.child("position");
+		if (positionNode) {
+			modelMatrix = glm::translate(modelMatrix, ReadPositionNode(positionNode));
 		}
 
-		return true;
-
-		std::unique_ptr<SceneLoader> sl = std::unique_ptr<SceneLoader>(new SceneLoader);
-
-		std::string pth(fileToLoad), directory, filename;
-		_splitPathToFilenameAndDirectory(pth, directory, filename);
-
-		if (!sl->addModelFromFileToScene(directory.c_str(), filename.c_str(), _scene, transform))
+		if (!sl->addModelFromFileToScene(m_sceneFolder.c_str(), node.attribute("file").as_string(), scene, modelMatrix))
 		{
-			Clear();
-			return false;
+			std::cerr << "Unable to load model " << std::endl; 
+			return nullptr;
 		}
-
-		return true;
 
 		m_scene = scene;
-		m_nullTexture = std::make_shared<GLW::C_Texture>();
-		m_nullTexture->StartGroupOp();
-		m_nullTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-		m_nullTexture->setWrap(GL_REPEAT, GL_REPEAT);
-		GLubyte data[] = { 0, 0, 0, 255 };
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		m_nullTexture->EndGroupOp();
 
 
 		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>();
@@ -113,7 +112,6 @@ namespace render {
 		}
 		for (const auto &mesh : scene->meshes) {
 			const auto& node = LoadMesh(mesh);
-			//static_cast<render::C_MeshNode*>(node.get())->SetTexture(m_earthTexture);
 			try
 			{
 				ret->push_back(std::move(node));
@@ -165,6 +163,13 @@ namespace render {
 		tex->EndGroupOp();
 
 		return tex;
+	}
+
+	//=================================================================================
+	glm::vec3 C_SceneBuilder::ReadPositionNode(const pugi::xml_node& node) const noexcept
+	{
+		assert(!strcmp(node.name(), "position"));
+		return glm::vec3(node.attribute("x").as_double(0.0f), node.attribute("y").as_double(0.0f), node.attribute("z").as_double(0.0f));
 	}
 
 	//=================================================================================

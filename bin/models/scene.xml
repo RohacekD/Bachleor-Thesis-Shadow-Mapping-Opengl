@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene>
-	<terrain file="" />
+	<terrain file="profile.jpg" tile-size="1" />
 	<model file="scene.obj">
-		<object name="Plane" isShadowCaster=true />
+		<position x="0.0" y="0.0" z="0.0" />
+		<object name="Plane" isShadowCaster="true" />
 	</model>
 </scene>
