@@ -37,6 +37,12 @@ bool ModelLoader::addModelFromFileToScene(const char* path, std::shared_ptr<Scen
     return true;
 }
 
+//=================================================================================
+void ModelLoader::Reset()
+{
+	_numMaterialsPreviouslyLoaded = _numMeshesPreviouslyLoaded = _numTexturesPreviouslyLoaded = 0;
+}
+
 void ModelLoader::_loadMaterialsFromAiscene(const aiScene* loadedScene, std::shared_ptr<Scene> scene, std::vector< std::string >& textureRegister)
 {
     for(unsigned int i=0; i<loadedScene->mNumMaterials; ++i)

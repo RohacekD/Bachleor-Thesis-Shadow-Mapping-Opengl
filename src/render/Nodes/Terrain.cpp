@@ -107,25 +107,21 @@ namespace render {
 	}
 
 	//=================================================================================
-	void C_Terrain::Render(const S_RenderParams& params)
+	/**
+	 * @method:    Render
+	 * @fullName:  render::C_Terrain::Render
+	 * @access:    virtual public 
+	 * @return:    void
+	 * @qualifier:
+	 * @param: 	   const S_RenderParams & params
+	 * @param: 	   glm::mat4 & parentModelMatrix
+	 * @brief	   Terrain should be leaf node, so it have no need to call render on its child.
+	 * @todo:		Leaf node structure 
+	 */
+	//=================================================================================
+	void C_Terrain::RenderChilds(const S_RenderParams& params, const glm::mat4& modelMatrix)
 	{
-		glEnable(GL_PRIMITIVE_RESTART);
-		glPrimitiveRestartIndex(0xffffffff);
-		ErrorCheck();
-		m_program->useProgram();
-
-		glBindVertexArray(m_VAO);
-
-		glDrawElements(
-			GL_TRIANGLE_STRIP,      // mode
-			static_cast<GLsizei>(m_indicesNum),    // count
-			GL_UNSIGNED_INT,   // type
-			(void*)0           // element array buffer offset
-		);
-
-		glBindVertexArray(0);
-		m_program->disableProgram();
-		glDisable(GL_PRIMITIVE_RESTART);
+		
 	}
 
 	//=================================================================================
@@ -195,6 +191,28 @@ namespace render {
 	const glm::mat4 C_Terrain::GetActualModelMatrix() const
 	{
 		throw glm::mat4(1.0f);
+	}
+
+	//=================================================================================
+	void C_Terrain::RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix)
+	{
+		glEnable(GL_PRIMITIVE_RESTART);
+		glPrimitiveRestartIndex(0xffffffff);
+		ErrorCheck();
+		m_program->useProgram();
+
+		glBindVertexArray(m_VAO);
+
+		glDrawElements(
+			GL_TRIANGLE_STRIP,      // mode
+			static_cast<GLsizei>(m_indicesNum),    // count
+			GL_UNSIGNED_INT,   // type
+			(void*)0           // element array buffer offset
+		);
+
+		glBindVertexArray(0);
+		m_program->disableProgram();
+		glDisable(GL_PRIMITIVE_RESTART);
 	}
 
 }

@@ -20,7 +20,7 @@ namespace render {
 		C_MeshNode();
 		virtual ~C_MeshNode();
 
-		virtual void Render(const S_RenderParams& params) override;
+		virtual void RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix) override;
 
 		virtual void Clean() override;
 
@@ -30,9 +30,11 @@ namespace render {
 
 		virtual bool IsAABBChanged() const override;
 
+
+
 	private:
-		void ShadowPass(const S_RenderParams& params) const;
-		void RenderPass(const S_RenderParams& params) const;
+		void ShadowPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
+		void RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
 
 		void RenderBBox(const glm::mat4& projectionMatrix) const;
 

@@ -38,16 +38,14 @@ namespace render {
 	}
 
 	//=================================================================================
-	void C_MeshNode::Render(const S_RenderParams& params)
+	void C_MeshNode::RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix)
 	{
 		if (params.m_pass == render::S_RenderParams::E_PassType::E_P_RenderPass) {
-			RenderPass(params);
+			RenderPass(params, modelMatrix);
 		}
 		else {
-			ShadowPass(params);
+			ShadowPass(params, modelMatrix);
 		}
-
-		T_Base::Render(params);
 	}
 
 	//=================================================================================
@@ -120,14 +118,14 @@ namespace render {
 	}
 
 	//=================================================================================
-	void C_MeshNode::ShadowPass(const S_RenderParams& params) const
+	void C_MeshNode::ShadowPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
 		ErrorCheck();
 		m_shadowProgram->useProgram();
 
 		glBindVertexArray(m_VAO);
 
-		m_shadowProgram->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
+		m_shadowProgram->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
@@ -137,7 +135,7 @@ namespace render {
 	}
 
 	//=================================================================================
-	void C_MeshNode::RenderPass(const S_RenderParams& params) const
+	void C_MeshNode::RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
 		//RenderBBox(params.m_cameraViewProjectionMatrix);
 
@@ -156,7 +154,7 @@ namespace render {
 		}
 
 		m_program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
-		m_program->SetUniform("modelMatrix", m_modelMatrix * m_animation->GetTRSMatrix());
+		m_program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 

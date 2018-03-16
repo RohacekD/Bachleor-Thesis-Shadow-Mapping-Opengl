@@ -10,11 +10,12 @@ namespace render {
 		using T_Base = I_RenderNode;
 	public:
 		C_Scene();
-
-		virtual void Render(const S_RenderParams& params) override;
-
+		C_Scene(const glm::vec3& position);
 
 		virtual void PostUpdate() override;
+
+
+		virtual void RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix) override;
 
 	};
 

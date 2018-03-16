@@ -4,6 +4,8 @@ bool SceneLoader::addModelFromFileToScene(const char* filepath, const char* file
 {
     //Load geometry first
     ModelLoader ml;
+	// dr
+	ml.Reset();
 	std::vector< std::string > texNames;
 
 	bool retval = ml.addModelFromFileToScene((std::string(filepath) + std::string("/") + std::string(filename)).c_str(), scene, texNames, transform);

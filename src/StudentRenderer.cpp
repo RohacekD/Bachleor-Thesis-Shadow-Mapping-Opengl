@@ -144,7 +144,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
 
-	m_renderScene->Render(params);
+	m_renderScene->Render(params, glm::mat4(1.0f));
 	ErrorCheck();
 	m_CSM->ActivateUBO(false);
 
@@ -190,7 +190,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
 
 	glCullFace(GL_FRONT);
-	m_renderScene->Render(params);
+	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
 	glCullFace(GL_BACK);
 	ErrorCheck();
 	

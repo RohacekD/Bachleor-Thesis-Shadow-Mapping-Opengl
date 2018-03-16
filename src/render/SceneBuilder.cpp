@@ -39,6 +39,17 @@ namespace render {
 	}
 
 	//=================================================================================
+	/**
+	 * @method:		LoadScene
+	 * @fullName:	render::C_SceneBuilder::LoadScene
+	 * @access:		public 
+	 * @return:		std::shared_ptr<render::C_Scene>
+	 * @qualifier:
+	 * @param: 		const std::string & sceneDefinitionFile - path from working directory
+	 *				to xml containing scene definition
+	 * @brief		
+	 */
+	//=================================================================================
 	std::shared_ptr<render::C_Scene> C_SceneBuilder::LoadScene(const std::string& sceneDefinitionFile)
 	{
 		m_sceneFolder = GetFolderpath(sceneDefinitionFile);
@@ -93,9 +104,9 @@ namespace render {
 
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 		auto positionNode = node.child("position");
-		if (positionNode) {
-			modelMatrix = glm::translate(modelMatrix, ReadPositionNode(positionNode));
-		}
+		//if (positionNode) {
+		//	modelMatrix = glm::translate(modelMatrix, ReadPositionNode(positionNode));
+		//}
 
 		if (!sl->addModelFromFileToScene(m_sceneFolder.c_str(), node.attribute("file").as_string(), scene, modelMatrix))
 		{
@@ -106,7 +117,7 @@ namespace render {
 		m_scene = scene;
 
 
-		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>();
+		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>(ReadPositionNode(positionNode));
 		for (const auto&texture : scene->textures) {
 			m_textures.push_back(LoadTexture(texture));
 		}

@@ -25,7 +25,9 @@ namespace render {
 		//=================================================================================
 		I_RenderNode(const glm::vec3& pos, const glm::vec3& rot);
 		virtual ~I_RenderNode();
-		virtual void Render(const S_RenderParams& params);
+		virtual void Render(const S_RenderParams& params, const glm::mat4& parentModelMatrix);
+		virtual void RenderChilds(const S_RenderParams& params, const glm::mat4& modelMatrix);
+		virtual void RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix) = 0;
 		virtual void Clean();
 		virtual void Update(const double timeSinceLastUpdateMs);
 		virtual void PostUpdate();
@@ -42,7 +44,7 @@ namespace render {
 
 		std::shared_ptr<Animation::C_Animation> m_animation;
 	protected:
-
+		// todo maybe this should be private?
 		glm::mat4 m_modelMatrix;
 	};
 };

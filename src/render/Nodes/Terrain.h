@@ -17,12 +17,15 @@ namespace render {
 		C_Terrain(float tileSize, const Texture& texture);
 		virtual ~C_Terrain();
 
-		virtual void Render(const S_RenderParams& params) override;
+		virtual void RenderChilds(const S_RenderParams& params, const glm::mat4& modelMatrix) override;
+		virtual void RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix) override;
 		virtual void Clean() override;
 		virtual void Update(const double timeSinceLastUpdateMs) override;
 		virtual void PostUpdate() override;
 		virtual bool IsAABBChanged() const override;
 		virtual const glm::mat4 GetActualModelMatrix() const override;
+
+
 
 	private:
 		unsigned int m_x = 0;
