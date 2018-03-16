@@ -2,6 +2,16 @@
 
 #include "GLW/ShaderProgram.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifndef WIN32
+#include <unistd.h>
+#endif
+
+#ifdef WIN32
+#define stat _stat
+#endif
+
 
 #include <iostream>
 #include <sstream>
@@ -27,37 +37,34 @@ void C_ShaderManager::Clear()
 }
 
 //=================================================================================
+void C_ShaderManager::Update()
+{
+#if _DEBUG
+	const auto currentTime = std::chrono::system_clock::now();
+	if (m_LastUpdate + m_Timeout < currentTime) {
+		for (auto& program : m_Programs) {
+			try
+			{
+				program.second.swap(std::make_shared<GLW::C_ShaderProgram>(LoadProgram(program.first)));
+			}
+			catch (...)
+			{
+				std::cerr << "Unable to reload shader " << program.first << " so we keep it outdated" << std::endl;
+			}
+		}
+		m_LastUpdate = currentTime;
+	}
+#endif
+}
+
+//=================================================================================
 C_ShaderManager::T_ShaderPtr C_ShaderManager::GetProgram(const std::string& name)
 {
 	if (ShaderLoaded(name)) {
 		return m_Programs[name];
 	}
 
-	std::string filePath;
-
-	pugi::xml_document doc;
-
-	if (!LoadDoc(doc, name)) {
-		std::cerr << "C_ShaderManager: Can't open config file for shader name: " << name << std::endl;
-		return nullptr;
-	}
-
-	std::vector<GLuint> shaders;
-
-	for (auto& shader : doc.child("pipeline").children("shader")) {
-		GLuint shaderStage = LoadShader(shader);
-		if (shaderStage == 0) {
-			return nullptr;
-		}
-		shaders.push_back(shaderStage);
-	}
-
-	GLuint program;
-	std::string str;
-	if (!s_Compiler.linkProgram(program, str, shaders)) {
-		std::cerr << str << std::endl;
-		return false;
-	}
+	GLuint program = LoadProgram(name);
 
 	T_ShaderPtr shaderProgram = std::make_shared<GLW::C_ShaderProgram>(program);
 
@@ -82,6 +89,14 @@ std::string C_ShaderManager::ShadersStatistics() const
 		ss << "->\tHas stages:" << std::endl;
 	}
 	return ss.str();
+}
+
+//=================================================================================
+C_ShaderManager::C_ShaderManager()
+	: m_Timeout(std::chrono::seconds(1))
+	, m_LastUpdate(std::chrono::system_clock::now())
+{
+
 }
 
 //=================================================================================
@@ -127,4 +142,42 @@ GLuint C_ShaderManager::LoadShader(const pugi::xml_node& node) const
 		return 0;
 	}
 	return shader;
+}
+
+//=================================================================================
+GLuint C_ShaderManager::LoadProgram(const std::string& name) const
+{
+	std::string filePath;
+
+	pugi::xml_document doc;
+
+	if (!LoadDoc(doc, name)) {
+		std::cerr << __FUNCTION__ << ": Can't open config file for shader name: " << name << std::endl;
+		throw;
+	}
+
+	std::vector<GLuint> shaders;
+
+	//struct stat result;
+	//if (stat(name.c_str(), &result) == 0)
+	//{
+	//	auto mod_time = result.st_mtime;
+	//	
+	//}
+
+	for (auto& shader : doc.child("pipeline").children("shader")) {
+		GLuint shaderStage = LoadShader(shader);
+		if (shaderStage == 0) {
+			throw;
+		}
+		shaders.push_back(shaderStage);
+	}
+
+	GLuint program;
+	std::string str;
+	if (!s_Compiler.linkProgram(program, str, shaders)) {
+		std::cerr << str << std::endl;
+		return false;
+	}
+	return program;
 }

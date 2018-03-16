@@ -94,6 +94,7 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	std::cout << timeSinceLastUpdateMs << std::endl;
 	m_animation->Update(timeSinceLastUpdateMs);
 	m_CSM->Update();
+	C_ShaderManager::Instance().Update();
 }
 
 //=================================================================================

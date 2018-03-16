@@ -15,11 +15,20 @@ namespace GLW {
 	class C_ShaderProgram {
 	public:
 		C_ShaderProgram(GLuint program);
+#if _DEBUG
+		//C_ShaderProgram(GLuint program);
+#endif
+		C_ShaderProgram(C_ShaderProgram&& rhs);
+		C_ShaderProgram& operator=(C_ShaderProgram&& other);
+		C_ShaderProgram& operator=(C_ShaderProgram& other) = delete;
+		C_ShaderProgram(C_ShaderProgram& rhs) = delete;
 		virtual ~C_ShaderProgram();
+
 		void useProgram() const;
 		void disableProgram() const;
 
 		void BindUBO(std::shared_ptr<C_UniformBuffer>) const;
+
 
 		// replace this
 		inline GLuint GetProgram() const { return m_Program; }

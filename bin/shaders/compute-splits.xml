@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pipeline>
-  <shader stage="vertex">basic/vertex.glsl</shader>
-  <shader stage="fragment">basic/fragment.glsl</shader>
+  <shader stage="compute">computes/splits.glsl</shader>
 </pipeline>
