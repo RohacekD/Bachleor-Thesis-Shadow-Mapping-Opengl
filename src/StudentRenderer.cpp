@@ -130,6 +130,7 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
 	ShowGUI();
+	renderDepthSamples();
 	renderToFBO(camera.getViewProjectionMatrix());
 
 
@@ -143,7 +144,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_cameraViewProjectionMatrix = camera.getViewProjectionMatrix();
 	params.m_cameraPosition = m_CSM->GetBoundCamera()->getPosition();
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
-	params.m_pass = render::S_RenderParams::E_PassType::E_P_RenderPass;
+	params.m_pass = render::S_RenderParams::E_PassType::RenderPass;
 
 	m_renderScene->Render(params, glm::mat4(1.0f));
 	ErrorCheck();
@@ -160,6 +161,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 void StudentRenderer::clearStudentData()
 {
 	m_framebuffer.reset();
+	m_DepthSamplesframebuffer.reset();
 	m_scene.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
@@ -188,7 +190,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
 
 	render::S_RenderParams params;
-	params.m_pass = render::S_RenderParams::E_PassType::E_P_ShadowPass;
+	params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
 
 	glCullFace(GL_FRONT);
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
@@ -201,6 +203,29 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 #ifdef FBO_COLOR
 	glDrawBuffer(GL_BACK);
 #endif
+}
+
+//=================================================================================
+void StudentRenderer::renderDepthSamples() const
+{
+	RenderDoc::C_DebugScope scope("Z Pass");
+	auto mainCam = Application::Instance().GetCamManager()->GetMainCamera();
+
+	m_DepthSamplesframebuffer->Bind();
+
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, 512, 512);
+
+	render::S_RenderParams params;
+	params.m_pass = render::S_RenderParams::E_PassType::ZPass;
+	params.m_cameraViewProjectionMatrix = mainCam->getViewProjectionMatrix();
+
+	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
+	ErrorCheck();
+
+	m_DepthSamplesframebuffer->Unbind();
 }
 
 //=================================================================================
@@ -237,6 +262,30 @@ bool StudentRenderer::initFBO()
 
 	m_framebuffer->AttachTexture(GL_COLOR_ATTACHMENT0, colorTexture);
 #endif
+
+	m_DepthSamplesframebuffer = std::make_shared<GLW::C_Framebuffer>();
+
+	auto depthSamplesTexture = std::make_shared<GLW::C_Texture>("depthSamplesTexture");
+	depthSamplesTexture->StartGroupOp();
+	glTexImage2D(GL_TEXTURE_2D,
+		0,
+		GL_DEPTH_COMPONENT32,
+		512,
+		512,
+		0,
+		GL_DEPTH_COMPONENT,
+		GL_UNSIGNED_BYTE,
+		0);
+
+	ErrorCheck();
+	depthSamplesTexture->setWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
+	depthSamplesTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	ErrorCheck();
+
+	depthSamplesTexture->EndGroupOp();
+
+	m_DepthSamplesframebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, depthSamplesTexture);
+
 	return true;
 }
 

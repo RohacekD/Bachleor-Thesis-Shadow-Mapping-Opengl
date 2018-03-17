@@ -35,6 +35,7 @@ namespace render {
 	private:
 		void ShadowPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
 		void RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
+		void ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
 
 		void RenderBBox(const glm::mat4& projectionMatrix) const;
 

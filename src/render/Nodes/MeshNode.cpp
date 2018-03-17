@@ -40,8 +40,11 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix)
 	{
-		if (params.m_pass == render::S_RenderParams::E_PassType::E_P_RenderPass) {
+		if (params.m_pass == render::S_RenderParams::E_PassType::RenderPass) {
 			RenderPass(params, modelMatrix);
+		}
+		else if (params.m_pass == render::S_RenderParams::E_PassType::ZPass) {
+			ZPass(params, modelMatrix);
 		}
 		else {
 			ShadowPass(params, modelMatrix);
@@ -132,6 +135,7 @@ namespace render {
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		m_shadowProgram->disableProgram();
+		ErrorCheck();
 	}
 
 	//=================================================================================
@@ -166,6 +170,27 @@ namespace render {
 		{
 			m_texture->unbind();
 		}
+	}
+
+	//=================================================================================
+	void C_MeshNode::ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
+	{
+		auto& shdManager = C_ShaderManager::Instance();
+		ErrorCheck();
+		auto program = shdManager.GetProgram("depthsamples");
+		program->useProgram();
+
+		glBindVertexArray(m_VAO);
+
+		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
+		program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
+
+		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
+		ErrorCheck();
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		program->disableProgram();
+		ErrorCheck();
 	}
 
 	//=================================================================================

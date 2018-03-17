@@ -8,9 +8,10 @@
 
 namespace render {
 	struct S_RenderParams {
-		enum E_PassType : char {
-			E_P_RenderPass,
-			E_P_ShadowPass
+		enum class E_PassType : char {
+			RenderPass,
+			ShadowPass,
+			ZPass
 		};
 		glm::mat4 m_cameraViewProjectionMatrix;
 		glm::vec3 m_cameraPosition;

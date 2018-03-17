@@ -41,6 +41,7 @@ public:
 
 private:
 	void renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const;
+	void renderDepthSamples() const;
 	bool initFBO();
 	void ShowGUI();
 	struct {
@@ -59,6 +60,7 @@ private:
 	static const int gs_splits;
 
 	std::shared_ptr<GLW::C_Framebuffer> m_framebuffer;
+	std::shared_ptr<GLW::C_Framebuffer> m_DepthSamplesframebuffer;
 
 	bool m_bWireframe;
 	unsigned int m_screenWidht;
