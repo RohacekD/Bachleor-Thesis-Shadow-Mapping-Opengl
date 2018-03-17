@@ -1,15 +1,39 @@
+/** ==============================================
+ * @file 		Frustum.h
+ * @date 		2018/03/17 19:52
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology 
+ * @university 	Brno University of Technology
+ *
+ * @author 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ ** ==============================================*/
+ 
 #pragma once
 
 #include <glm/glm.hpp>
 #include "Scene.hpp"
 
 
-/************************************************************************/
-/* Helper class for Frustum debugging and getting the AABB's            */
-/************************************************************************/
+/** ==============================================
+ * @class C_Frustum
+ *
+ * @brief Helper class for Frustum debugging and getting the AABB's
+ *
+ * @author 	Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * @date 	2018/03/17
+ ** ==============================================*/
 class C_Frustum {
 public:
 	C_Frustum(const glm::vec3& position, const glm::vec3& upVectro, const glm::vec3& foreward, float near, float far, float aspect, float fov);
+	/** ==============================================
+	 * @method:    GetAABB
+	 * @fullName:  C_Frustum::GetAABB
+	 * @return:    AABB
+	 * @brief	   Returns AABB of whole frustum. If you want 
+	 *			   AABB of subfrustum, simply change far/near plane.
+	 ** ==============================================*/
 	AABB GetAABB() const;
 	void DebugDraw(const glm::vec3& color) const;
 	void UpdateWithMatrix(const glm::mat4& matrix);

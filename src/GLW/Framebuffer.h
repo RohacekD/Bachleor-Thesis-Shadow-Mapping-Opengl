@@ -1,3 +1,16 @@
+/**
+ * ==============================================
+ * \file 		Framebuffer.h
+ * \date 		2018/03/17 19:07
+ * \project 	Computer Graphics Project
+ * \faculty 	Faculty of Information Technology 
+ * \university 	Brno University of Technology
+ *
+ * \author Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * ==============================================
+ */
+
 #pragma once
 
 #include <gl/glew.h>

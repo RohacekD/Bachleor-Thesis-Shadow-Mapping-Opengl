@@ -1,3 +1,16 @@
+/**
+ * ==============================================
+ * \file 		MeshNode.h
+ * \date 		2018/03/17 19:01
+ * \project 	Computer Graphics Project
+ * \faculty 	Faculty of Information Technology 
+ * \university 	Brno University of Technology
+ *
+ * \author Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * ==============================================
+*/
+
 #pragma once
 
 #include "RenderNode.h"
@@ -20,6 +33,8 @@ namespace render {
 		C_MeshNode();
 		virtual ~C_MeshNode();
 
+		
+		//=================================================================================
 		virtual void RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix) override;
 
 		virtual void Clean() override;

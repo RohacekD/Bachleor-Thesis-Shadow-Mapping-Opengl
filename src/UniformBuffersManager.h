@@ -1,3 +1,14 @@
+/** ==============================================
+ * @file 		UniformBuffersManager.h
+ * @date 		2018/03/17 20:04
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology 
+ * @university 	Brno University of Technology
+ *
+ * @author 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ ** ==============================================*/
+ 
 #pragma once
 
 #include <gl/glew.h>
@@ -11,6 +22,20 @@ namespace GLW {
 	class C_ShaderProgram;
 }
 
+/** ==============================================
+ * @class C_UniformBuffersManager
+ *
+ * @brief	Manages UBO's over application.
+ *
+ * @note	This class is intended to store and bind UBO's to 
+ *			shader programs. Also possibly prints some statistics
+ *
+ * @todo	It would be nice to extend statistics to memory usage details
+ *
+ * @author 	Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * @date 	2018/03/17
+ ** ==============================================*/
 class C_UniformBuffersManager {
 public:
 	//Singleton stuff

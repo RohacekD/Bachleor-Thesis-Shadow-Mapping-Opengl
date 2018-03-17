@@ -1,3 +1,19 @@
+/**
+ * ==============================================
+ * @file 		Debug.h
+ * @date 		2018/03/17 19:30
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology
+ * @university 	Brno University of Technology
+ * 
+ * @author 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ * ==============================================
+ * @brief		In this file you can find debug functions for both OpenGL 
+ *				and C++.
+ * ==============================================
+ */
+ 
 #pragma once
 
 #include "RenderDocTools.h"
@@ -12,16 +28,39 @@
 #include <memory>
 #include <iostream>
 
-
-//=================================================================================
-//= returns true if error occurs
-//=================================================================================
+/** ==============================================
+ * @method:    _glErrorCheck
+ * @return:    bool true if error occurs
+ * @param: 	   const std::string file
+ * @param: 	   const int line
+ * @brief	   You should not use this directly, use ErrorCheck() macro instead
+ ** ==============================================*/
 bool _glErrorCheck(const std::string file, const int line);
 
-//=================================================================================
+/** ==============================================
+* @method:    ErrorCheck
+* @return:    bool true if error occurs
+* @brief	  Checks for OpenGL API errors. 
+*
+* @note When _DEBUG is true this will debug break your program when error occurs.
+*		You can use that for debug purposes. When error occurs this will print 
+*		Basic error info and name of file and line where error occurs.
+* 
+* @todo Create define for disabling this macro completely.
+* @warning Make sure this is not called after OpenGL context destruction, otherwise
+* this will produce false positive warnings
+** ==============================================*/
 #define ErrorCheck() _glErrorCheck(__FILE__, __LINE__)
 
-//=================================================================================
+/** ==============================================
+* @method:    DestructorFullCheck
+* @brief	  Use that in function where you want to destruct everything from class representing
+*			  OpenGL resource.
+*
+* @todo Create define for disabling this macro completely.
+* @warning Make sure this is not called after OpenGL context destruction, otherwise
+* this will produce false positive warnings
+** ==============================================*/
 #if _DEBUG
 #define DestructorFullCheck() _glErrorCheck(__FILE__, __LINE__); std::cout<<__FUNCTION__<<std::endl
 #else
@@ -29,13 +68,28 @@ bool _glErrorCheck(const std::string file, const int line);
 #endif
 
 //=================================================================================
-
+// Forward declarations
 namespace GLW {
 	class C_ShaderProgram;
 }
 
 #if _DEBUG
 //=================================================================================
+/**
+ * ==============================================
+ * @class C_DebugDraw
+ *
+ * @brief	Helpers for OpenGL visual debug.
+ * 
+ * @note	When _DEBUG macro is set to 0 defined this class is defined 
+ *			with empty methods implementations so you can feel free
+ *			to use it around application without #if _DEBUG
+ *
+ * @author 	Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * @date 	2018/03/17
+ * ==============================================
+ */
 class C_DebugDraw {
 public:
 	//Singleton stuff
@@ -56,7 +110,26 @@ public:
 
 	void DrawAxis(const glm::vec4& origin, const glm::vec4& up, const glm::vec4& foreward, const glm::mat4& projectionMatrix, glm::mat4& modelMatrix = glm::mat4(1.0f));
 private:
-	inline glm::vec4 toVec4(const glm::vec3& vec) const { return glm::vec4(vec, 1.0f); };
+	/**
+	 * ==============================================
+	 * @method:		toVec4
+	 * @fullName:	C_DebugDraw::toVec4
+	 * @return:		glm::vec4
+	 * @param: 		const glm::vec3 & vec
+	 * @brief		Helper to transform vec3 to vec4
+	 * @todo		Check on difference between inline function and macro, should be same
+	 *				because of compilers optimizations
+	 * ==============================================
+	 */
+	inline glm::vec4 toVec4(const glm::vec3& vec) const noexcept { return glm::vec4(vec, 1.0f); };
+	/**
+	 * ==============================================
+	 * @method:    SetupAABB
+	 * @fullName:  C_DebugDraw::SetupAABB
+	 * @return:    void
+	 * @brief	   Fills VAO, VBO and IBO for drawing AABB debug
+	 * ==============================================
+	 */
 	void SetupAABB();
 
 	std::shared_ptr<GLW::C_ShaderProgram> m_program;

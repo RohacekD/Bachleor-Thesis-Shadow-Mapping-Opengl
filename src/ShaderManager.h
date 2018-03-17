@@ -1,3 +1,14 @@
+/** ==============================================
+ * @file 		ShaderManager.h
+ * @date 		2018/03/17 19:59
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology 
+ * @university 	Brno University of Technology
+ *
+ * @author 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ ** ==============================================*/
+ 
 #pragma once
 
 #include "ShaderCompiler.hpp"
@@ -17,6 +28,19 @@ namespace GLW {
 
 
 // I just wanna have some statistics and also save some loading time and memory
+/** ==============================================
+ * @class C_ShaderManager
+ *
+ * @brief	All the shaders in application should be build through this manager.
+ *
+ * Holds all shaders in application, can print statistics about shaders usage.
+ * Also it is possible to refresh every m_Timeout defined intervals all shaders
+ * for better shader develop.
+ *
+ * @author 	Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * @date 	2018/03/17
+ ** ==============================================*/
 class C_ShaderManager {
 	using T_ShaderPtr = std::shared_ptr<GLW::C_ShaderProgram>;
 public:
@@ -26,6 +50,13 @@ public:
 	static C_ShaderManager& Instance();
 
 	void Clear();
+	/** ==============================================
+	 * @method:    Update
+	 * @fullName:  C_ShaderManager::Update
+	 * @return:    void
+	 * @brief	   You need to call this if you want to refresh shaders regularly
+	 *			   as refresh is synchronous.
+	 ** ==============================================*/
 	void Update();
 
 	T_ShaderPtr GetProgram(const std::string& name);

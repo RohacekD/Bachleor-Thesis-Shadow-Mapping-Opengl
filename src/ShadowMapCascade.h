@@ -1,3 +1,14 @@
+/** ==============================================
+ * @file 		ShadowMapCascade.h
+ * @date 		2018/03/17 20:02
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology 
+ * @university 	Brno University of Technology
+ *
+ * @author 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ ** ==============================================*/
+ 
 #pragma once
 
 #include <glm/glm.hpp>
@@ -41,7 +52,7 @@ public:
 
 	void			Update();
 
-	//TODO set split resolution etc
+	//@TODO set split resolution etc
 
 	void RecalcAll();
 

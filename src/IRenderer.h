@@ -1,3 +1,14 @@
+/** ==============================================
+ * @file 		IRenderer.h
+ * @date 		2018/03/17 19:53
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology 
+ * @university 	Brno University of Technology
+ *
+ * @author 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ ** ==============================================*/
+ 
 #pragma once
 
 #include <glm/glm.hpp>
@@ -9,6 +20,15 @@
 struct Scene;
 class I_Camera;
 
+/** ==============================================
+ * @class I_Renderer
+ *
+ * @brief Interface for renderer.
+ *
+ * @author 	Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * @date 	2018/03/17
+ ** ==============================================*/
 class I_Renderer
 {
 public:

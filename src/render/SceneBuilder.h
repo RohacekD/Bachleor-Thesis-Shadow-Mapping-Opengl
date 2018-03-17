@@ -1,3 +1,16 @@
+/**
+ * ==============================================
+ * \file 		SceneBuilder.h
+ * \date 		2018/03/17 19:19
+ * \project 	Computer Graphics Project
+ * \faculty 	Faculty of Information Technology 
+ * \university 	Brno University of Technology
+ *
+ * \author Dominik Rohacek
+ * Contact: RohacekD@gmail.com
+ * ==============================================
+ */
+ 
 #pragma once
 
 #include <glm/glm.hpp>
@@ -17,11 +30,10 @@ namespace GLW {
 }
 
 namespace render {
-	class C_MeshNode;
 	class I_RenderNode;
 	class C_Scene;
 	class C_Terrain;
-
+	//@todo needs refactor
 	class C_SceneBuilder {
 	public:
 		C_SceneBuilder();

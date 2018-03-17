@@ -1,5 +1,7 @@
 #include "RenderDocTools.h"
 
+#include <gl/glew.h>
+
 namespace RenderDoc {
 
 	//=================================================================================

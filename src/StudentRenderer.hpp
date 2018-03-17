@@ -1,3 +1,16 @@
+/** ==============================================
+ * @file 		StudentRenderer.hpp
+ * @date 		2018/03/17 20:02
+ * @project 	Computer Graphics Project
+ * @faculty 	Faculty of Information Technology 
+ * @university 	Brno University of Technology
+ *
+ * @author 		Ing. Jozef Kobrtek
+ * Contact: 	ikobrtek@fit.vutbr.cz
+ * @edited 		Dominik Rohacek
+ * Contact: 	RohacekD@gmail.com
+ ** ==============================================*/
+ 
 #pragma once
 
 #include "IRenderer.h"
