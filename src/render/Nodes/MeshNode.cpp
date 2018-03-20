@@ -141,7 +141,7 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
-		//RenderBBox(params.m_cameraViewProjectionMatrix);
+		//RenderBBox(params.m_cameraViewProjectionMatrix, modelMatrix);
 
 
 		m_program->useProgram();
@@ -194,8 +194,8 @@ namespace render {
 	}
 
 	//=================================================================================
-	void C_MeshNode::RenderBBox(const glm::mat4& projectionMatrix) const
+	void C_MeshNode::RenderBBox(const glm::mat4& projectionMatrix, const glm::mat4& modelMatrix) const
 	{
-		C_DebugDraw::Instance().DrawAABB(m_bbox, projectionMatrix, glm::vec3(0.0f), m_modelMatrix * m_animation->GetTRSMatrix());
+		C_DebugDraw::Instance().DrawAABB(m_bbox, projectionMatrix, glm::vec3(0.0f), modelMatrix * m_animation->GetTRSMatrix());
 	}
 };

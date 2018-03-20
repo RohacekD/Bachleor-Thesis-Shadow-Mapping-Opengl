@@ -42,17 +42,14 @@ namespace render {
 		void LoadMesh(const Mesh& mesh);
 		void SetTexture(std::shared_ptr<GLW::C_Texture> texture) { m_texture = texture; }
 
-
 		virtual bool IsAABBChanged() const override;
-
-
 
 	private:
 		void ShadowPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
 		void RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
 		void ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const;
 
-		void RenderBBox(const glm::mat4& projectionMatrix) const;
+		void RenderBBox(const glm::mat4& projectionMatrix, const glm::mat4& modelMatrix) const;
 
 		bool m_bShadowCaster : 1;
 		GLuint m_triangles;

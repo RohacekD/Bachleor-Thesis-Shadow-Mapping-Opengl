@@ -80,6 +80,14 @@ namespace GLW {
 
 	//=================================================================================
 	template<class N>
+	void GLW::C_ShaderProgram::SetUniform(N name, const glm::ivec2 & value)
+	{
+		glUniform2iv(FindLocation(name), 1, glm::value_ptr(value));
+		ErrorCheck();
+	}
+
+	//=================================================================================
+	template<class N>
 	void C_ShaderProgram::SetUniform(N name, const std::vector<float> & value)
 	{
 		glUniform1fv(FindLocation(name), static_cast<GLsizei>(value.size()), (GLfloat*)(value.data()));

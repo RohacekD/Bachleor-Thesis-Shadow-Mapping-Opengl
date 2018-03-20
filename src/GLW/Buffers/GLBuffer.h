@@ -25,6 +25,8 @@ namespace GLW {
 
 		virtual void bind() const;
 		virtual void unbind() const;
+
+		constexpr GLenum GetBufferType() const noexcept;
 	protected:
 		GLuint m_id;
 	};

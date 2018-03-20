@@ -12,6 +12,8 @@
 #include "GLW/Texture.h"
 #include "GLW/Framebuffer.h"
 
+#include "GLW/Buffers/ShaderStorage.h"
+#include "GLW/ShaderProgram.h"
 #include "ShaderManager.h"
 #include "Camera/ICamera.h"
 #include "CameraManager.h"
@@ -131,6 +133,44 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 {
 	ShowGUI();
 	renderDepthSamples();
+	{
+		RenderDoc::C_DebugScope scope("Compute shader");
+		auto program = C_ShaderManager::Instance().GetProgram("compute-splits");
+		auto texture = m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
+		program->useProgram();
+		program->SetUniform("globalSize", glm::ivec2(512, 512));
+		m_histogram->bind();
+
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+		glActiveTexture(GL_TEXTURE0);
+		texture->bind();
+		glDispatchCompute(512 / 16, 512 / 16, 1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+		texture->unbind();
+		program->disableProgram();
+	}
+	{
+		RenderDoc::C_DebugScope scope("Compute shader draw");
+		auto program = C_ShaderManager::Instance().GetProgram("histagraDraw");
+		program->useProgram();
+
+		glActiveTexture(GL_TEXTURE0);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+		glBindImageTexture(0, m_HistogramTexture->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+		glDispatchCompute(256, 1, 1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+		m_histogram->ClearBuffer();
+		m_histogram->unbind();
+		m_HistogramTexture->unbind();
+		program->disableProgram();
+	}
+
+
+
+
 	renderToFBO(camera.getViewProjectionMatrix());
 
 
@@ -226,6 +266,7 @@ void StudentRenderer::renderDepthSamples() const
 	ErrorCheck();
 
 	m_DepthSamplesframebuffer->Unbind();
+	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 }
 
 //=================================================================================
@@ -241,7 +282,7 @@ bool StudentRenderer::initFBO()
 	depthTexture->setWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
 	depthTexture->setFilter(GL_NEAREST, GL_NEAREST);
 	glm::vec4 borderColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(borderColor));
+	glTexParameterfv(depthTexture->GetTarget(), GL_TEXTURE_BORDER_COLOR, glm::value_ptr(borderColor));
 	ErrorCheck();
 
 	depthTexture->EndGroupOp();
@@ -267,7 +308,7 @@ bool StudentRenderer::initFBO()
 
 	auto depthSamplesTexture = std::make_shared<GLW::C_Texture>("depthSamplesTexture");
 	depthSamplesTexture->StartGroupOp();
-	glTexImage2D(GL_TEXTURE_2D,
+	glTexImage2D(depthSamplesTexture->GetTarget(),
 		0,
 		GL_DEPTH_COMPONENT32,
 		512,
@@ -286,6 +327,22 @@ bool StudentRenderer::initFBO()
 
 	m_DepthSamplesframebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, depthSamplesTexture);
 
+	m_histogram = std::make_shared<C_Histogram>(256, 3);
+
+
+
+	m_HistogramTexture = std::make_shared<GLW::C_Texture>("m_HistogramTexture");
+	m_HistogramTexture->StartGroupOp();
+	glTexImage2D(m_HistogramTexture->GetTarget(), 0, GL_RGBA32F, 256, 150, 0, GL_RGBA, GL_FLOAT, 0);
+	
+	ErrorCheck();
+	m_HistogramTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	m_HistogramTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	ErrorCheck();
+	
+	m_HistogramTexture->EndGroupOp();
+
+
 	return true;
 }
 
@@ -295,6 +352,10 @@ void StudentRenderer::ShowGUI()
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
 	//ImGui::SliderInt("Splits", &m_ControlPanel.m_lambda, 1, 6);
+	ImGui::End();
+	bool active = true;
+	ImGui::Begin("Depth histogram", &active);
+	ImGui::Image((void*)m_HistogramTexture->GetTexture(), { 256, 150 }, { 0,1 }, {1,0});
 	ImGui::End();
 
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);

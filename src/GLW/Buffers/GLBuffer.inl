@@ -22,13 +22,22 @@ namespace GLW {
 	template<GLenum TYPE>
 	void C_GLBuffer<TYPE>::unbind() const
 	{
-		glBindBuffer(TYPE, m_id);
+		glBindBuffer(TYPE, 0);
 	}
 
 	//=================================================================================
 	template<GLenum TYPE>
 	void C_GLBuffer<TYPE>::bind() const
 	{
-		glBindBuffer(TYPE, 0);
+		glBindBuffer(TYPE, m_id);
 	}
+
+	//=================================================================================
+	template<GLenum TYPE>
+	constexpr GLenum C_GLBuffer<TYPE>::GetBufferType() const noexcept
+	{
+		return TYPE;
+	}
+
+
 }

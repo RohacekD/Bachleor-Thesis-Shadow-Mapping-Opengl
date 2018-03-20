@@ -25,6 +25,7 @@
 #include "ShadowMapCascade.h"
 
 class I_Camera;
+class C_Histogram;
 
 namespace GLW {
 	class C_Texture;
@@ -74,6 +75,9 @@ private:
 
 	std::shared_ptr<GLW::C_Framebuffer> m_framebuffer;
 	std::shared_ptr<GLW::C_Framebuffer> m_DepthSamplesframebuffer;
+
+	std::shared_ptr<GLW::C_Texture> m_HistogramTexture;
+	std::shared_ptr<C_Histogram> m_histogram;
 
 	bool m_bWireframe;
 	unsigned int m_screenWidht;

@@ -183,6 +183,9 @@
     <ClCompile Include="..\src\render\Nodes\Terrain.cpp">
       <Filter>Source Files\render\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GLW\Buffers\ShaderStorage.cpp">
+      <Filter>Source Files\GLW\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -329,6 +332,9 @@
     <ClInclude Include="..\src\render\Nodes\Terrain.h">
       <Filter>Header Files\render\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\GLW\Buffers\ShaderStorage.h">
+      <Filter>Header Files\GLW\Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -338,5 +344,6 @@
     <None Include="..\src\GLW\Buffers\GLBuffer.inl">
       <Filter>Header Files\GLW\Buffers</Filter>
     </None>
+    <None Include="..\src\GLW\Buffers\ShaderStorageBuffer" />
   </ItemGroup>
 </Project>
