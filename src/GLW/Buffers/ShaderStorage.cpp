@@ -20,6 +20,8 @@ namespace GLW {
 }
 
 //=================================================================================
+// C_Histogram
+//=================================================================================
 C_Histogram::C_Histogram(unsigned int samples, int bindingPoint)
 	: m_samples(samples)
 	, C_ShaderStorageBuffer(bindingPoint)
@@ -36,7 +38,7 @@ void C_Histogram::UploadData() const
 	bind();
 	unsigned int* data = (unsigned int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
 
-	std::vector<unsigned int> v = { 257, 0 };
+	std::vector<unsigned int> v( 257, 0 );
 
 	data = v.data();
 
@@ -86,4 +88,48 @@ void C_Histogram::ClearBuffer()
 	bind();
 	glClearBufferData(GetBufferType(), GL_R32UI, GL_RED, GL_UNSIGNED_INT, nullptr);
 	glClearBufferSubData(GetBufferType(), GL_R32UI, (m_samples+1)*sizeof(GLuint), sizeof(GLuint), GL_RED, GL_UNSIGNED_INT, &m_samples);
+}
+
+//=================================================================================
+// C_SplitPlanesStorage
+//=================================================================================
+C_SplitPlanesStorage::C_SplitPlanesStorage(unsigned int numFrustums, int bindingPoint)
+	: m_NumFrustums(numFrustums)
+	, C_ShaderStorageBuffer(bindingPoint)
+{
+	m_Frustums.reserve(m_NumFrustums);
+	for (unsigned int i = 0; i < m_NumFrustums; ++i) {
+		m_Frustums.emplace_back(0,0);
+	}
+	bind();
+	glBufferData(GetBufferType(), m_NumFrustums*2 * sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
+	ErrorCheck();
+}
+//=================================================================================
+void C_SplitPlanesStorage::UploadData() const
+{
+	bind();
+	unsigned int* data = (unsigned int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
+
+	memcpy(data, m_Frustums.data(), m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
+
+	glUnmapBuffer(GetBufferType());
+}
+
+//=================================================================================
+void C_SplitPlanesStorage::DownloadData()
+{
+	bind();
+	int* data = (int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
+
+	memcpy(m_Frustums.data(), data, m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
+
+	glUnmapBuffer(GetBufferType());
+}
+
+//=================================================================================
+void C_SplitPlanesStorage::ClearBuffer()
+{
+	bind();
+	glClearBufferData(GetBufferType(), GL_R32UI, GL_RED, GL_UNSIGNED_INT, nullptr);
 }

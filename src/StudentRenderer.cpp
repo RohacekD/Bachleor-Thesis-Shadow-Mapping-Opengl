@@ -153,9 +153,10 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	}
 	{
 		RenderDoc::C_DebugScope scope("Compute shader draw");
-		auto program = C_ShaderManager::Instance().GetProgram("histagraDraw");
+		auto program = C_ShaderManager::Instance().GetProgram("histagraDrawColor");
 		program->useProgram();
 
+		m_SplitFrust->bind();
 		glActiveTexture(GL_TEXTURE0);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 		glBindImageTexture(0, m_HistogramTexture->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
@@ -164,6 +165,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 
 		m_histogram->ClearBuffer();
 		m_histogram->unbind();
+		m_SplitFrust->unbind();
 		m_HistogramTexture->unbind();
 		program->disableProgram();
 	}
@@ -205,6 +207,9 @@ void StudentRenderer::clearStudentData()
 	m_scene.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
+	m_HistogramTexture.reset();
+	m_histogram.reset();
+	m_SplitFrust.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
 	C_UniformBuffersManager::Instance().Clear();
@@ -341,6 +346,14 @@ bool StudentRenderer::initFBO()
 	ErrorCheck();
 	
 	m_HistogramTexture->EndGroupOp();
+
+	m_SplitFrust = std::make_shared<C_SplitPlanesStorage>(gs_splits, 4);
+	m_SplitFrust->m_Frustums[0] = { 0, 64 };
+	m_SplitFrust->m_Frustums[1] = { 64, 128 };
+	m_SplitFrust->m_Frustums[2] = { 128, 128+64 };
+	m_SplitFrust->m_Frustums[3] = { 128+ 64, 256};
+	m_SplitFrust->UploadData();
+	m_SplitFrust->unbind();
 
 
 	return true;
