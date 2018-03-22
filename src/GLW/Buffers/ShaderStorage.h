@@ -31,19 +31,21 @@ namespace GLW {
 //for now it can stay here
 class C_Histogram : public GLW::C_ShaderStorageBuffer {
 public:
-	C_Histogram(int samples, int bindingPoint);
+	C_Histogram(unsigned int samples, int bindingPoint);
 
 	virtual void UploadData() const override;
 	virtual void DownloadData() override;
 
-	glm::ivec2	FindLimits() const;
+	glm::uvec2 FindLimits() const;
 	int			GetHighest() const;
 
 	std::vector<unsigned int>	m_histogram;
-	int					m_highestValue;
+	unsigned int				m_highestValue;
+	unsigned int				m_lowestIndex;
+	unsigned int				m_highestIndex;
 
 	virtual void ClearBuffer() override;
 
 private:
-	int m_samples;
+	unsigned int m_samples;
 };

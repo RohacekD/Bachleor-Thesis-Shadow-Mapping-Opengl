@@ -10,7 +10,9 @@ uniform ivec2 globalSize;
 layout(std430, binding = 3) buffer histogram
 {
     uint data_SSBO[256];
-    uint highestValue;
+    uint highestValue; // 
+    uint lowestIndex;
+    uint highestIndex;
 };
 
 void main()
@@ -24,5 +26,7 @@ void main()
 		int 		index = int(depthSample.r*255);
 		atomicAdd(data_SSBO[index], 1);
 		atomicMax(highestValue, data_SSBO[index]);
+		atomicMin(lowestIndex, index);
+		atomicMax(highestIndex, index);
 	}
 }

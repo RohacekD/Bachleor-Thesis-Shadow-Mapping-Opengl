@@ -20,13 +20,13 @@ namespace GLW {
 }
 
 //=================================================================================
-C_Histogram::C_Histogram(int samples, int bindingPoint)
+C_Histogram::C_Histogram(unsigned int samples, int bindingPoint)
 	: m_samples(samples)
 	, C_ShaderStorageBuffer(bindingPoint)
 {
 	ErrorCheck();
 	bind();
-	glBufferData(GetBufferType(), (m_samples + 1)*sizeof(int), nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GetBufferType(), (m_samples + 3)*sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
 	ErrorCheck();
 }
 
@@ -49,17 +49,19 @@ void C_Histogram::DownloadData()
 	bind();
 	int* data = (int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
 
-	m_histogram = std::vector<unsigned int>(data, data+m_samples);
+	m_histogram = std::vector<unsigned int>(data, data + m_samples);
 	m_highestValue = data[m_samples];
+	m_lowestIndex = data[m_samples + 1];
+	m_highestIndex = data[m_samples + 2];
 
 	glUnmapBuffer(GetBufferType());
 }
 
 //=================================================================================
-glm::ivec2 C_Histogram::FindLimits() const
+glm::uvec2 C_Histogram::FindLimits() const
 {
-	glm::ivec2 ret(m_samples, 0);
-	for (int i = 0; i < m_samples; ++i) {
+	glm::uvec2 ret(m_samples, 0);
+	for (unsigned int i = 0; i < m_samples; ++i) {
 		const int sample = m_histogram[i];
 		if (sample == 0) continue;
 		if (i < ret.x) {
@@ -81,5 +83,7 @@ int C_Histogram::GetHighest() const
 //=================================================================================
 void C_Histogram::ClearBuffer()
 {
-	glClearBufferData(GetBufferType(), GL_R32UI, GL_RED, GL_UNSIGNED_INT, nullptr );
+	bind();
+	glClearBufferData(GetBufferType(), GL_R32UI, GL_RED, GL_UNSIGNED_INT, nullptr);
+	glClearBufferSubData(GetBufferType(), GL_R32UI, (m_samples+1)*sizeof(GLuint), sizeof(GLuint), GL_RED, GL_UNSIGNED_INT, &m_samples);
 }
