@@ -152,6 +152,30 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 		program->disableProgram();
 	}
 	{
+		RenderDoc::C_DebugScope scope("Compute shader splits");
+		auto program = C_ShaderManager::Instance().GetProgram("calcSplits");
+		program->useProgram();
+		auto planes = m_CSM->GetPlanes();
+
+		const auto func = [](float value, float from1, float to1, float from2, float to2) {
+			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+		};
+
+		std::for_each(planes.begin(), planes.end(), [func, this](float& val) {
+			val = func(val, m_CSM->GetBoundCamera()->GetNear(), m_CSM->GetBoundCamera()->GetFar(), 0.0f, 1.0f);
+		});
+		
+		program->SetUniform("splitRatios", planes);
+		m_histogram->bind();
+
+		m_SplitFrust->bind();
+		glDispatchCompute(1, 1, 1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+		m_SplitFrust->unbind();
+		program->disableProgram();
+	}
+	{
 		RenderDoc::C_DebugScope scope("Compute shader draw");
 		auto program = C_ShaderManager::Instance().GetProgram("histagraDrawColor");
 		program->useProgram();

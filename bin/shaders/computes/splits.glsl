@@ -13,8 +13,10 @@ layout(std430, binding = 3) buffer histogram
     uint highestValue; // 
     uint lowestIndex;
     uint highestIndex;
+    uint numSamples;
 };
 
+//=================================================================================
 void main()
 {
 	vec2 position = ivec2(gl_GlobalInvocationID.xy);
@@ -28,5 +30,6 @@ void main()
 		atomicMax(highestValue, data_SSBO[index]);
 		atomicMin(lowestIndex, index);
 		atomicMax(highestIndex, index);
+		atomicAdd(numSamples, 1);
 	}
 }

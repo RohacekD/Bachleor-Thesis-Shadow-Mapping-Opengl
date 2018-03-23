@@ -67,6 +67,9 @@ C_ShaderManager::T_ShaderPtr C_ShaderManager::GetProgram(const std::string& name
 	GLuint program = LoadProgram(name);
 
 	T_ShaderPtr shaderProgram = std::make_shared<GLW::C_ShaderProgram>(program);
+#if _DEBUG
+	shaderProgram->SetName(name);
+#endif
 
 	m_Programs.insert({ name, shaderProgram});
 

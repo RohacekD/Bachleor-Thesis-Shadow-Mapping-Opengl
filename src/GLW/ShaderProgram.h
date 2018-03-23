@@ -42,6 +42,9 @@ namespace GLW {
 
 		void BindUBO(std::shared_ptr<C_UniformBuffer>) const;
 
+#if _DEBUG
+		inline void SetName(const std::string& name) noexcept { m_name = name; }
+#endif
 
 		// replace this
 		inline GLuint GetProgram() const { return m_Program; }
@@ -65,6 +68,9 @@ namespace GLW {
 		template<> int FindUniformBlockLocation(const std::string& name) const;
 
 	private:
+#if _DEBUG
+		std::string m_name;
+#endif
 		GLuint m_Program;
 		std::map<std::string, GLint> m_uniformMap;
 	};

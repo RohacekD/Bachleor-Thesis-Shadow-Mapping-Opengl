@@ -20,7 +20,7 @@ namespace GLW {
 		}
 #if _DEBUG
 		if (location < 0) {
-			std::cerr << "Program number #" << m_Program << " doesn't have uniform: " << name << std::endl;
+			std::cerr << "Program " << m_name << " doesn't have uniform: " << name << std::endl;
 		}
 #endif
 		return location;
@@ -41,7 +41,7 @@ namespace GLW {
 		}
 #if _DEBUG
 		if (location < 0) {
-			std::cerr << "Program number #" << m_Program << " doesn't have uniform: " << name << std::endl;
+			std::cerr << "Program " << m_name << "  doesn't have uniform: " << name << std::endl;
 		}
 #endif
 		return location;

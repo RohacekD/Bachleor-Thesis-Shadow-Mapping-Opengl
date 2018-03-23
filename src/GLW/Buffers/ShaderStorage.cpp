@@ -28,7 +28,7 @@ C_Histogram::C_Histogram(unsigned int samples, int bindingPoint)
 {
 	ErrorCheck();
 	bind();
-	glBufferData(GetBufferType(), (m_samples + 3)*sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GetBufferType(), (m_samples + 4)*sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
 	ErrorCheck();
 }
 
@@ -38,7 +38,7 @@ void C_Histogram::UploadData() const
 	bind();
 	unsigned int* data = (unsigned int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
 
-	std::vector<unsigned int> v( 257, 0 );
+	std::vector<unsigned int> v( 265, 0 );
 
 	data = v.data();
 
@@ -90,6 +90,7 @@ void C_Histogram::ClearBuffer()
 	glClearBufferSubData(GetBufferType(), GL_R32UI, (m_samples+1)*sizeof(GLuint), sizeof(GLuint), GL_RED, GL_UNSIGNED_INT, &m_samples);
 }
 
+#pragma region C_SplitPlanesStorage
 //=================================================================================
 // C_SplitPlanesStorage
 //=================================================================================
@@ -133,3 +134,4 @@ void C_SplitPlanesStorage::ClearBuffer()
 	bind();
 	glClearBufferData(GetBufferType(), GL_R32UI, GL_RED, GL_UNSIGNED_INT, nullptr);
 }
+#pragma endregion C_SplitPlanesStorage

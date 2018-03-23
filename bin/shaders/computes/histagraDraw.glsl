@@ -9,6 +9,7 @@ layout(std430, binding = 3) buffer histogram
     int highestValue;
 };
 
+//=================================================================================
 void main()
 {
 	uint posX = gl_GlobalInvocationID.x;
