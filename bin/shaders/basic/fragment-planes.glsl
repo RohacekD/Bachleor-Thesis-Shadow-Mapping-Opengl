@@ -70,7 +70,7 @@ bool IsInPSSMShadow(){
 	vec4 shadowCoords = pssm.m_LightViewProjection[split] * worldCoord;
 	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
 	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;
-	return (shadowCoords.z - (1.0f/1024.0f) > objectNearestLight);
+	return (shadowCoords.z > objectNearestLight);
 }
 
 //=================================================================================

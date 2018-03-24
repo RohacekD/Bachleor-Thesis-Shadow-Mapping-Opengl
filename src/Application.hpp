@@ -85,7 +85,9 @@ private:
 		bool m_useMainCam;
 	} m_controlPanel;
 
+#ifndef SPEEDPROFILE
 	void ShowGUI();
+#endif
 
 	void _splitPathToFilenameAndDirectory(const std::string& path, std::string& directoryPath, std::string& fileName);
 

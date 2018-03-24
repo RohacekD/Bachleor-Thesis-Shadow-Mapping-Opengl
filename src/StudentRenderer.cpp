@@ -20,7 +20,9 @@
 #include "Application.hpp"
 #include "UniformBuffersManager.h"
 
+#ifndef SPEEDPROFILE
 #include "imgui/imgui.h"
+#endif
 
 #include <glm/gtx/string_cast.hpp>
 
@@ -93,7 +95,9 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
+#ifdef _DEBUG
 	std::cout << timeSinceLastUpdateMs << std::endl;
+#endif
 	m_animation->Update(timeSinceLastUpdateMs);
 	m_CSM->Update();
 	C_ShaderManager::Instance().Update();
@@ -131,7 +135,9 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
+#ifndef SPEEDPROFILE
 	ShowGUI();
+#endif
 	renderDepthSamples();
 	{
 		RenderDoc::C_DebugScope scope("Compute shader");
@@ -261,9 +267,9 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
 
-	glCullFace(GL_FRONT);
+	//glCullFace(GL_FRONT);
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
-	glCullFace(GL_BACK);
+	//glCullFace(GL_BACK);
 	ErrorCheck();
 	
 
@@ -383,12 +389,12 @@ bool StudentRenderer::initFBO()
 	return true;
 }
 
+#ifndef SPEEDPROFILE
 //=================================================================================
 void StudentRenderer::ShowGUI()
 {
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
-	//ImGui::SliderInt("Splits", &m_ControlPanel.m_lambda, 1, 6);
 	ImGui::End();
 	bool active = true;
 	ImGui::Begin("Depth histogram", &active);
@@ -397,6 +403,7 @@ void StudentRenderer::ShowGUI()
 
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);
 }
+#endif
 
 //=================================================================================
 glm::mat4 StudentRenderer::GetShadowViewMat() const

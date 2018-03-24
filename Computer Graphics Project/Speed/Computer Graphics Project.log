@@ -1,0 +1,145 @@
+﻿  Application.cpp
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewEnableVertexAttribArray
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBindVertexArray
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBindSampler
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetPerformanceCounter
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewUseProgram
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glViewport@16
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewCompileShader
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewGetAttribLocation
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewCreateShader
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glPolygonMode@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GL_GetDrawableSize
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewCreateProgram
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glBindTexture@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glGenTextures@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glEnable@4
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glScissor@16
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetWindowWMInfo
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_ShowCursor
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteVertexArrays
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBlendFuncSeparate
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_SetClipboardText
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glBlendFunc@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetMouseState
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glTexParameteri@12
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetClipboardText
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewAttachShader
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewActiveTexture
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glDeleteTextures@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_CaptureMouse
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteProgram
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewShaderSource
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBlendEquation
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewGenVertexArrays
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewBlendEquationSeparate
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetModState
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glTexImage2D@36
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetWindowFlags
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glIsEnabled@4
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewDetachShader
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_SetCursor
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_FreeCursor
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glDrawElements@16
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glDisable@4
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_CreateSystemCursor
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteShader
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glPixelStorei@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetPerformanceFrequency
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewLinkProgram
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol _SDL_GetWindowSize
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp__glGetIntegerv@8
+imgui_impl_sdl_gl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteBuffers
+Application.obj : error LNK2001: unresolved external symbol _SDL_GL_SwapWindow
+Application.obj : error LNK2001: unresolved external symbol __imp____glewDebugMessageCallback
+Application.obj : error LNK2001: unresolved external symbol _SDL_GL_DeleteContext
+Application.obj : error LNK2001: unresolved external symbol _SDL_Init
+Application.obj : error LNK2001: unresolved external symbol _SDL_DestroyWindow
+Application.obj : error LNK2001: unresolved external symbol _SDL_Quit
+Application.obj : error LNK2001: unresolved external symbol _SDL_GL_SetAttribute
+Application.obj : error LNK2001: unresolved external symbol _SDL_GL_CreateContext
+Application.obj : error LNK2001: unresolved external symbol _SDL_PollEvent
+Application.obj : error LNK2001: unresolved external symbol _SDL_GL_SetSwapInterval
+Application.obj : error LNK2001: unresolved external symbol __imp__glewExperimental
+Application.obj : error LNK2001: unresolved external symbol _SDL_CreateWindow
+Application.obj : error LNK2001: unresolved external symbol __imp__glewInit@0
+Debug.obj : error LNK2001: unresolved external symbol __imp__glewGetErrorString@4
+Debug.obj : error LNK2001: unresolved external symbol __imp__glGetError@0
+ShaderStorage.obj : error LNK2001: unresolved external symbol __imp____glewUnmapBuffer
+ShaderStorage.obj : error LNK2001: unresolved external symbol __imp____glewMapBuffer
+ShaderStorage.obj : error LNK2001: unresolved external symbol __imp____glewBindBufferBase
+ShaderStorage.obj : error LNK2001: unresolved external symbol __imp____glewClearBufferData
+ShaderStorage.obj : error LNK2001: unresolved external symbol __imp____glewClearBufferSubData
+Framebuffer.obj : error LNK2001: unresolved external symbol __imp____glewFramebufferTexture
+Framebuffer.obj : error LNK2001: unresolved external symbol __imp____glewGenFramebuffers
+Framebuffer.obj : error LNK2001: unresolved external symbol __imp____glewBindFramebuffer
+ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewUniformBlockBinding
+ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformBlockIndex
+Texture.obj : error LNK2001: unresolved external symbol __imp____glewObjectLabel
+ModelLoader.obj : error LNK2001: unresolved external symbol _aiGetMaterialFloatArray
+ModelLoader.obj : error LNK2001: unresolved external symbol _aiGetMaterialTextureCount
+ModelLoader.obj : error LNK2001: unresolved external symbol _aiGetMaterialColor
+ModelLoader.obj : error LNK2001: unresolved external symbol "public: void __thiscall Assimp::Importer::FreeScene(void)" (?FreeScene@Importer@Assimp@@QAEXXZ)
+ModelLoader.obj : error LNK2001: unresolved external symbol "public: struct aiScene const * __thiscall Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QAEPBUaiScene@@PBDI@Z)
+ModelLoader.obj : error LNK2001: unresolved external symbol "public: __thiscall Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QAE@XZ)
+ModelLoader.obj : error LNK2001: unresolved external symbol "public: __thiscall Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QAE@XZ)
+ModelLoader.obj : error LNK2001: unresolved external symbol _aiGetMaterialTexture
+RenderDocTools.obj : error LNK2001: unresolved external symbol __imp____glewPopDebugGroup
+RenderDocTools.obj : error LNK2001: unresolved external symbol __imp____glewPushDebugGroup
+MeshNode.obj : error LNK2001: unresolved external symbol __imp__glDrawArrays@12
+Terrain.obj : error LNK2001: unresolved external symbol __imp____glewPrimitiveRestartIndex
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_object_range<class pugi::xml_node_iterator> __thiscall pugi::xml_node::children(void)const " (?children@xml_node@pugi@@QBE?AV?$xml_object_range@Vxml_node_iterator@pugi@@@2@XZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_attribute __thiscall pugi::xml_node::attribute(char const *)const " (?attribute@xml_node@pugi@@QBE?AVxml_attribute@2@PBD@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_node __thiscall pugi::xml_node::child(char const *)const " (?child@xml_node@pugi@@QBE?AV12@PBD@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: char const * __thiscall pugi::xml_node::name(void)const " (?name@xml_node@pugi@@QBEPBDXZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: float __thiscall pugi::xml_attribute::as_float(float)const " (?as_float@xml_attribute@pugi@@QBEMM@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: double __thiscall pugi::xml_attribute::as_double(double)const " (?as_double@xml_attribute@pugi@@QBENN@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: char const * __thiscall pugi::xml_attribute::as_string(char const *)const " (?as_string@xml_attribute@pugi@@QBEPBDPBD@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: __thiscall pugi::xml_parse_result::xml_parse_result(void)" (??0xml_parse_result@pugi@@QAE@XZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_node_iterator const & __thiscall pugi::xml_node_iterator::operator++(void)" (??Exml_node_iterator@pugi@@QAEABV01@XZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_node & __thiscall pugi::xml_node_iterator::operator*(void)const " (??Dxml_node_iterator@pugi@@QBEAAVxml_node@1@XZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: bool __thiscall pugi::xml_node_iterator::operator!=(class pugi::xml_node_iterator const &)const " (??9xml_node_iterator@pugi@@QBE_NABV01@@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: struct pugi::xml_parse_result __thiscall pugi::xml_document::load_file(char const *,unsigned int,enum pugi::xml_encoding)" (?load_file@xml_document@pugi@@QAE?AUxml_parse_result@2@PBDIW4xml_encoding@2@@Z)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: __thiscall pugi::xml_document::~xml_document(void)" (??1xml_document@pugi@@QAE@XZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol "public: __thiscall pugi::xml_document::xml_document(void)" (??0xml_document@pugi@@QAE@XZ)
+SceneBuilder.obj : error LNK2001: unresolved external symbol __imp____glewGenerateMipmap
+ShaderCompiler.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderiv
+ShaderCompiler.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderInfoLog
+ShaderCompiler.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramiv
+ShaderCompiler.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramInfoLog
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_object_range<class pugi::xml_named_node_iterator> __thiscall pugi::xml_node::children(char const *)const " (?children@xml_node@pugi@@QBE?AV?$xml_object_range@Vxml_named_node_iterator@pugi@@@2@PBD@Z)
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_node __thiscall pugi::xml_node::first_child(void)const " (?first_child@xml_node@pugi@@QBE?AV12@XZ)
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: char const * __thiscall pugi::xml_node::value(void)const " (?value@xml_node@pugi@@QBEPBDXZ)
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_named_node_iterator const & __thiscall pugi::xml_named_node_iterator::operator++(void)" (??Exml_named_node_iterator@pugi@@QAEABV01@XZ)
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: class pugi::xml_node & __thiscall pugi::xml_named_node_iterator::operator*(void)const " (??Dxml_named_node_iterator@pugi@@QBEAAVxml_node@1@XZ)
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: bool __thiscall pugi::xml_named_node_iterator::operator!=(class pugi::xml_named_node_iterator const &)const " (??9xml_named_node_iterator@pugi@@QBE_NABV01@@Z)
+ShaderManager.obj : error LNK2001: unresolved external symbol "public: char const * __thiscall pugi::xml_attribute::value(void)const " (?value@xml_attribute@pugi@@QBEPBDXZ)
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp____glewUniform2iv
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp__glClear@4
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp__glCullFace@4
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp____glewBindImageTexture
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp__glTexParameterfv@12
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp____glewDispatchCompute
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp____glewUniform1fv
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp__glClearColor@16
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp____glewTexStorage3D
+StudentRenderer.obj : error LNK2001: unresolved external symbol __imp____glewMemoryBarrier
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilEnable@4
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilLoadImage@4
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilConvertImage@8
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilOriginFunc@4
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilInit@0
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilBindImage@4
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilGetData@0
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilGetError@0
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilGetInteger@4
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilDeleteImage@4
+TextureLoader.obj : error LNK2001: unresolved external symbol __imp__ilGenImages@8
+E:\BP\sablona\Speed\Opengl Shadow Rendering.exe : fatal error LNK1120: 143 unresolved externals

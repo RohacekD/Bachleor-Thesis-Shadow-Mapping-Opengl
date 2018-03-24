@@ -1,8 +1,14 @@
 ﻿#include "Application.hpp"
+
+#ifndef SPEEDPROFILE
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl_gl3.h>
+#endif
+
 #include "Debug.h"
 #include "DebugCallbacks.h"
+
+
 
 //=================================================================================
 Application::Application()
@@ -21,19 +27,25 @@ bool Application::Init()
 
 	glDebugMessageCallback(debugFunc, nullptr);
 
+#ifndef SPEEDPROFILE
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	ImGui_ImplSdlGL3_Init(_window);
 
 	ImGui::StyleColorsDark();
+#endif
 
 	m_cameraManager = std::make_shared<C_CameraManager>();
 	_scene = std::make_shared<Scene>();
 
 	m_controlPanel.m_active = true;
 	m_controlPanel.m_controlMainCam = false;
+#ifndef SPEEDPROFILE
 	m_controlPanel.m_controlScene = true;
+#else
+	m_controlPanel.m_controlScene = false;
+#endif
 	m_controlPanel.m_useMainCam = false;
 
     return true;
@@ -165,6 +177,7 @@ bool Application::addModelFileToScene(const char* fileToLoad, std::shared_ptr<Sc
 }
 
 //=================================================================================
+#ifndef SPEEDPROFILE
 void Application::ShowGUI()
 {
 	// Create a window called "My First Tool", with a menu bar.
@@ -175,6 +188,7 @@ void Application::ShowGUI()
 	ImGui::End();
 
 }
+#endif
 
 //=================================================================================
 void Application::_splitPathToFilenameAndDirectory(const std::string& path, std::string& directoryPath, std::string& fileName)
@@ -242,7 +256,9 @@ bool Application::Run()
 		
         while (SDL_PollEvent(&e) != 0)
 		{
+#ifndef SPEEDPROFILE
 			ImGui_ImplSdlGL3_ProcessEvent(&e);
+#endif
 			if(m_controlPanel.m_controlScene) continue;
 			controledCamera->Input(e);
             switch (e.type)
@@ -282,7 +298,9 @@ bool Application::Run()
                 break;
             }
 		}
+#ifndef SPEEDPROFILE
 		ImGui_ImplSdlGL3_NewFrame(_window);
+#endif
 		GetCamManager()->UseDebugCam(!m_controlPanel.m_useMainCam);
 		ErrorCheck();
 
@@ -290,7 +308,8 @@ bool Application::Run()
 		m_camera->update();
         _renderer.onUpdate(float(_timer.getElapsedTimeFromLastQueryMilliseconds()));
 
-        _renderer.onWindowRedraw(*(renderCamera.get()), renderCamera->getPosition());
+		_renderer.onWindowRedraw(*(renderCamera.get()), renderCamera->getPosition());
+#ifndef SPEEDPROFILE
 		ShowGUI();
 		{
 			glUseProgram(0);//just to be sure
@@ -299,10 +318,13 @@ bool Application::Run()
 			ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
 			ErrorCheck();
 		}
+#endif
         SDL_GL_SwapWindow(_window);
     }
 
+#ifndef SPEEDPROFILE
 	ImGui_ImplSdlGL3_Shutdown();
+#endif
     Clear();
 
     return true;

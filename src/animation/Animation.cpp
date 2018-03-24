@@ -29,8 +29,10 @@ namespace Animation {
 	{
 		m_TimePassed += TimePassed;
 		m_Percentage = (m_TimePassed) / m_Lenght;
+#ifdef _DEBUG
 		if(m_Components.size())
-		std::cout << m_Percentage << "%" << std::endl;
+			std::cout << m_Percentage << "%" << std::endl;
+#endif
 		if (m_Percentage >= 1.0) {
 			Start();// not accurate
 		}
