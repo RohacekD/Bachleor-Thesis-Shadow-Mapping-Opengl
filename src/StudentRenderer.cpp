@@ -432,8 +432,10 @@ glm::mat4 StudentRenderer::ScreenToTextureCoord() const
 
 //=================================================================================
 inline double StudentRenderer::approxRollingAverage(double new_sample) {
-	m_avg -= m_avg / s_avgFramesNum;
-	m_avg += new_sample / s_avgFramesNum;
+	static const float smoothing = 0.9f; // larger=more smoothing
+	m_avg = (m_avg * smoothing) + (new_sample * (1.0f - smoothing));
+	//m_avg -= m_avg / s_avgFramesNum;
+	//m_avg += new_sample / s_avgFramesNum;
 
 	return m_avg;
 }

@@ -70,6 +70,7 @@ void C_ShadowMapCascade::Update()
 		const auto& splitInfo = GetSplitInfo(i);
 		m_PSSSMUBO->m_lightViewProjections[i] = splitInfo.m_lightViewProjectionMatrix;//splitInfo.m_cropMat * CSMviewProjection
 	}
+	m_PSSSMUBO->m_SunDirection = glm::vec3(m_lighInfo->GetNormal());
 	m_PSSSMUBO->UploadData();
 }
 

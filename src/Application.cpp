@@ -25,9 +25,10 @@ bool Application::Init()
     if (!initGlew())
         return false;
 
+#ifndef SPEEDPROFILE
+
 	glDebugMessageCallback(debugFunc, nullptr);
 
-#ifndef SPEEDPROFILE
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
@@ -61,7 +62,7 @@ bool Application::initWindow()
         return false;
     }
 
-    _window = SDL_CreateWindow("Shadows", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    _window = SDL_CreateWindow("OpenGL shadow Rendering", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     if(_window == nullptr)
     {
         std::cerr << "Failed to create SDL window!\n";

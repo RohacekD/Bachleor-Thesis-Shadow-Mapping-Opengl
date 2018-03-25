@@ -18,10 +18,21 @@
 #include "Frustum.h"
 #include <SDL/SDL_events.h>
 
+#include <vector>
+#include <memory>
+
+class I_CameraObserver;
+
+enum class E_CameraValues {
+	Near,
+	Far,
+	Fov,
+};
+
 class I_Camera {
 public:
-	I_Camera(){}
-	virtual ~I_Camera() {};
+
+	virtual ~I_Camera() = default;
 
 	// return true if object handles input
 	virtual bool Input(SDL_Event) = 0;
@@ -53,4 +64,17 @@ public:
 	virtual float GetFov() const = 0;
 	virtual void  SetFov(float fov) = 0;
 	virtual float GetAspectRatio() const = 0;
+
+
+	void Subscribe(std::shared_ptr<I_CameraObserver> observer);
+	void Unsubscribe(std::shared_ptr<I_CameraObserver> observer);
+	void Notify(E_CameraValues value);
+private:
+	std::vector<std::weak_ptr<I_CameraObserver>> m_observers;
+};
+
+class I_CameraObserver {
+public:
+	~I_CameraObserver() = default;
+	virtual void Notify(E_CameraValues value) = 0;
 };

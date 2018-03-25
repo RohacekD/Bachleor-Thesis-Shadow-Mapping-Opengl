@@ -50,6 +50,7 @@ namespace GLW {
 		inline GLuint GetProgram() const { return m_Program; }
 
 		template<class N, class T> void SetUniform(N name, T value);
+		template<class N> void SetUniform(N name, const bool& value);
 		template<class N> void SetUniform(N name, const int & value);
 		template<class N> void SetUniform(N name, const float & value);
 		template<class N> void SetUniform(N name, const glm::mat4 & value);

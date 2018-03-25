@@ -142,12 +142,10 @@ namespace render {
 		auto node = std::make_shared<C_MeshNode>();
 		node->LoadMesh(mesh);
 		auto material = m_scene->materials[mesh.materialIndex];
-		if(material.textureIndex != -1)
-		node->SetTexture(m_textures[material.textureIndex]);
-		else
-		{
-			node->SetTexture(m_nullTexture);
+		if (material.textureIndex != -1) {
+			node->SetTexture(m_textures[material.textureIndex]);
 		}
+		node->SetColor(material.diffuse);
 		return node;
 	}
 

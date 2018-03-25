@@ -41,6 +41,8 @@ namespace render {
 
 		void LoadMesh(const Mesh& mesh);
 		void SetTexture(std::shared_ptr<GLW::C_Texture> texture) { m_texture = texture; }
+		void SetColor(const glm::vec4& color) noexcept { m_color = color; }
+
 
 		virtual bool IsAABBChanged() const override;
 
@@ -58,5 +60,7 @@ namespace render {
 		std::shared_ptr<GLW::C_ShaderProgram> m_program;
 		std::shared_ptr<GLW::C_ShaderProgram> m_shadowProgram;
 		std::shared_ptr<GLW::C_Texture> m_texture;
+
+		glm::vec4 m_color;
 	};
 };

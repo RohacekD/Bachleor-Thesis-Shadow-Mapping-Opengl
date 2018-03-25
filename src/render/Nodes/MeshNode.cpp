@@ -107,7 +107,7 @@ namespace render {
 		glBindVertexArray(0);
 
 		auto& shdManager = C_ShaderManager::Instance();
-		m_program = shdManager.GetProgram("basic-planes");
+		m_program = shdManager.GetProgram("basic");
 		m_shadowProgram = shdManager.GetProgram("basic-shadow");
 	}
 
@@ -142,28 +142,34 @@ namespace render {
 	void C_MeshNode::RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
 		//RenderBBox(params.m_cameraViewProjectionMatrix, modelMatrix);
+		auto& shdManager = C_ShaderManager::Instance();
+		auto program = shdManager.GetProgram("basic-planes");
 
-
-		m_program->useProgram();
+		program->useProgram();
 		glBindVertexArray(m_VAO);
 
 		glActiveTexture(GL_TEXTURE0);
 		params.m_shadowMap->bind();
-		m_program->SetUniform("shadowMap", 0);
+		program->SetUniform("shadowMap", 0);
 
-		glActiveTexture(GL_TEXTURE1);
 		if (m_texture) {
+			glActiveTexture(GL_TEXTURE1);
 			m_texture->bind();
-			m_program->SetUniform("tex", 1);
+			program->SetUniform("tex", 1);
+			program->SetUniform("hasTexture", true);
+		}
+		else {
+			program->SetUniform("hasTexture", false);
+			program->SetUniform("modelColor", m_color);
 		}
 
-		m_program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
-		m_program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
+		program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
+		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 
 		glBindVertexArray(0);
-		m_program->disableProgram();
+		program->disableProgram();
 		
 		params.m_shadowMap->unbind();
 		if (m_texture)

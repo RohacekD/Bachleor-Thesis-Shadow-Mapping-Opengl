@@ -56,6 +56,13 @@ namespace GLW {
 
 	//=================================================================================
 	template<class N>
+	void GLW::C_ShaderProgram::SetUniform(N name, const bool& value)
+	{
+		glUniform1i(FindLocation(name), value);
+	}
+
+	//=================================================================================
+	template<class N>
 	void C_ShaderProgram::SetUniform(N name, const glm::mat4 & value)
 	{
 		glUniformMatrix4fv(FindLocation(name), 1, GL_FALSE, glm::value_ptr(value)); 
