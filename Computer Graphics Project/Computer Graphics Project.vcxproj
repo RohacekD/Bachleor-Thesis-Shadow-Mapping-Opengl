@@ -254,9 +254,11 @@
     <ClCompile Include="..\src\GLW\ShaderProgram.cpp" />
     <ClCompile Include="..\src\GLW\Texture.cpp" />
     <ClCompile Include="..\src\HighResolutionTimer.cpp" />
+    <ClCompile Include="..\src\ISplitPlanesCalculator.cpp" />
     <ClCompile Include="..\src\LightInfo.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\ModelLoader.cpp" />
+    <ClCompile Include="..\src\PSSMSplitsCalculator.cpp" />
     <ClCompile Include="..\src\PSSMUBO.cpp" />
     <ClCompile Include="..\src\RenderDocTools.cpp" />
     <ClCompile Include="..\src\render\Nodes\MeshNode.cpp" />
@@ -268,6 +270,7 @@
     <ClCompile Include="..\src\SceneLoader.cpp" />
     <ClCompile Include="..\src\ShaderCompiler.cpp" />
     <ClCompile Include="..\src\ShaderManager.cpp" />
+    <ClCompile Include="..\src\ShaderPreprocessor.cpp" />
     <ClCompile Include="..\src\ShadowMapCascade.cpp" />
     <ClCompile Include="..\src\StudentRenderer.cpp" />
     <ClCompile Include="..\src\TextureLoader.cpp" />
@@ -305,8 +308,10 @@
     <ClInclude Include="..\src\GLW\Texture.h" />
     <ClInclude Include="..\src\HighResolutionTimer.hpp" />
     <ClInclude Include="..\src\IRenderer.h" />
+    <ClInclude Include="..\src\ISplitPlanesCalculator.h" />
     <ClInclude Include="..\src\LightInfo.h" />
     <ClInclude Include="..\src\ModelLoader.hpp" />
+    <ClInclude Include="..\src\PSSMSplitsCalculator.h" />
     <ClInclude Include="..\src\PSSMUBO.h" />
     <ClInclude Include="..\src\RenderDocTools.h" />
     <ClInclude Include="..\src\render\Nodes\MeshNode.h" />
@@ -319,6 +324,7 @@
     <ClInclude Include="..\src\SceneLoader.hpp" />
     <ClInclude Include="..\src\ShaderCompiler.hpp" />
     <ClInclude Include="..\src\ShaderManager.h" />
+    <ClInclude Include="..\src\ShaderPreprocessor.h" />
     <ClInclude Include="..\src\ShadowMapCascade.h" />
     <ClInclude Include="..\src\StudentRenderer.hpp" />
     <ClInclude Include="..\src\TextureLoader.hpp" />

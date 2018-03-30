@@ -100,17 +100,17 @@ C_SplitPlanesStorage::C_SplitPlanesStorage(unsigned int numFrustums, int binding
 {
 	m_Frustums.reserve(m_NumFrustums);
 	for (unsigned int i = 0; i < m_NumFrustums; ++i) {
-		m_Frustums.emplace_back(0,0);
+		m_Frustums.emplace_back(0.0f, 0.0f);
 	}
 	bind();
-	glBufferData(GetBufferType(), m_NumFrustums*2 * sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GetBufferType(), m_NumFrustums*2 * sizeof(decltype (m_Frustums)::value_type), nullptr, GL_DYNAMIC_DRAW);
 	ErrorCheck();
 }
 //=================================================================================
 void C_SplitPlanesStorage::UploadData() const
 {
 	bind();
-	unsigned int* data = (unsigned int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
+	decltype (m_Frustums)::value_type* data = (decltype (m_Frustums)::value_type*)glMapBuffer(GetBufferType(), GL_READ_WRITE);
 
 	memcpy(data, m_Frustums.data(), m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
 
@@ -121,7 +121,7 @@ void C_SplitPlanesStorage::UploadData() const
 void C_SplitPlanesStorage::DownloadData()
 {
 	bind();
-	int* data = (int *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
+	decltype (m_Frustums)::value_type* data = (decltype (m_Frustums)::value_type *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
 
 	memcpy(m_Frustums.data(), data, m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
 

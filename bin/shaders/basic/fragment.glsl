@@ -23,63 +23,19 @@ out vec4 fragColor;
 
 vec4 MaterialDiffuseColor;
 
-
-
-//=================================================================================
-layout(std430, binding = 4) buffer splitFrustums
-{
-    uvec2 frustum[4];
-};
+#include "include/splitFrustrum.glsl"
+#include "include/pssmUniform.glsl"
 
 //================================================================================
 in vec4 PSSM_CameraDependentPos;
 
-uniform PSSM{
-	float[PSSM_SPLITS] PSSM_Limits;
-	mat4 PSSM_CameraView;
-	mat4 PSSM_CameraProjection;
-	mat4[PSSM_SPLITS] m_LightViewProjection;
-	vec3 SunDirection;
-} pssm;
-
-//=================================================================================
-int PSSMPlane(){
-	float linDepth = abs(PSSM_CameraDependentPos.z);
-
-	if(linDepth < 0.0f){
-		return 4;
-	}
-	else if(linDepth < 0.1f){
-		return 4;
-	}
-	else if(linDepth < pssm.PSSM_Limits[0]){
-		return 0;
-	}
-	else if(linDepth < pssm.PSSM_Limits[1]){
-		return 1;
-	}
-	else if(linDepth < pssm.PSSM_Limits[2]){
-		return 2;
-	} 
-	else if(linDepth < pssm.PSSM_Limits[3]){
-		return 3;
-	}
-	else{
-		return 4;
-	}
-}
-
 //=================================================================================
 bool IsInPSSMShadow(){
-	int split = PSSMPlane();
+	int split = getNumberFrustum(abs(PSSM_CameraDependentPos.z));
 	vec4 shadowCoords = pssm.m_LightViewProjection[split] * worldCoord;
 	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
 	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;
-	return (shadowCoords.z - (2.0f/1024.0f)  > objectNearestLight);
-}
-
-//=================================================================================
-void ApplyPSSM(){
+	return (shadowCoords.z > objectNearestLight);
 }
 
 //=================================================================================

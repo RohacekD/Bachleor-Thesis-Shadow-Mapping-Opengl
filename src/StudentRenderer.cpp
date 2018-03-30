@@ -138,67 +138,67 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 #ifndef SPEEDPROFILE
 	ShowGUI();
 #endif
-	renderDepthSamples();
-	{
-		RenderDoc::C_DebugScope scope("Compute shader");
-		auto program = C_ShaderManager::Instance().GetProgram("compute-splits");
-		auto texture = m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
-		program->useProgram();
-		program->SetUniform("globalSize", glm::ivec2(512, 512));
-		m_histogram->bind();
-
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
-
-		glActiveTexture(GL_TEXTURE0);
-		texture->bind();
-		glDispatchCompute(512 / 16, 512 / 16, 1);
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
-
-		texture->unbind();
-		program->disableProgram();
-	}
-	{
-		RenderDoc::C_DebugScope scope("Compute shader splits");
-		auto program = C_ShaderManager::Instance().GetProgram("calcSplits");
-		program->useProgram();
-		auto planes = m_CSM->GetPlanes();
-
-		const auto func = [](float value, float from1, float to1, float from2, float to2) {
-			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
-		};
-
-		std::for_each(planes.begin(), planes.end(), [func, this](float& val) {
-			val = func(val, m_CSM->GetBoundCamera()->GetNear(), m_CSM->GetBoundCamera()->GetFar(), 0.0f, 1.0f);
-		});
-		
-		program->SetUniform("splitRatios", planes);
-		m_histogram->bind();
-
-		m_SplitFrust->bind();
-		glDispatchCompute(1, 1, 1);
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
-
-		m_SplitFrust->unbind();
-		program->disableProgram();
-	}
-	{
-		RenderDoc::C_DebugScope scope("Compute shader draw");
-		auto program = C_ShaderManager::Instance().GetProgram("histagraDrawColor");
-		program->useProgram();
-
-		m_SplitFrust->bind();
-		glActiveTexture(GL_TEXTURE0);
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
-		glBindImageTexture(0, m_HistogramTexture->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-		glDispatchCompute(256, 1, 1);
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
-
-		m_histogram->ClearBuffer();
-		m_histogram->unbind();
-		m_SplitFrust->unbind();
-		m_HistogramTexture->unbind();
-		program->disableProgram();
-	}
+	//renderDepthSamples();
+	//{
+	//	RenderDoc::C_DebugScope scope("Compute shader");
+	//	auto program = C_ShaderManager::Instance().GetProgram("compute-splits");
+	//	auto texture = m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
+	//	program->useProgram();
+	//	program->SetUniform("globalSize", glm::ivec2(512, 512));
+	//	m_histogram->bind();
+	//
+	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	//
+	//	glActiveTexture(GL_TEXTURE0);
+	//	texture->bind();
+	//	glDispatchCompute(512 / 16, 512 / 16, 1);
+	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	//
+	//	texture->unbind();
+	//	program->disableProgram();
+	//}
+	//{
+	//	RenderDoc::C_DebugScope scope("Compute shader splits");
+	//	auto program = C_ShaderManager::Instance().GetProgram("calcSplits");
+	//	program->useProgram();
+	//	auto planes = m_CSM->GetPlanes();
+	//
+	//	const auto func = [](float value, float from1, float to1, float from2, float to2) {
+	//		return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+	//	};
+	//
+	//	std::for_each(planes.begin(), planes.end(), [func, this](float& val) {
+	//		val = func(val, m_CSM->GetBoundCamera()->GetNear(), m_CSM->GetBoundCamera()->GetFar(), 0.0f, 1.0f);
+	//	});
+	//	
+	//	program->SetUniform("splitRatios", planes);
+	//	m_histogram->bind();
+	//
+	//	m_SplitFrust->bind();
+	//	glDispatchCompute(1, 1, 1);
+	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	//
+	//	m_SplitFrust->unbind();
+	//	program->disableProgram();
+	//}
+	//{
+	//	RenderDoc::C_DebugScope scope("Compute shader draw");
+	//	auto program = C_ShaderManager::Instance().GetProgram("histagraDrawColor");
+	//	program->useProgram();
+	//
+	//	m_SplitFrust->bind();
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	//	glBindImageTexture(0, m_HistogramTexture->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+	//	glDispatchCompute(256, 1, 1);
+	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	//
+	//	m_histogram->ClearBuffer();
+	//	m_histogram->unbind();
+	//	m_SplitFrust->unbind();
+	//	m_HistogramTexture->unbind();
+	//	program->disableProgram();
+	//}
 
 
 
@@ -209,6 +209,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	RenderDoc::C_DebugScope scope("Render pass");
 
 	m_CSM->ActivateUBO();
+	//auto splits = 
 
 	glViewport(0, 0, m_screenWidht, m_screenHeight);
 
@@ -219,6 +220,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_pass = render::S_RenderParams::E_PassType::RenderPass;
 
 	m_renderScene->Render(params, glm::mat4(1.0f));
+
 	ErrorCheck();
 	m_CSM->ActivateUBO(false);
 
@@ -239,7 +241,6 @@ void StudentRenderer::clearStudentData()
 	m_renderScene.reset();
 	m_HistogramTexture.reset();
 	m_histogram.reset();
-	m_SplitFrust.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
 	C_UniformBuffersManager::Instance().Clear();
@@ -376,14 +377,6 @@ bool StudentRenderer::initFBO()
 	ErrorCheck();
 	
 	m_HistogramTexture->EndGroupOp();
-
-	m_SplitFrust = std::make_shared<C_SplitPlanesStorage>(gs_splits, 4);
-	m_SplitFrust->m_Frustums[0] = { 0, 64 };
-	m_SplitFrust->m_Frustums[1] = { 64, 128 };
-	m_SplitFrust->m_Frustums[2] = { 128, 128+64 };
-	m_SplitFrust->m_Frustums[3] = { 128+ 64, 256};
-	m_SplitFrust->UploadData();
-	m_SplitFrust->unbind();
 
 
 	return true;

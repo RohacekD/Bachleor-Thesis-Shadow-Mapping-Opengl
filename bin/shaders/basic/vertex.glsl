@@ -17,13 +17,7 @@ uniform mat4 modelMatrix;
 //=================================================================================
 out vec4 PSSM_CameraDependentPos;
 
-uniform PSSM{
-	float[PSSM_SPLITS] PSSM_Limits;
-	mat4 PSSM_CameraView;
-	mat4 PSSM_CameraProjection;
-	mat4[PSSM_SPLITS] m_LightViewProjection;
-	vec3 SunDirection;
-} pssm;
+#include "include/pssmUniform.glsl"
 
 //=================================================================================
 out vec3 normalOUT;

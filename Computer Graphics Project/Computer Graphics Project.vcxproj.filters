@@ -186,6 +186,15 @@
     <ClCompile Include="..\src\GLW\Buffers\ShaderStorage.cpp">
       <Filter>Source Files\GLW\Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PSSMSplitsCalculator.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ISplitPlanesCalculator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShaderPreprocessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -334,6 +343,15 @@
     </ClInclude>
     <ClInclude Include="..\src\GLW\Buffers\ShaderStorage.h">
       <Filter>Header Files\GLW\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ISplitPlanesCalculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PSSMSplitsCalculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ShaderPreprocessor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

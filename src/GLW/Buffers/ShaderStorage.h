@@ -13,6 +13,8 @@
 
 #include "GLW/Buffers/GLBuffer.h"
 
+#include "ISplitPlanesCalculator.h"
+
 #include <vector>
 
 namespace GLW {
@@ -61,10 +63,7 @@ class C_SplitPlanesStorage : public GLW::C_ShaderStorageBuffer {
 		virtual void DownloadData() override;
 		virtual void ClearBuffer() override;
 
-		// indexes now
-		using T_FrustSplits = std::pair<int, int>;
-
 		unsigned int m_NumFrustums;
-		std::vector<T_FrustSplits> m_Frustums;
+		I_SplitPlanesCalculator::T_FrustVector m_Frustums;
 
 };

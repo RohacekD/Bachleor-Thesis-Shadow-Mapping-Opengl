@@ -1,6 +1,10 @@
 #include "ShaderCompiler.hpp"
+#include "ShaderPreprocessor.h"
 
+#include <regex>
+#include <algorithm>
 #include <iterator>
+#include <exception>
 
 bool ShaderCompiler::compileShader(GLuint& shader, const char* filepath, const GLenum shaderType, std::string& errorLog)
 {
@@ -11,15 +15,34 @@ bool ShaderCompiler::compileShader(GLuint& shader, const char* filepath, const G
         return false;
     }
 
-    std::string src;
+	std::string src;
 
-    if(!_loadFile(filepath, src))
-    {
-        std::stringstream sstr;
-        sstr << "Failed to open shader file: " << std::string(filepath) << std::endl;
-        errorLog = sstr.str();
-        return false;
-    }
+
+	if (!_loadFile(filepath, src))
+	{
+		std::stringstream sstr;
+		sstr << "Failed to open shader file: " << std::string(filepath) << std::endl;
+		errorLog = sstr.str();
+		return false;
+	}
+
+	std::smatch m;
+	std::regex e(R"(^(.+\/)*(.+)\.(.+)$)");
+
+	std::string filestr(filepath);
+
+	try
+	{
+		if (std::regex_search(filestr, m, e)) {
+			C_ShaderPreprocessor preproces;
+			src = preproces.PreprocessFile(src, m[1].str());
+		}
+
+	}
+	catch (std::exception& e)
+	{
+		errorLog += e.what();
+	}
 
     const char* cstr = src.c_str();
     glShaderSource(shader, 1, &cstr, NULL);
@@ -38,7 +61,7 @@ bool ShaderCompiler::compileShader(GLuint& shader, const char* filepath, const G
             char* log = new char[loglen];
 
             glGetShaderInfoLog(shader, loglen, nullptr, log);
-            errorLog.assign(log);
+            errorLog.append(log);
 
             delete[] log;
         }

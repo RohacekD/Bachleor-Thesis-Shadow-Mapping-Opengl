@@ -16,6 +16,8 @@
 #include "LightInfo.h"
 #include "PSSMUBO.h"
 
+#include "PSSMSplitsCalculator.h"
+
 #include <memory>
 #include <vector>
 
@@ -24,6 +26,7 @@ namespace GLW {
 	class C_Texture;
 }
 
+class C_SplitPlanesStorage;
 class C_LightInfo;
 
 struct S_SplitInfo {
@@ -38,6 +41,7 @@ public:
 	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, std::shared_ptr<I_Camera> camera, unsigned int defaultResolution, unsigned int levels, float m_lambda = 0.5f);
 	~C_ShadowMapCascade();
 
+	// not working just now
 	unsigned int	GetNumLevels() const { return m_levels; }
 	void			SetNumLevels(unsigned int val) { m_levels = val; }
 
@@ -65,8 +69,10 @@ public:
 
 	const S_SplitInfo& GetSplitInfo(int i) { return m_splitInfos[i]; }
 private:
-	void CalcSplitPlanes();
 	void CalcCropMatrices();
+
+	C_PSSMSplitsCalculator m_SplitCalculator;
+	std::shared_ptr<C_SplitPlanesStorage> m_SplitFrust;
 
 	unsigned int									m_levels;
 	unsigned int									m_resolution;
