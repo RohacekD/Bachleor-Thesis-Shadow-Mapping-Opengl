@@ -17,6 +17,8 @@
 #include <vector>
 #include <utility>
 
+class C_SplitPlanesStorage;
+
 class I_SplitPlanesCalculator {
 public:
 	using T_FrustSplits = std::pair<float, float>;
@@ -27,7 +29,7 @@ public:
 
 	void SetLambda(float lambda) { m_ratios->SetLambda(lambda); }
 
-
+	virtual void BindBuffer(float activate = true);
 	virtual const T_FrustVector& GetSplitFrusts() = 0;
 protected:
 	class C_RatiosCalculator 
@@ -38,9 +40,10 @@ protected:
 		~C_RatiosCalculator();
 
 		float GetLambda() const { return m_lambda; }
-		void SetLambda(float val) { m_lambda = val; m_changed = true; }
+		void SetLambda(float val);
 
 		bool Changed() const { return m_changed; }
+		void ChangeProcessed() { m_changed = false; }
 
 		std::vector<float> CalcRations(unsigned int splits);
 
@@ -54,4 +57,5 @@ protected:
 
 	std::shared_ptr<I_Camera> m_camera;
 	std::shared_ptr<C_RatiosCalculator> m_ratios; // have to be shared ptr to enable observer pattern. Maybe not a bes idea
+	std::shared_ptr<C_SplitPlanesStorage> m_SplitFrust;
 };

@@ -60,8 +60,6 @@ public:
 
 	void RecalcAll();
 
-	const std::vector<float> GetPlanes() const;
-
 	void	PrintSplittingDepths() const;
 	void	DebugDrawAABBs(const glm::mat4& projectionMatrix) const;
 

@@ -105,6 +105,7 @@ C_SplitPlanesStorage::C_SplitPlanesStorage(unsigned int numFrustums, int binding
 	bind();
 	glBufferData(GetBufferType(), m_NumFrustums*2 * sizeof(decltype (m_Frustums)::value_type), nullptr, GL_DYNAMIC_DRAW);
 	ErrorCheck();
+	unbind();
 }
 //=================================================================================
 void C_SplitPlanesStorage::UploadData() const
@@ -115,6 +116,7 @@ void C_SplitPlanesStorage::UploadData() const
 	memcpy(data, m_Frustums.data(), m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
 
 	glUnmapBuffer(GetBufferType());
+	unbind();
 }
 
 //=================================================================================
@@ -126,6 +128,7 @@ void C_SplitPlanesStorage::DownloadData()
 	memcpy(m_Frustums.data(), data, m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
 
 	glUnmapBuffer(GetBufferType());
+	unbind();
 }
 
 //=================================================================================
@@ -133,5 +136,6 @@ void C_SplitPlanesStorage::ClearBuffer()
 {
 	bind();
 	glClearBufferData(GetBufferType(), GL_R32UI, GL_RED, GL_UNSIGNED_INT, nullptr);
+	unbind();
 }
 #pragma endregion C_SplitPlanesStorage

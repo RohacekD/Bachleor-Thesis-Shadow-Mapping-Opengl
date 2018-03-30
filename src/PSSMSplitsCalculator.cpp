@@ -1,5 +1,7 @@
 #include "PSSMSplitsCalculator.h"
 
+#include "GLW/Buffers/ShaderStorage.h"
+
 //=================================================================================
 C_PSSMSplitsCalculator::C_PSSMSplitsCalculator(unsigned int frusrums, std::shared_ptr<I_Camera> camera)
 	: m_frustums(frusrums)
@@ -21,6 +23,10 @@ const I_SplitPlanesCalculator::T_FrustVector& C_PSSMSplitsCalculator::GetSplitFr
 				m_frusts[i].first = ratios[i - 1];
 			}
 		}
+		m_SplitFrust->m_Frustums = m_frusts;
+		m_SplitFrust->UploadData();
+		
+		m_ratios->ChangeProcessed();
 		// je to posledni near??????
 	}
 	return m_frusts;

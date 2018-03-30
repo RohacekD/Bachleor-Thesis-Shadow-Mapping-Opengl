@@ -54,7 +54,8 @@ void main()
 	else{
 		MaterialDiffuseColor = modelColor;
 	}
-	MaterialDiffuseColor += getColorForFrustum(abs(PSSM_CameraDependentPos.z))*0.3;
+	if(PSSM_CameraDependentPos.z<0.0)
+		MaterialDiffuseColor += getColorForFrustum(abs(PSSM_CameraDependentPos.z))*0.3;
 
 	ApplyPSSM();
 

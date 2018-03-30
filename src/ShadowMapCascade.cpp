@@ -8,7 +8,6 @@
 #include "CameraManager.h"
 #include "Camera/ICamera.h"
 #include "UniformBuffersManager.h"
-#include "GLW/Buffers/ShaderStorage.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -28,8 +27,6 @@ C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, s
 {
 	//todo
 	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO<4>>("PSSM");
-	//TODO
-	m_SplitFrust = std::make_shared<C_SplitPlanesStorage>(4, 4);
 
 	ErrorCheck();
 	m_PSSSMUBO->m_splits = levels;
@@ -45,14 +42,7 @@ C_ShadowMapCascade::~C_ShadowMapCascade()
 void C_ShadowMapCascade::ActivateUBO(bool activate /*= true*/)
 {
 	m_PSSSMUBO->Activate(activate);
-	if (activate) {
-		m_SplitFrust->m_Frustums = m_SplitCalculator.GetSplitFrusts();
-		m_SplitFrust->bind();
-		m_SplitFrust->UploadData();
-	}
-	else {
-		m_SplitFrust->unbind();
-	}
+	m_SplitCalculator.BindBuffer(activate);
 	
 }
 
@@ -60,6 +50,7 @@ void C_ShadowMapCascade::ActivateUBO(bool activate /*= true*/)
 void C_ShadowMapCascade::SetLambda(float val) {
 	m_lambda = val;
 	m_lambda = std::min(std::max(m_lambda, 0.0f), 1.0f);
+	m_SplitCalculator.SetLambda(m_lambda);
 }
 
 //=================================================================================
@@ -77,7 +68,6 @@ void C_ShadowMapCascade::Update()
 
 	RecalcAll();
 
-	m_PSSSMUBO->m_splitPlanes = GetPlanes();
 	m_PSSSMUBO->m_cameraView = m_boundCamera->getViewMatrix();
 	m_PSSSMUBO->m_cameraProjection = m_boundCamera->getProjectionMatrix();
 	for (unsigned int i = 0; i < GetNumLevels(); ++i) {
@@ -101,13 +91,6 @@ void C_ShadowMapCascade::PrintSplittingDepths() const
 void C_ShadowMapCascade::RecalcAll()
 {
 	CalcCropMatrices();
-}
-
-//=================================================================================
-const std::vector<float> C_ShadowMapCascade::GetPlanes() const
-{
-	//todo change to different sizes
-	return std::vector<float>(++(m_splitingPlanes.begin()), m_splitingPlanes.end());
 }
 
 //=================================================================================

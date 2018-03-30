@@ -1,5 +1,7 @@
 #include "ISplitPlanesCalculator.h"
 
+#include "GLW/Buffers/ShaderStorage.h"
+
 
 //=================================================================================
 I_SplitPlanesCalculator::I_SplitPlanesCalculator(std::shared_ptr<I_Camera> camera)
@@ -7,12 +9,26 @@ I_SplitPlanesCalculator::I_SplitPlanesCalculator(std::shared_ptr<I_Camera> camer
 	, m_camera(camera)
 {
 	m_camera->Subscribe(m_ratios);
+	//TODO
+	m_SplitFrust = std::make_shared<C_SplitPlanesStorage>(4, 4);
 }
 
 //=================================================================================
 I_SplitPlanesCalculator::~I_SplitPlanesCalculator()
 {
 	m_camera->Unsubscribe(m_ratios);
+	m_SplitFrust.reset();
+}
+
+//=================================================================================
+void I_SplitPlanesCalculator::BindBuffer(float activate /*= true*/)
+{
+	if (activate) {
+		m_SplitFrust->bind();
+	}
+	else {
+		m_SplitFrust->unbind();
+	}
 }
 
 //=================================================================================
@@ -27,6 +43,15 @@ I_SplitPlanesCalculator::C_RatiosCalculator::C_RatiosCalculator(std::shared_ptr<
 //=================================================================================
 I_SplitPlanesCalculator::C_RatiosCalculator::~C_RatiosCalculator()
 {
+}
+
+//=================================================================================
+void I_SplitPlanesCalculator::C_RatiosCalculator::SetLambda(float val)
+{
+	if (m_lambda != val) {
+		m_lambda = val; 
+		m_changed = true;
+	}
 }
 
 //=================================================================================
