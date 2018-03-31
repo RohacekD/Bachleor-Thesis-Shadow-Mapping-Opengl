@@ -15,6 +15,7 @@
 
 #include <GL/glew.h>
 
+#include <glm/glm.hpp>
 #include <string>
 
 namespace GLW {
@@ -36,9 +37,10 @@ namespace GLW {
 		inline GLuint GetTexture() const { return m_texture; }
 		inline GLenum GetTarget() const { return m_target; }
 
-		void setWrap(GLint wrapS, GLint wrapT);
-		void setFilter(GLint min, GLint mag);
-		void setParameteri(GLenum pname, GLint param);
+		void SetWrap(GLint wrapS, GLint wrapT);
+		void SetFilter(GLint min, GLint mag);
+		void SetTexParameter(GLenum pname, const glm::vec4& value);
+		void SetTexParameter(GLenum pname, GLint value);
 
 	private:
 		GLuint m_texture;

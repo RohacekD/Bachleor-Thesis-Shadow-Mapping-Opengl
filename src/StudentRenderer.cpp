@@ -1,5 +1,4 @@
 ﻿#include "StudentRenderer.hpp"
-#include <glm/gtc/type_ptr.hpp>
 
 #include "animation/Animation.h"
 #include "animation/TranslationAnimations.h"
@@ -25,6 +24,7 @@
 #endif
 
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Debug.h"
 
@@ -44,7 +44,7 @@ const int StudentRenderer::gs_splits = 4;
 //=================================================================================
 StudentRenderer::StudentRenderer()
 {
-
+	m_ControlPanel.m_animateSun = true;
 }
 
 //=================================================================================
@@ -100,7 +100,9 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
-	m_SunAnimation->Update(timeSinceLastUpdateMs);
+	if (m_ControlPanel.m_animateSun) {
+		m_SunAnimation->Update(timeSinceLastUpdateMs);
+	}
 	m_CSM->Update();
 	C_ShaderManager::Instance().Update();
 }
@@ -250,11 +252,9 @@ bool StudentRenderer::initFBO()
 	glTexStorage3D(depthTexture->GetTarget(), 1, GL_DEPTH_COMPONENT32, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
 
 	ErrorCheck();
-	depthTexture->setWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
-	depthTexture->setFilter(GL_NEAREST, GL_NEAREST);
-	glm::vec4 borderColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glTexParameterfv(depthTexture->GetTarget(), GL_TEXTURE_BORDER_COLOR, glm::value_ptr(borderColor));
-	ErrorCheck();
+	depthTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
+	depthTexture->SetFilter(GL_NEAREST, GL_NEAREST);
+	depthTexture->SetTexParameter(GL_TEXTURE_BORDER_COLOR, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	depthTexture->EndGroupOp();
 
@@ -266,8 +266,8 @@ bool StudentRenderer::initFBO()
 	glTexStorage3D(colorTexture->GetTarget(), 1, GL_RGBA32F, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
 
 	ErrorCheck();
-	colorTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	colorTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	colorTexture->SetWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	colorTexture->SetFilter(GL_NEAREST, GL_NEAREST);
 	ErrorCheck();
 
 	colorTexture->EndGroupOp();
@@ -290,8 +290,8 @@ bool StudentRenderer::initFBO()
 		0);
 
 	ErrorCheck();
-	depthSamplesTexture->setWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
-	depthSamplesTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	depthSamplesTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
+	depthSamplesTexture->SetFilter(GL_NEAREST, GL_NEAREST);
 	ErrorCheck();
 
 	depthSamplesTexture->EndGroupOp();
@@ -310,6 +310,7 @@ void StudentRenderer::ShowGUI()
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
 	ImGui::Checkbox("Use SDSM", &m_ControlPanel.m_useSDSM);
+	ImGui::Checkbox("Animate sun position", &m_ControlPanel.m_animateSun);
 	ImGui::End();
 	bool active = true;
 	ImGui::Begin("Depth histogram", &active);
@@ -319,31 +320,6 @@ void StudentRenderer::ShowGUI()
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);
 }
 #endif
-
-//=================================================================================
-glm::mat4 StudentRenderer::GetShadowViewMat() const
-{
-	float maxY = m_renderScene->m_bbox.maxPoint.y;
-	return glm::lookAt(glm::vec3(0, maxY + 0.5f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
-}
-
-//=================================================================================
-glm::mat4 StudentRenderer::GetShadowProjectionMat() const
-{
-	AABB box = m_renderScene->m_bbox.getTransformedAABB(GetShadowViewMat());
-
-	return glm::ortho(box.minPoint.x, box.maxPoint.x, box.minPoint.y, box.maxPoint.y, 0.5f, -box.minPoint.z);
-
-}
-
-//=================================================================================
-glm::mat4 StudentRenderer::ScreenToTextureCoord() const
-{
-	glm::mat4 offset(1.0f);
-	offset = glm::translate(offset, glm::vec3(0.5f, 0.5f, 0.5f));
-	offset = glm::scale(offset, glm::vec3(0.5f, 0.5f, 0.5f));
-	return offset;
-}
 
 //=================================================================================
 inline double StudentRenderer::approxRollingAverage(double new_sample) {

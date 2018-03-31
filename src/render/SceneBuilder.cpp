@@ -25,8 +25,8 @@ namespace render {
 	{
 		m_nullTexture = std::make_shared<GLW::C_Texture>();
 		m_nullTexture->StartGroupOp();
-		m_nullTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-		m_nullTexture->setWrap(GL_REPEAT, GL_REPEAT);
+		m_nullTexture->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+		m_nullTexture->SetWrap(GL_REPEAT, GL_REPEAT);
 		GLubyte data[] = { 0, 0, 0, 255 };
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		m_nullTexture->EndGroupOp();
@@ -164,8 +164,8 @@ namespace render {
 			GL_UNSIGNED_BYTE,
 			texture.data.get());
 		ErrorCheck();
-		tex->setWrap(GL_REPEAT, GL_REPEAT);
-		tex->setFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+		tex->SetWrap(GL_REPEAT, GL_REPEAT);
+		tex->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		ErrorCheck();
 

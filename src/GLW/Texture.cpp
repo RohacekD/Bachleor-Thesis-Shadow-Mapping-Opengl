@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "Debug.h"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace GLW {
 
@@ -46,20 +47,38 @@ namespace GLW {
 	}
 
 	//=================================================================================
-	void C_Texture::setWrap(GLint wrapS, GLint wrapT)
+	void C_Texture::SetWrap(GLint wrapS, GLint wrapT)
 	{
 		bind();
-		glTexParameteri(m_target, GL_TEXTURE_WRAP_S, wrapS);
-		glTexParameteri(m_target, GL_TEXTURE_WRAP_T, wrapT);
+		SetTexParameter(GL_TEXTURE_WRAP_S, wrapS);
+		SetTexParameter(GL_TEXTURE_WRAP_T, wrapT);
 		unbind();
 	}
 
 	//=================================================================================
-	void C_Texture::setFilter(GLint min, GLint mag)
+	void C_Texture::SetFilter(GLint min, GLint mag)
 	{
 		bind();
-		glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, min);
-		glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, mag);
+		SetTexParameter(GL_TEXTURE_MIN_FILTER, min);
+		SetTexParameter(GL_TEXTURE_MAG_FILTER, mag);
+	}
+
+	//=================================================================================
+	void C_Texture::SetTexParameter(GLenum pname, const glm::vec4& value)
+	{
+		bind();
+		glTexParameterfv(m_target, pname, glm::value_ptr(value));
+		ErrorCheck();
 		unbind();
 	}
+
+	//=================================================================================
+	void C_Texture::SetTexParameter(GLenum pname, GLint value)
+	{
+		bind();
+		glTexParameteri(m_target, pname, value);
+		ErrorCheck();
+		unbind();
+	}
+
 };

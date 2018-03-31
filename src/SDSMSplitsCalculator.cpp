@@ -23,8 +23,8 @@ C_SDSMSplitsCalculator::C_SDSMSplitsCalculator(unsigned int frusrums, std::share
 	glTexImage2D(m_HistogramTexture->GetTarget(), 0, GL_RGBA32F, 256, 150, 0, GL_RGBA, GL_FLOAT, 0);
 
 	ErrorCheck();
-	m_HistogramTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	m_HistogramTexture->setFilter(GL_NEAREST, GL_NEAREST);
+	m_HistogramTexture->SetWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	m_HistogramTexture->SetFilter(GL_NEAREST, GL_NEAREST);
 	ErrorCheck();
 
 	m_HistogramTexture->EndGroupOp();

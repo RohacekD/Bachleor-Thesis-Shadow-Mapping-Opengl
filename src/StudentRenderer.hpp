@@ -63,11 +63,8 @@ private:
 		float m_lambda;
 		int m_splits;
 		bool m_useSDSM;
+		bool m_animateSun;
 	} m_ControlPanel;
-
-	glm::mat4 GetShadowViewMat() const;
-	glm::mat4 GetShadowProjectionMat() const;
-	glm::mat4 ScreenToTextureCoord() const;
 
 	std::shared_ptr<Scene> m_scene; // IMHO I don't need it anymore
 	std::shared_ptr<render::C_Scene> m_renderScene;
