@@ -63,6 +63,7 @@ private:
 		bool m_active;
 		float m_lambda;
 		int m_splits;
+		bool m_useSDSM;
 	} m_ControlPanel;
 
 	glm::mat4 GetShadowViewMat() const;

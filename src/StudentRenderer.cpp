@@ -389,6 +389,7 @@ void StudentRenderer::ShowGUI()
 	m_ControlPanel.m_lambda = m_CSM->GetLambda();
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
+	ImGui::Checkbox("Use SDSM", &m_ControlPanel.m_useSDSM);
 	ImGui::End();
 	bool active = true;
 	ImGui::Begin("Depth histogram", &active);
