@@ -28,6 +28,8 @@
 
 #include "Debug.h"
 
+#include "SDSMSplitsCalculator.h"
+
 #include <iostream>
 #include <iterator>
 
@@ -41,7 +43,6 @@ const int StudentRenderer::gs_splits = 4;
 // StudentRenderer
 //=================================================================================
 StudentRenderer::StudentRenderer()
-	:m_bWireframe(false)
 {
 
 }
@@ -68,11 +69,15 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	// I should pass camera just to CSM
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 15.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
-	m_animation = std::make_shared<Animation::C_Animation>(5000.0f);
-	m_animation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10.0f, 10.0f));
-	lightInfo->SetDirectionAnimation(m_animation);
+
+	// create animation for sun
+	m_SunAnimation = std::make_shared<Animation::C_Animation>(5000.0f);
+	m_SunAnimation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10.0f, 10.0f));
+	lightInfo->SetDirectionAnimation(m_SunAnimation);
 
 	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits);
+
+	m_sdsmCalc = std::make_shared<C_SDSMSplitsCalculator>(gs_splits, camera);
 
 	if (!initFBO()) {
 		return false;
@@ -95,10 +100,7 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
-#ifdef _DEBUG
-	std::cout << timeSinceLastUpdateMs << std::endl;
-#endif
-	m_animation->Update(timeSinceLastUpdateMs);
+	m_SunAnimation->Update(timeSinceLastUpdateMs);
 	m_CSM->Update();
 	C_ShaderManager::Instance().Update();
 }
@@ -107,11 +109,6 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 void StudentRenderer::onKeyPressed(SDL_Keycode code)
 {
 	switch (code) {
-	case SDLK_w:
-	{
-		m_bWireframe = !m_bWireframe;
-		break;
-	}
 	case SDLK_i:
 	{
 		printFrameStatistics();
@@ -138,71 +135,11 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 #ifndef SPEEDPROFILE
 	ShowGUI();
 #endif
-	//renderDepthSamples();
-	//{
-	//	RenderDoc::C_DebugScope scope("Compute shader");
-	//	auto program = C_ShaderManager::Instance().GetProgram("compute-splits");
-	//	auto texture = m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
-	//	program->useProgram();
-	//	program->SetUniform("globalSize", glm::ivec2(512, 512));
-	//	m_histogram->bind();
-	//
-	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//
-	//	glActiveTexture(GL_TEXTURE0);
-	//	texture->bind();
-	//	glDispatchCompute(512 / 16, 512 / 16, 1);
-	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//
-	//	texture->unbind();
-	//	program->disableProgram();
-	//}
-	//{
-	//	RenderDoc::C_DebugScope scope("Compute shader splits");
-	//	auto program = C_ShaderManager::Instance().GetProgram("calcSplits");
-	//	program->useProgram();
-	//	auto planes = m_CSM->GetPlanes();
-	//
-	//	const auto func = [](float value, float from1, float to1, float from2, float to2) {
-	//		return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
-	//	};
-	//
-	//	std::for_each(planes.begin(), planes.end(), [func, this](float& val) {
-	//		val = func(val, m_CSM->GetBoundCamera()->GetNear(), m_CSM->GetBoundCamera()->GetFar(), 0.0f, 1.0f);
-	//	});
-	//	
-	//	program->SetUniform("splitRatios", planes);
-	//	m_histogram->bind();
-	//
-	//	m_SplitFrust->bind();
-	//	glDispatchCompute(1, 1, 1);
-	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//
-	//	m_SplitFrust->unbind();
-	//	program->disableProgram();
-	//}
-	//{
-	//	RenderDoc::C_DebugScope scope("Compute shader draw");
-	//	auto program = C_ShaderManager::Instance().GetProgram("histagraDrawColor");
-	//	program->useProgram();
-	//
-	//	m_SplitFrust->bind();
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//	glBindImageTexture(0, m_HistogramTexture->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-	//	glDispatchCompute(256, 1, 1);
-	//	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//
-	//	m_histogram->ClearBuffer();
-	//	m_histogram->unbind();
-	//	m_SplitFrust->unbind();
-	//	m_HistogramTexture->unbind();
-	//	program->disableProgram();
-	//}
+	// if use SDSM - but better use depth from last render pass
+	renderDepthSamples();
 
-
-
-
+	m_sdsmCalc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
+	
 	renderToFBO(camera.getViewProjectionMatrix());
 
 
@@ -239,8 +176,6 @@ void StudentRenderer::clearStudentData()
 	m_scene.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
-	m_HistogramTexture.reset();
-	m_histogram.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
 	C_UniformBuffersManager::Instance().Clear();
@@ -363,21 +298,6 @@ bool StudentRenderer::initFBO()
 
 	m_DepthSamplesframebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, depthSamplesTexture);
 
-	m_histogram = std::make_shared<C_Histogram>(256, 3);
-
-
-
-	m_HistogramTexture = std::make_shared<GLW::C_Texture>("m_HistogramTexture");
-	m_HistogramTexture->StartGroupOp();
-	glTexImage2D(m_HistogramTexture->GetTarget(), 0, GL_RGBA32F, 256, 150, 0, GL_RGBA, GL_FLOAT, 0);
-	
-	ErrorCheck();
-	m_HistogramTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	m_HistogramTexture->setFilter(GL_NEAREST, GL_NEAREST);
-	ErrorCheck();
-	
-	m_HistogramTexture->EndGroupOp();
-
 
 	return true;
 }
@@ -393,7 +313,7 @@ void StudentRenderer::ShowGUI()
 	ImGui::End();
 	bool active = true;
 	ImGui::Begin("Depth histogram", &active);
-	ImGui::Image((void*)m_HistogramTexture->GetTexture(), { 256, 150 }, { 0,1 }, {1,0});
+	ImGui::Image((void*)m_sdsmCalc->GetHistogramTexture()->GetTexture(), { 256, 150 }, { 0,1 }, {1,0});
 	ImGui::End();
 
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);

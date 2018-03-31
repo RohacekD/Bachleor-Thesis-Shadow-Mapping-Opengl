@@ -12,9 +12,8 @@
 #pragma once
 
 #include "ISplitPlanesCalculator.h"
-#include "Camera/ICamera.h"
 
-#include <memory>
+class I_Camera;
 
 class C_PSSMSplitsCalculator : public I_SplitPlanesCalculator {
 public:

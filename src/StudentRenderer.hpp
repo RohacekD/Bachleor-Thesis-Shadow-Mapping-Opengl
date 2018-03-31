@@ -25,8 +25,7 @@
 #include "ShadowMapCascade.h"
 
 class I_Camera;
-class C_Histogram;
-class C_SplitPlanesStorage;
+class C_SDSMSplitsCalculator;
 
 namespace GLW {
 	class C_Texture;
@@ -70,23 +69,19 @@ private:
 	glm::mat4 GetShadowProjectionMat() const;
 	glm::mat4 ScreenToTextureCoord() const;
 
-	std::shared_ptr<Scene> m_scene;
+	std::shared_ptr<Scene> m_scene; // IMHO I don't need it anymore
 	std::shared_ptr<render::C_Scene> m_renderScene;
 
 	static const int gs_splits;
 
+	std::shared_ptr<C_SDSMSplitsCalculator> m_sdsmCalc;
 	std::shared_ptr<GLW::C_Framebuffer> m_framebuffer;
 	std::shared_ptr<GLW::C_Framebuffer> m_DepthSamplesframebuffer;
 
-	std::shared_ptr<GLW::C_Texture> m_HistogramTexture;
-	std::shared_ptr<C_Histogram> m_histogram;
-	std::shared_ptr<C_SplitPlanesStorage> m_SplitFrust;
-
-	bool m_bWireframe;
 	unsigned int m_screenWidht;
 	unsigned int m_screenHeight;
 
-	// not really accurate rolling average but I am ok with it
+	// not really accurate rolling average but I am ok with it - not anymore
 	double approxRollingAverage(double new_sample);
 	void printFrameStatistics() const;
 
@@ -96,7 +91,5 @@ private:
 
 	std::shared_ptr<C_ShadowMapCascade> m_CSM;
 
-
-	HighResolutionTimer  m_timer;
-	std::shared_ptr<Animation::C_Animation> m_animation;
+	std::shared_ptr<Animation::C_Animation> m_SunAnimation;
 };

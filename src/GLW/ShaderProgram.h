@@ -57,6 +57,7 @@ namespace GLW {
 		template<class N> void SetUniform(N name, const glm::vec4 & value);
 		template<class N> void SetUniform(N name, const glm::vec3 & value);
 		template<class N> void SetUniform(N name, const glm::ivec2 & value);
+		template<class N> void SetUniform(N name, const glm::vec2 & value);
 		template<class N> void SetUniform(N name, const std::vector<int> & value);
 		template<class N> void SetUniform(N name, const std::vector<float> & value);
 
