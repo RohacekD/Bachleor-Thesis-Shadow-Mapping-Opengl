@@ -44,6 +44,8 @@ namespace GLW {
 
 #if _DEBUG
 		inline void SetName(const std::string& name) noexcept { m_name = name; }
+#else
+		inline void SetName(const std::string& name) noexcept {}
 #endif
 
 		// replace this
