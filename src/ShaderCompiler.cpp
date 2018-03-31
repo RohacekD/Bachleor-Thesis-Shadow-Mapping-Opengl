@@ -167,5 +167,6 @@ bool ShaderCompiler::_loadFile(const char* file, std::string& content)
         return false;
 
     content =  std::string(std::istream_iterator<char>(stream >> std::noskipws), std::istream_iterator<char>());
+	stream.close(); //dr
     return true;
 }

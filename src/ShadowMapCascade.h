@@ -82,7 +82,7 @@ private:
 	std::vector<glm::mat4>							m_LightClippingMatrices;
 	std::shared_ptr<C_LightInfo>					m_lighInfo;
 	std::shared_ptr<I_Camera>						m_boundCamera;
-	std::shared_ptr<C_PSSMUBO<4>>					m_PSSSMUBO;
+	std::shared_ptr<C_PSSMUBO>						m_PSSSMUBO;
 
 	//for debug purposes
 	std::vector<AABB>								m_bboxes;

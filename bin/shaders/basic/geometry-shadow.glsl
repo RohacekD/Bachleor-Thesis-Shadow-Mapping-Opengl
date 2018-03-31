@@ -2,7 +2,7 @@
 
 #define PSSM_SPLITS 4
 
-layout(triangles, invocations = 4) in;
+layout(triangles, invocations = PSSM_SPLITS) in;
 layout(triangle_strip, max_vertices = 3) out;
 
 #include "include/pssmUniform.glsl"

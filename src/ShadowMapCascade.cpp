@@ -26,10 +26,9 @@ C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, s
 	, m_SplitCalculator(levels, camera)
 {
 	//todo
-	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO<4>>("PSSM");
+	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO>("PSSM", levels);
 
 	ErrorCheck();
-	m_PSSSMUBO->m_splits = levels;
 }
 
 //=================================================================================

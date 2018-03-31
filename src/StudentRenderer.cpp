@@ -386,6 +386,7 @@ bool StudentRenderer::initFBO()
 //=================================================================================
 void StudentRenderer::ShowGUI()
 {
+	m_ControlPanel.m_lambda = m_CSM->GetLambda();
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
 	ImGui::End();
