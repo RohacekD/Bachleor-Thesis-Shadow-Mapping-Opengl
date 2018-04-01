@@ -134,6 +134,9 @@ void C_ShadowMapCascade::CalcCropMatrices()
 
 	auto splits = m_SplitCalculator->GetSplitFrusts();
 
+	// this makes subfrusums bigger, it is virtual distance from frustum to light
+	static const float s_lightDistance = 20.0f;
+
 	for (unsigned int i = 0; i < m_levels; ++i) {
 		frust.SetNear(splits[i].first);
 		frust.SetFar(splits[i].second);
@@ -149,7 +152,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 			height / 2.0f,
 			-height / 2.0f,
 			nearPlane,
-			nearPlane + subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z);
+			nearPlane + subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z + s_lightDistance);
 
 		vec4 normal = m_lighInfo->GetNormal();
 
@@ -168,7 +171,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 		up = normalize(up);
 
 
-		glm::mat4 lightViewMatrix = lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
+		glm::mat4 lightViewMatrix = lookAt(vec3(eye - normal), vec3(eye + normal), vec3(up - eye));
 
 		C_DebugDraw::Instance().DrawPoint(eye, projectionMatrix, glm::vec3(1, 0, 0));
 		C_DebugDraw::Instance().DrawPoint(glm::normalize(eye + normal), projectionMatrix, glm::vec3(0, 0, 0));
