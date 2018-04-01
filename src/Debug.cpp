@@ -60,8 +60,6 @@ C_DebugDraw & C_DebugDraw::Instance()
 //=================================================================================
 void C_DebugDraw::SetupAABB()
 {
-	m_program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
-
 	glGenVertexArrays(1, &m_VAOaabb);
 	glBindVertexArray(m_VAOaabb);
 	// Cube 1x1x1, centered on origin
@@ -122,7 +120,6 @@ C_DebugDraw::~C_DebugDraw()
 //=================================================================================
 void C_DebugDraw::Clear()
 {
-	m_program.reset();
 	glDeleteBuffers(1, &m_VBOline);
 	glDeleteBuffers(1, &m_IBOaabb);
 	glDeleteVertexArrays(1, &m_VAOline);
@@ -134,7 +131,8 @@ void C_DebugDraw::Clear()
 //=================================================================================
 void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectionMatrix, const glm::vec3 & color, const glm::mat4 & modelMatrix)
 {
-	m_program->useProgram();
+	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
+	program->useProgram();
 
 	glBindVertexArray(m_VAOline);
 
@@ -146,16 +144,17 @@ void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectio
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4), glm::value_ptr(point), GL_DYNAMIC_DRAW);
 	ErrorCheck();
 
-	m_program->SetUniform("modelMatrix", modelMatrix);
-	m_program->SetUniform("projectionMatrix", projectionMatrix);
-	m_program->SetUniform("colorIN", color);
+	program->SetUniform("modelMatrix", modelMatrix);
+	program->SetUniform("projectionMatrix", projectionMatrix);
+	program->SetUniform("colorIN", color);
+	ErrorCheck();
 
 	glDrawArrays(GL_POINTS, 0, 1);
 	ErrorCheck();
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	m_program->disableProgram();
+	program->disableProgram();
 	ErrorCheck();
 }
 
@@ -168,15 +167,16 @@ void C_DebugDraw::DrawPoint(const glm::vec3 & point, const glm::mat4 & projectio
 //=================================================================================
 void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/, const glm::mat4& modelMatrix /*= glm::mat4(1.0f)*/)
 {
-	m_program->useProgram();
+	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
+	program->useProgram();
 	glm::vec3 size = bbox.maxPoint - bbox.minPoint;
 	glm::vec3 center = (bbox.maxPoint + bbox.minPoint) / 2.0f;// glm::vec3((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
 	glm::mat4 transform = glm::translate(glm::mat4(1), center) * glm::scale(glm::mat4(1), size);
 
 	/* Apply object's transformation matrix */
-	m_program->SetUniform("modelMatrix", modelMatrix*transform);
-	m_program->SetUniform("projectionMatrix", projectionMatrix);
-	m_program->SetUniform("colorIN", color);
+	program->SetUniform("modelMatrix", modelMatrix*transform);
+	program->SetUniform("projectionMatrix", projectionMatrix);
+	program->SetUniform("colorIN", color);
 
 	glBindVertexArray(m_VAOaabb);
 
@@ -193,7 +193,7 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, 
 	ErrorCheck();
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	m_program->disableProgram();
+	program->disableProgram();
 	glBindVertexArray(0);
 	ErrorCheck();
 }
@@ -201,7 +201,8 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, 
 //=================================================================================
 void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/)
 {
-	m_program->useProgram();
+	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
+	program->useProgram();
 
 	glBindVertexArray(m_VAOline);
 
@@ -213,15 +214,15 @@ void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, con
 
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec4), vertices.data(), GL_DYNAMIC_DRAW);
 
-	m_program->SetUniform("modelMatrix", glm::mat4(1.0f));
-	m_program->SetUniform("projectionMatrix", projectionMatrix);
-	m_program->SetUniform("colorIN", color);
+	program->SetUniform("modelMatrix", glm::mat4(1.0f));
+	program->SetUniform("projectionMatrix", projectionMatrix);
+	program->SetUniform("colorIN", color);
 
 	glDrawArrays(GL_LINES, 0, 2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	m_program->disableProgram();
+	program->disableProgram();
 	ErrorCheck();
 }
 
@@ -235,7 +236,8 @@ void C_DebugDraw::DrawLine(const glm::vec3& pointA, const glm::vec3& pointB, con
 void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4 & projectionMatrix, const glm::vec3 & color)
 {
 	ErrorCheck();
-	m_program->useProgram();
+	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
+	program->useProgram();
 
 	glBindVertexArray(m_VAOline);
 
@@ -247,15 +249,15 @@ void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4
 	glBufferData(GL_ARRAY_BUFFER, pairs.size() * sizeof(glm::vec4), pairs.data(), GL_DYNAMIC_DRAW);
 
 	ErrorCheck();
-	m_program->SetUniform("modelMatrix", glm::mat4(1.0f));
-	m_program->SetUniform("projectionMatrix", projectionMatrix);
-	m_program->SetUniform("colorIN", color);
+	program->SetUniform("modelMatrix", glm::mat4(1.0f));
+	program->SetUniform("projectionMatrix", projectionMatrix);
+	program->SetUniform("colorIN", color);
 
 	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(pairs.size()));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	m_program->disableProgram();
+	program->disableProgram();
 	ErrorCheck();
 }
 

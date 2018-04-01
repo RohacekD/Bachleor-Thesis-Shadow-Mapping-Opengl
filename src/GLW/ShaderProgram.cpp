@@ -12,24 +12,6 @@ namespace GLW {
 	{}
 
 	//=================================================================================
-	C_ShaderProgram::C_ShaderProgram(C_ShaderProgram&& rhs)
-		: m_Program(rhs.m_Program)
-		, m_uniformMap(std::move(rhs.m_uniformMap))
-	{
-		std::cout << "Move semantics" << std::endl;
-	}
-
-	//=================================================================================
-	GLW::C_ShaderProgram& C_ShaderProgram::operator=(C_ShaderProgram&& other)
-	{
-		if (this != &other) {
-			m_Program = other.m_Program;
-			m_uniformMap = std::move(other.m_uniformMap);
-		}
-		return *this;
-	}
-
-	//=================================================================================
 	C_ShaderProgram::~C_ShaderProgram()
 	{
 		glDeleteProgram(m_Program);

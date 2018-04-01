@@ -37,6 +37,7 @@ void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthM
 		RenderDoc::C_DebugScope scope("Compute shader");
 		auto program = C_ShaderManager::Instance().GetProgram("compute-splits");
 		program->useProgram();
+		program->SetUniform("nearFar", glm::vec2(m_camera->GetNear(), m_camera->GetFar()));
 		program->SetUniform("globalSize", glm::ivec2(512, 512));
 		m_histogram->bind();
 

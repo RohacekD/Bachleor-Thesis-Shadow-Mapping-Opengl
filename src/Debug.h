@@ -132,7 +132,6 @@ private:
 	 */
 	void SetupAABB();
 
-	std::shared_ptr<GLW::C_ShaderProgram> m_program;
 	C_DebugDraw();
 	GLuint m_IBOaabb;
 	GLuint m_VBOaabb;

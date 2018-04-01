@@ -31,8 +31,6 @@ namespace GLW {
 #if _DEBUG
 		//C_ShaderProgram(GLuint program);
 #endif
-		C_ShaderProgram(C_ShaderProgram&& rhs);
-		C_ShaderProgram& operator=(C_ShaderProgram&& other);
 		C_ShaderProgram& operator=(C_ShaderProgram& other) = delete;
 		C_ShaderProgram(C_ShaderProgram& rhs) = delete;
 		virtual ~C_ShaderProgram();

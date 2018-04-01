@@ -30,13 +30,13 @@ void main()
 	frustum[0].x = SampleToRealZ(lowestIndex);
 	uint sum = 0;
 	uint actualGroup = 0;
-	uint groupTrashhold = uint(splitRatios[0] * numSamples);
+	float groupTrashhold = splitRatios[0] * float(numSamples);
 	for(uint i = lowestIndex; i <= highestIndex && actualGroup<4; ++i){
 		sum += data_SSBO[i];
 		if(sum > groupTrashhold){
 			frustum[actualGroup].y = frustum[actualGroup+1].x = SampleToRealZ(i);
 			++actualGroup;
-			groupTrashhold = uint(splitRatios[actualGroup] * numSamples);
+			groupTrashhold = float(splitRatios[actualGroup] * numSamples);
 		}
 	}
 	frustum[3].y = SampleToRealZ(highestIndex);

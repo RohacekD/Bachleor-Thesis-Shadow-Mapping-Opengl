@@ -98,16 +98,15 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 //=================================================================================
 void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
+	C_ShaderManager::Instance().Update();
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
 	if (m_ControlPanel.m_animateSun) {
 		m_SunAnimation->Update(timeSinceLastUpdateMs);
 	}
+	UseSDSM(m_ControlPanel.m_useSDSM);
 	m_CSM->Update();
-	C_ShaderManager::Instance().Update();
 }
 
 //=================================================================================
@@ -137,7 +136,8 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
-	UseSDSM(m_ControlPanel.m_useSDSM);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 #ifndef SPEEDPROFILE
 	ShowGUI();
 #endif
