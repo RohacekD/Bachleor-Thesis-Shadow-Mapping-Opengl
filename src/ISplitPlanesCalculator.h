@@ -21,6 +21,10 @@ class C_SplitPlanesStorage;
 
 class I_SplitPlanesCalculator {
 public:
+	enum class E_MethodType {
+		PSSM,
+		SDSM
+	};
 	using T_FrustSplits = std::pair<float, float>;
 	using T_FrustVector = std::vector<T_FrustSplits>;
 
@@ -31,6 +35,7 @@ public:
 
 	virtual void BindBuffer(float activate = true);
 	virtual const T_FrustVector& GetSplitFrusts() = 0;
+	virtual E_MethodType MethodType() const = 0;
 protected:
 	class C_RatiosCalculator 
 		: public I_CameraObserver

@@ -23,6 +23,7 @@
 #include "HighResolutionTimer.hpp"
 #include "CameraPath.h"
 #include "ShadowMapCascade.h"
+#include "ISplitPlanesCalculator.h"
 
 class I_Camera;
 class C_SDSMSplitsCalculator;
@@ -53,6 +54,8 @@ public:
 	void onKeyPressed(SDL_Keycode code) override;
 	void clearStudentData() override;
 
+	void UseSDSM(bool sdsm = true);
+
 private:
 	void renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const;
 	void renderDepthSamples() const;
@@ -71,7 +74,6 @@ private:
 
 	static const int gs_splits;
 
-	std::shared_ptr<C_SDSMSplitsCalculator> m_sdsmCalc;
 	std::shared_ptr<GLW::C_Framebuffer> m_framebuffer;
 	std::shared_ptr<GLW::C_Framebuffer> m_DepthSamplesframebuffer;
 

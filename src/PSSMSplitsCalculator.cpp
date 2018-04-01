@@ -38,3 +38,9 @@ void C_PSSMSplitsCalculator::RecalcSplits()
 	}
 	// je to posledni near??????
 }
+
+//=================================================================================
+I_SplitPlanesCalculator::E_MethodType C_PSSMSplitsCalculator::MethodType() const
+{
+	return I_SplitPlanesCalculator::E_MethodType::PSSM;
+}

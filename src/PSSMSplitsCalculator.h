@@ -22,6 +22,9 @@ public:
 	virtual const T_FrustVector& GetSplitFrusts() override;
 
 	void RecalcSplits();
+
+	virtual E_MethodType MethodType() const override;
+
 private:
 	T_FrustVector m_frusts;
 	unsigned int m_frustums;

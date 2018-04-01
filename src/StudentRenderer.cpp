@@ -23,6 +23,9 @@
 #include "imgui/imgui.h"
 #endif
 
+#include "SDSMSplitsCalculator.h"
+#include "PSSMSplitsCalculator.h"
+
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -75,9 +78,9 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	m_SunAnimation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10.0f, 10.0f));
 	lightInfo->SetDirectionAnimation(m_SunAnimation);
 
-	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits);
+	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits, std::make_shared<C_PSSMSplitsCalculator>(gs_splits, camera));
 
-	m_sdsmCalc = std::make_shared<C_SDSMSplitsCalculator>(gs_splits, camera);
+	UseSDSM(m_ControlPanel.m_useSDSM);
 
 	if (!initFBO()) {
 		return false;
@@ -134,13 +137,17 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
+	UseSDSM(m_ControlPanel.m_useSDSM);
 #ifndef SPEEDPROFILE
 	ShowGUI();
 #endif
 	// if use SDSM - but better use depth from last render pass
-	renderDepthSamples();
-
-	m_sdsmCalc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
+	auto method = m_CSM->GetSplittingMethod(); // move it here until C++17 is used
+	if (method->MethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM) {
+		renderDepthSamples();
+		auto calc = std::dynamic_pointer_cast<C_SDSMSplitsCalculator>(method);
+		calc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
+	}
 	
 	renderToFBO(camera.getViewProjectionMatrix());
 
@@ -148,7 +155,6 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	RenderDoc::C_DebugScope scope("Render pass");
 
 	m_CSM->ActivateUBO();
-	//auto splits = 
 
 	glViewport(0, 0, m_screenWidht, m_screenHeight);
 
@@ -184,6 +190,17 @@ void StudentRenderer::clearStudentData()
 	DestructorFullCheck(); // I have to call it here because destructor is called after OpenGL context is destroyed
 
 	std::cout << "Clear ended after this NO OpenGL should be call" << std::endl;
+}
+
+//=================================================================================
+void StudentRenderer::UseSDSM(bool sdsm /*= true*/)
+{
+	if (sdsm) {
+		m_CSM->SetSplittingMethod(I_SplitPlanesCalculator::E_MethodType::SDSM);
+	}
+	else {
+		m_CSM->SetSplittingMethod(I_SplitPlanesCalculator::E_MethodType::PSSM);
+	}
 }
 
 //=================================================================================
@@ -307,14 +324,21 @@ bool StudentRenderer::initFBO()
 void StudentRenderer::ShowGUI()
 {
 	m_ControlPanel.m_lambda = m_CSM->GetLambda();
+	m_ControlPanel.m_useSDSM = (m_CSM->GetSplittingMethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM);
+
+	bool active = true;
+	if (m_ControlPanel.m_useSDSM) {
+		ImGui::Begin("Depth histogram", &active);
+		ImGui::Image((void*)std::dynamic_pointer_cast<C_SDSMSplitsCalculator>(m_CSM->GetSplittingMethod())->GetHistogramTexture()->GetTexture(),
+		{ 256, 150 }, { 0,1 }, { 1,0 });
+		ImGui::End();
+	}
+
+
 	ImGui::Begin("Settings", &m_ControlPanel.m_active);
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
 	ImGui::Checkbox("Use SDSM", &m_ControlPanel.m_useSDSM);
 	ImGui::Checkbox("Animate sun position", &m_ControlPanel.m_animateSun);
-	ImGui::End();
-	bool active = true;
-	ImGui::Begin("Depth histogram", &active);
-	ImGui::Image((void*)m_sdsmCalc->GetHistogramTexture()->GetTexture(), { 256, 150 }, { 0,1 }, {1,0});
 	ImGui::End();
 
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);

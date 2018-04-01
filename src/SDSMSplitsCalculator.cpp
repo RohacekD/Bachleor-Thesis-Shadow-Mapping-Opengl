@@ -108,5 +108,13 @@ std::shared_ptr<GLW::C_Texture> C_SDSMSplitsCalculator::GetHistogramTexture() co
 //=================================================================================
 const I_SplitPlanesCalculator::T_FrustVector& C_SDSMSplitsCalculator::GetSplitFrusts()
 {
+	m_SplitFrust->DownloadData();
+	m_frusts = m_SplitFrust->m_Frustums;
 	return m_frusts;
+}
+
+//=================================================================================
+I_SplitPlanesCalculator::E_MethodType C_SDSMSplitsCalculator::MethodType() const
+{
+	return I_SplitPlanesCalculator::E_MethodType::SDSM;
 }

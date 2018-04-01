@@ -9,6 +9,9 @@
 #include "Camera/ICamera.h"
 #include "UniformBuffersManager.h"
 
+#include "SDSMSplitsCalculator.h"
+#include "PSSMSplitsCalculator.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -17,13 +20,13 @@
 #include <sstream>
 
 //=================================================================================
-C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, std::shared_ptr<I_Camera> camera, unsigned int defaultResolution, unsigned int levels, float m_lambda /*= 0.5f*/)
+C_ShadowMapCascade::C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, std::shared_ptr<I_Camera> camera, unsigned int defaultResolution, unsigned int levels, std::shared_ptr<I_SplitPlanesCalculator> SplitCalculator, float m_lambda /*= 0.5f*/)
 	: m_resolution(defaultResolution)
 	, m_boundCamera(camera)
 	, m_levels(levels)
 	, m_lambda(m_lambda)
 	, m_lighInfo(lightInfo)
-	, m_SplitCalculator(levels, camera)
+	, m_SplitCalculator(SplitCalculator)
 {
 	//todo
 	m_PSSSMUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_PSSMUBO>("PSSM", levels);
@@ -41,7 +44,7 @@ C_ShadowMapCascade::~C_ShadowMapCascade()
 void C_ShadowMapCascade::ActivateUBO(bool activate /*= true*/)
 {
 	m_PSSSMUBO->Activate(activate);
-	m_SplitCalculator.BindBuffer(activate);
+	m_SplitCalculator->BindBuffer(activate);
 	
 }
 
@@ -49,7 +52,7 @@ void C_ShadowMapCascade::ActivateUBO(bool activate /*= true*/)
 void C_ShadowMapCascade::SetLambda(float val) {
 	m_lambda = val;
 	m_lambda = std::min(std::max(m_lambda, 0.0f), 1.0f);
-	m_SplitCalculator.SetLambda(m_lambda);
+	m_SplitCalculator->SetLambda(m_lambda);
 }
 
 //=================================================================================
@@ -87,6 +90,19 @@ void C_ShadowMapCascade::PrintSplittingDepths() const
 }
 
 //=================================================================================
+void C_ShadowMapCascade::SetSplittingMethod(I_SplitPlanesCalculator::E_MethodType methodType)
+{
+	if (methodType != m_SplitCalculator->MethodType()) {
+		if (methodType == I_SplitPlanesCalculator::E_MethodType::SDSM) {
+			m_SplitCalculator = std::make_shared<C_SDSMSplitsCalculator>(m_levels, GetBoundCamera());
+		}
+		else {
+			m_SplitCalculator = std::make_shared<C_PSSMSplitsCalculator>(m_levels, GetBoundCamera());
+		}
+	}
+}
+
+//=================================================================================
 void C_ShadowMapCascade::RecalcAll()
 {
 	CalcCropMatrices();
@@ -116,7 +132,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 	m_splitInfos = std::vector<S_SplitInfo>();
 	m_splitInfos.resize(m_levels);
 
-	auto splits = m_SplitCalculator.GetSplitFrusts();
+	auto splits = m_SplitCalculator->GetSplitFrusts();
 
 	for (unsigned int i = 0; i < m_levels; ++i) {
 		frust.SetNear(splits[i].first);

@@ -22,6 +22,9 @@ public:
 #endif
 
 	virtual const T_FrustVector& GetSplitFrusts() override;
+
+	virtual E_MethodType MethodType() const override;
+
 private:
 #ifdef _DEBUG
 	std::shared_ptr<GLW::C_Texture> m_HistogramTexture;

@@ -38,7 +38,12 @@ struct S_SplitInfo {
 class C_ShadowMapCascade {
 public:
 	// not sure about near and far...
-	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, std::shared_ptr<I_Camera> camera, unsigned int defaultResolution, unsigned int levels, float m_lambda = 0.5f);
+	C_ShadowMapCascade(std::shared_ptr<C_LightInfo> lightInfo, 
+					   std::shared_ptr<I_Camera> camera, 
+					   unsigned int defaultResolution, 
+					   unsigned int levels, 
+					   std::shared_ptr<I_SplitPlanesCalculator> SplitCalculator, 
+					   float m_lambda = 0.5f);
 	~C_ShadowMapCascade();
 
 	// not working just now
@@ -56,6 +61,10 @@ public:
 
 	void			Update();
 
+	std::shared_ptr<I_SplitPlanesCalculator> GetSplittingMethod() const { return m_SplitCalculator; }
+	void SetSplittingMethod(I_SplitPlanesCalculator::E_MethodType methodType);
+	I_SplitPlanesCalculator::E_MethodType GetSplittingMethodType() const { return m_SplitCalculator->MethodType(); }
+
 	//@TODO set split resolution etc
 
 	void RecalcAll();
@@ -69,7 +78,7 @@ public:
 private:
 	void CalcCropMatrices();
 
-	C_PSSMSplitsCalculator m_SplitCalculator;
+	std::shared_ptr<I_SplitPlanesCalculator> m_SplitCalculator;
 	std::shared_ptr<C_SplitPlanesStorage> m_SplitFrust;
 
 	unsigned int									m_levels;
