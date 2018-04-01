@@ -13,13 +13,16 @@
 
 #pragma once
 
-#include <memory>
-#include <unordered_set>
-#include <vector>
-#include <glm/glm.hpp>
 #include "Scene.hpp"
 
 #include <GL/glew.h>
+
+#include <glm/glm.hpp>
+
+#include <string>
+#include <memory>
+#include <unordered_set>
+#include <vector>
 
 namespace Animation {
 	class C_Animation;
@@ -49,6 +52,13 @@ namespace render {
 		virtual const AABB GetActualAABB() const;
 		virtual const glm::mat4 GetActualModelMatrix() const;
 
+#ifdef _DEBUG
+		void SetName(std::string name) { m_name = name; }
+		const std::string & GetName() const { return m_name; }
+#else
+		void SetName(std::string name) {  }
+#endif // _DEBUG
+
 		// position and rotation is from parent node
 		glm::vec3 m_position;
 		glm::vec3 m_rotation;
@@ -56,8 +66,14 @@ namespace render {
 		AABB m_bbox;
 
 		std::shared_ptr<Animation::C_Animation> m_animation;
+		bool IsShadowCaster() const { return m_bShadowCaster; }
+		void SetShadowCaster(bool val) { m_bShadowCaster = val; }
 	protected:
+#ifdef _DEBUG
+		std::string m_name;
+#endif // _DEBUG
 		// todo maybe this should be private?
 		glm::mat4 m_modelMatrix;
+		bool m_bShadowCaster;
 	};
 };

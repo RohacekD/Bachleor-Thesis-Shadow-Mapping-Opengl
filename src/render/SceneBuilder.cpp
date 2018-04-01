@@ -122,10 +122,19 @@ namespace render {
 			m_textures.push_back(LoadTexture(texture));
 		}
 		for (const auto &mesh : scene->meshes) {
-			const auto& node = LoadMesh(mesh);
+			const auto& meshNode = LoadMesh(mesh);
+
+			std::string query(R"(object[@name=")" + mesh.m_name + R"("])");
+			auto objectNode = node.select_node(query.c_str()).node();
+			if (objectNode) {
+				auto isShadowcasterAttribute = objectNode.attribute("isShadowCaster");
+				if (isShadowcasterAttribute) {
+					meshNode->SetShadowCaster(isShadowcasterAttribute.as_bool());
+				}
+			}
 			try
 			{
-				ret->push_back(std::move(node));
+				ret->push_back(std::move(meshNode));
 			}
 			catch (const std::exception& e)
 			{
@@ -146,6 +155,9 @@ namespace render {
 			node->SetTexture(m_textures[material.textureIndex]);
 		}
 		node->SetColor(material.diffuse);
+
+		node->SetName(mesh.m_name);
+
 		return node;
 	}
 

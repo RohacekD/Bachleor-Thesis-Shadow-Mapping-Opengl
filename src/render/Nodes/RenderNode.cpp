@@ -24,6 +24,7 @@ namespace render {
 		: m_position(pos)
 		, m_rotation(rot)
 		, m_modelMatrix(1.0f)
+		, m_bShadowCaster(true)
 	{
 		m_animation = std::make_shared<Animation::C_Animation>(5000.0f);
 		m_modelMatrix = glm::translate(glm::mat4(1.0f), pos);

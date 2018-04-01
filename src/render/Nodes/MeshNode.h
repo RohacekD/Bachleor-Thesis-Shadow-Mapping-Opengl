@@ -53,7 +53,6 @@ namespace render {
 
 		void RenderBBox(const glm::mat4& projectionMatrix, const glm::mat4& modelMatrix) const;
 
-		bool m_bShadowCaster : 1;
 		GLuint m_triangles;
 		GLuint m_VBOs[3];
 		GLuint m_VAO;

@@ -123,6 +123,9 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ShadowPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
+		if (!m_bShadowCaster) {
+			return;
+		}
 		ErrorCheck();
 		m_shadowProgram->useProgram();
 
@@ -181,6 +184,9 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
+		if (!m_bShadowCaster) {
+			return;
+		}
 		auto& shdManager = C_ShaderManager::Instance();
 		ErrorCheck();
 		auto program = shdManager.GetProgram("depthsamples");

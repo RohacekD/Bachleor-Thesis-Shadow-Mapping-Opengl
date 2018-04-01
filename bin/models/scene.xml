@@ -2,10 +2,11 @@
 <scene>
 	<!-- <terrain file="profile.jpg" tile-size="1" /> -->
 	<model file="scene.obj">
-			<position x="0.0" y="0.0" z="0.0" />
-		<object name="Plane" isShadowCaster="true" />
+		<position x="0.0" y="0.0" z="0.0" />
+		<object name="Plane" isShadowCaster="false" />
 	</model>
 	<model file="castle.obj">
-			<position x="1.0" y="0.0" z="10.0" />
+		<position x="1.0" y="0.0" z="10.0" />
+		<object name="Floor_Plane" isShadowCaster="false" />
 	</model>
 </scene>
