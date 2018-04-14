@@ -17,10 +17,12 @@ C_SDSMSplitsCalculator::C_SDSMSplitsCalculator(unsigned int frusrums, std::share
 	m_histogram = std::make_shared<C_Histogram>(256, 3);
 
 
-
+#ifdef _DEBUG
 	m_HistogramTexture = std::make_shared<GLW::C_Texture>("m_HistogramTexture");
+
 	m_HistogramTexture->StartGroupOp();
 	glTexImage2D(m_HistogramTexture->GetTarget(), 0, GL_RGBA32F, 256, 150, 0, GL_RGBA, GL_FLOAT, 0);
+	m_HistogramTexture->SetDimensions({ 256, 150 });
 
 	ErrorCheck();
 	m_HistogramTexture->SetWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
@@ -28,6 +30,8 @@ C_SDSMSplitsCalculator::C_SDSMSplitsCalculator(unsigned int frusrums, std::share
 	ErrorCheck();
 
 	m_HistogramTexture->EndGroupOp();
+#endif // _DEBUG
+
 }
 
 //=================================================================================
@@ -101,10 +105,13 @@ void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthM
 }
 
 //=================================================================================
+#ifdef _DEBUG
 std::shared_ptr<GLW::C_Texture> C_SDSMSplitsCalculator::GetHistogramTexture() const
 {
 	return m_HistogramTexture;
 }
+#endif // _DEBUG
+
 
 //=================================================================================
 const I_SplitPlanesCalculator::T_FrustVector& C_SDSMSplitsCalculator::GetSplitFrusts()

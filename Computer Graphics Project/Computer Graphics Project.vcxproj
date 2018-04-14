@@ -253,6 +253,7 @@
     <ClCompile Include="..\src\GLW\Framebuffer.cpp" />
     <ClCompile Include="..\src\GLW\ShaderProgram.cpp" />
     <ClCompile Include="..\src\GLW\Texture.cpp" />
+    <ClCompile Include="..\src\GLW\Texture\Texture2D.cpp" />
     <ClCompile Include="..\src\HighResolutionTimer.cpp" />
     <ClCompile Include="..\src\ISplitPlanesCalculator.cpp" />
     <ClCompile Include="..\src\LightInfo.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="..\src\GLW\Framebuffer.h" />
     <ClInclude Include="..\src\GLW\ShaderProgram.h" />
     <ClInclude Include="..\src\GLW\Texture.h" />
+    <ClInclude Include="..\src\GLW\Texture\Texture2D.h" />
     <ClInclude Include="..\src\HighResolutionTimer.hpp" />
     <ClInclude Include="..\src\IRenderer.h" />
     <ClInclude Include="..\src\ISplitPlanesCalculator.h" />

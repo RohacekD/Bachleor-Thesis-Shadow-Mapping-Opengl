@@ -28,7 +28,8 @@ namespace render {
 		m_nullTexture->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		m_nullTexture->SetWrap(GL_REPEAT, GL_REPEAT);
 		GLubyte data[] = { 0, 0, 0, 255 };
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(m_nullTexture->GetTarget(), 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		m_nullTexture->SetDimensions({ 1,1 });
 		m_nullTexture->EndGroupOp();
 	}
 
@@ -116,8 +117,12 @@ namespace render {
 
 		m_scene = scene;
 
+		glm::vec3 position(0.f);
 
-		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>(ReadPositionNode(positionNode));
+		if (positionNode) {
+			position = ReadPositionNode(positionNode);
+		}
+		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>();
 		for (const auto&texture : scene->textures) {
 			m_textures.push_back(LoadTexture(texture));
 		}
@@ -175,6 +180,7 @@ namespace render {
 			GL_RGBA,
 			GL_UNSIGNED_BYTE,
 			texture.data.get());
+		tex->SetDimensions({ texture.width, texture.height });
 		ErrorCheck();
 		tex->SetWrap(GL_REPEAT, GL_REPEAT);
 		tex->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);

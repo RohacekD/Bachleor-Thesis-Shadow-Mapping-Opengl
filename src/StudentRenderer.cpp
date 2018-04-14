@@ -64,7 +64,7 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	m_screenWidht = screenWidth;
 	m_screenHeight = screenHeight;
 	render::C_SceneBuilder sceneBuilder;
-	m_renderScene = sceneBuilder.LoadScene("models/scene.xml");
+	m_renderScene = sceneBuilder.LoadScene("models/DesertCity.xml");
 	m_renderScene->m_bbox = scene->bbox;
 	m_avg = 0.0f;
 	m_frameID = 0;
@@ -267,6 +267,7 @@ bool StudentRenderer::initFBO()
 	auto depthTexture = std::make_shared<GLW::C_Texture>("depthTexture", GL_TEXTURE_2D_ARRAY);
 	depthTexture->StartGroupOp();
 	glTexStorage3D(depthTexture->GetTarget(), 1, GL_DEPTH_COMPONENT32, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
+	depthTexture->SetDimensions({gs_shadowMapsize, gs_shadowMapsize });
 
 	ErrorCheck();
 	depthTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
@@ -281,6 +282,7 @@ bool StudentRenderer::initFBO()
 	auto colorTexture = std::make_shared<GLW::C_Texture>("colorTexture", GL_TEXTURE_2D_ARRAY);
 	colorTexture->StartGroupOp();
 	glTexStorage3D(colorTexture->GetTarget(), 1, GL_RGBA32F, gs_shadowMapsize, gs_shadowMapsize, m_CSM->GetNumLevels());
+	colorTexture->SetDimensions({ gs_shadowMapsize, gs_shadowMapsize });
 
 	ErrorCheck();
 	colorTexture->SetWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
@@ -305,6 +307,7 @@ bool StudentRenderer::initFBO()
 		GL_DEPTH_COMPONENT,
 		GL_UNSIGNED_BYTE,
 		0);
+	depthSamplesTexture->SetDimensions({ 512, 512 });
 
 	ErrorCheck();
 	depthSamplesTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
@@ -329,8 +332,10 @@ void StudentRenderer::ShowGUI()
 	bool active = true;
 	if (m_ControlPanel.m_useSDSM) {
 		ImGui::Begin("Depth histogram", &active);
+#ifdef _DEBUG
 		ImGui::Image((void*)std::dynamic_pointer_cast<C_SDSMSplitsCalculator>(m_CSM->GetSplittingMethod())->GetHistogramTexture()->GetTexture(),
 		{ 256, 150 }, { 0,1 }, { 1,0 });
+#endif // _DEBUG
 		ImGui::End();
 	}
 

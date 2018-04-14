@@ -1,12 +1,9 @@
-﻿  Debug.cpp
-  ShaderProgram.cpp
-  ShaderManager.cpp
-  MeshNode.cpp
-  RenderNode.cpp
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (Computer Graphics Project.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  SDSMSplitsCalculator.cpp
   Generating code
-  256 of 3115 functions ( 8.2%) were compiled, the rest were copied from previous compilation.
-    139 functions were new in current compilation
-    246 functions had inline decision re-evaluated but remain unchanged
+  5624 of 5636 functions (99.8%) were compiled, the rest were copied from previous compilation.
+    376 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Computer Graphics Project.exe
-  Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Computer Graphics Project.pdb (Full PDB)
+  Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.exe
+  Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.pdb (Full PDB)

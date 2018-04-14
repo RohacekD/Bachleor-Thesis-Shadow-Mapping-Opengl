@@ -61,6 +61,12 @@
     <Filter Include="Source Files\ImGUI">
       <UniqueIdentifier>{78c8cb9e-97d9-4a2d-a587-2a5a2c25c5a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GLW\Texture">
+      <UniqueIdentifier>{1583e55c-f1ee-4eae-a204-21c7c8292b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GLW\Texture2D">
+      <UniqueIdentifier>{4fef5340-4141-45cf-a0d4-e124b93ee8f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Application.cpp">
@@ -197,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="..\src\SDSMSplitsCalculator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLW\Texture\Texture2D.cpp">
+      <Filter>Source Files\GLW\Texture2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="..\src\SDSMSplitsCalculator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GLW\Texture\Texture2D.h">
+      <Filter>Header Files\GLW\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
