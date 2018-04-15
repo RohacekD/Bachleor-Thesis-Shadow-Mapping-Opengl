@@ -10,13 +10,15 @@ namespace GLW {
 	inline int C_ShaderProgram::FindLocation(const char* name)
 	{
 		GLint location = -1;
-		const auto it = m_uniformMap.find(name);
+		auto hash = std::hash<std::string>{}(name);
+
+		const auto it = m_uniformMap.find(hash);
 		if (it != m_uniformMap.end()) {
 			location = it->second;
 		}
 		else {
 			location = glGetUniformLocation(m_Program, name);
-			m_uniformMap[std::string(name)] = location;
+			m_uniformMap[hash] = location;
 		}
 #if _DEBUG
 		if (location < 0) {
@@ -31,13 +33,15 @@ namespace GLW {
 	inline int C_ShaderProgram::FindLocation(const std::string& name)
 	{
 		GLint location = -1;
-		const auto it = m_uniformMap.find(name);
+		auto hash = std::hash<std::string>{}(name);
+
+		const auto it = m_uniformMap.find(hash);
 		if (it != m_uniformMap.end()) {
 			location = it->second;
 		}
 		else {
 			location = glGetUniformLocation(m_Program, name.c_str());
-			m_uniformMap[name] = location;
+			m_uniformMap[hash] = location;
 		}
 #if _DEBUG
 		if (location < 0) {

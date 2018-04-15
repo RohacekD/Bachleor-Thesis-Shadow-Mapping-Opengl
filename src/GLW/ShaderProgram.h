@@ -17,6 +17,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <functional>
 #include <map>
 #include <string>
 #include <vector>
@@ -74,7 +75,7 @@ namespace GLW {
 		std::string m_name;
 #endif
 		GLuint m_Program;
-		std::map<std::string, GLint> m_uniformMap;
+		std::map<std::size_t, GLint> m_uniformMap;
 	};
 }
 #include "GLW/ShaderProgram.inl"
