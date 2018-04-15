@@ -50,7 +50,12 @@ bool _glErrorCheck(const std::string file, const int line);
 * @warning Make sure this is not called after OpenGL context destruction, otherwise
 * this will produce false positive warnings
 ** ==============================================*/
+#ifndef SPEEDPROFILE
 #define ErrorCheck() _glErrorCheck(__FILE__, __LINE__)
+#else
+#define ErrorCheck()
+#endif
+
 
 /** ==============================================
 * @method:    DestructorFullCheck

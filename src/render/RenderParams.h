@@ -43,7 +43,6 @@ namespace render {
 			ShadowPass, //< Just silhouette is needed during shadow pass
 			ZPass		//< This pass is used only to get depth of shadow casters depths
 		};
-		glm::mat4 m_cameraViewProjectionMatrix; //< Pre-multiplicated view projection matrix
 		glm::vec3 m_cameraPosition;
 		// @todo: there should be some mechanism to control that texture is GL_TEXTURE_ARRAY_2D
 		std::shared_ptr<GLW::C_Texture> m_shadowMap; //< Contains shadow map cascade map

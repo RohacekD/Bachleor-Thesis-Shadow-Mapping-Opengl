@@ -193,7 +193,6 @@ namespace render {
 		glBindVertexArray(m_VAO);
 
 		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
-		program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
