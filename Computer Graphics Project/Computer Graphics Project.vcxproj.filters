@@ -210,6 +210,9 @@
     <ClCompile Include="..\src\FrameConstantsBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Shapes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -375,6 +378,9 @@
       <Filter>Header Files\GLW\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\src\FrameConstantsBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shapes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

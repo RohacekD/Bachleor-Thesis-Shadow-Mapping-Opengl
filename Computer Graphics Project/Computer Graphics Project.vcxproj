@@ -275,6 +275,7 @@
     <ClCompile Include="..\src\ShaderManager.cpp" />
     <ClCompile Include="..\src\ShaderPreprocessor.cpp" />
     <ClCompile Include="..\src\ShadowMapCascade.cpp" />
+    <ClCompile Include="..\src\Shapes.cpp" />
     <ClCompile Include="..\src\StudentRenderer.cpp" />
     <ClCompile Include="..\src\TextureLoader.cpp" />
     <ClCompile Include="..\src\UniformBuffersManager.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="..\src\ShaderManager.h" />
     <ClInclude Include="..\src\ShaderPreprocessor.h" />
     <ClInclude Include="..\src\ShadowMapCascade.h" />
+    <ClInclude Include="..\src\Shapes.h" />
     <ClInclude Include="..\src\StudentRenderer.hpp" />
     <ClInclude Include="..\src\TextureLoader.hpp" />
     <ClInclude Include="..\src\UniformBuffersManager.h" />
