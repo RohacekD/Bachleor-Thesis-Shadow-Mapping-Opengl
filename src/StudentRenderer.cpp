@@ -171,6 +171,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	params.m_cameraPosition = m_CSM->GetBoundCamera()->getPosition();
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
 	params.m_pass = render::S_RenderParams::E_PassType::RenderPass;
+	params.m_FrustumSphere = m_CSM->GetBoundCamera()->getFrustum().GetAABB().GetSphere();
 
 	glActiveTexture(GL_TEXTURE0);
 	params.m_shadowMap->bind();

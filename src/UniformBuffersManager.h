@@ -38,6 +38,8 @@ namespace GLW {
  ** ==============================================*/
 class C_UniformBuffersManager {
 public:
+	using T_UBOSmartPtr = std::shared_ptr<GLW::C_UniformBuffer>;
+
 	//Singleton stuff
 	C_UniformBuffersManager(C_UniformBuffersManager const&) = delete;
 	void operator=(C_UniformBuffersManager const&) = delete;
@@ -49,11 +51,14 @@ public:
 	void BindUBOs(const GLW::C_ShaderProgram* program) const;
 	template<class T, typename ...Params>
 	std::shared_ptr<T> CreateUniformBuffer(const std::string& name, Params&&... params);
+#ifdef _DEBUG
+	T_UBOSmartPtr GetBufferByName(const std::string& name) const;
+#endif
 
 	void ProcessUBOBindingPoints(std::shared_ptr<GLW::C_ShaderProgram> program) const;
 private:
 	C_UniformBuffersManager();
-	std::vector<std::shared_ptr<GLW::C_UniformBuffer>> m_UBOs;
+	std::vector<T_UBOSmartPtr> m_UBOs;
 };
 
 //=================================================================================

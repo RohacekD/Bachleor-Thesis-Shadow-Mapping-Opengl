@@ -4,6 +4,8 @@
 #include "GLW/ShaderProgram.h"
 #include "Debug.h"
 
+#include <algorithm>
+
 
 //=================================================================================
 C_UniformBuffersManager::C_UniformBuffersManager()
@@ -41,6 +43,14 @@ void C_UniformBuffersManager::BindUBOs(const GLW::C_ShaderProgram* program) cons
 			program->BindUBO(ubo);
 		}
 	}
+}
+
+//=================================================================================
+C_UniformBuffersManager::T_UBOSmartPtr C_UniformBuffersManager::GetBufferByName(const std::string& name) const
+{
+	return *std::find_if(m_UBOs.begin(), m_UBOs.end(), [name](const T_UBOSmartPtr& ubo) {
+		return name == ubo->GetBlockName();
+	});
 }
 
 //=================================================================================

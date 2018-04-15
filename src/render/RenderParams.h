@@ -13,12 +13,15 @@
  
 #pragma once
 
+#include "Shapes.h"
+#include "GLW/Texture.h"
+
+#include "glm/detail/type_mat.hpp"
 #include <glm/glm.hpp>
+
 #include <vector>
 #include <memory>
 
-#include "GLW/Texture.h"
-#include "glm/detail/type_mat.hpp"
 
 namespace render {
 	/**
@@ -48,6 +51,9 @@ namespace render {
 		std::shared_ptr<GLW::C_Texture> m_shadowMap; //< Contains shadow map cascade map
 		E_PassType m_pass;				
 		std::vector<float>	m_planes;	//< Splitting planes of shadow cascade
+
+		// informations for frustum culling
+		Shapes::S_Sphere	m_FrustumSphere;
 
 	};
 }

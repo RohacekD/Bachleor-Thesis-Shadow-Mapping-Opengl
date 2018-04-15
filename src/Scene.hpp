@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Shapes.h"
+
 #include <vector>
 #include <limits>
 #include <memory>
@@ -78,6 +80,13 @@ struct AABB
 		 newBB.updateWithVertex(glm::vec3(matrix * glm::vec4(maxPoint, 1.0f)));
 
 		 return newBB;
+	 }
+
+	 const Shapes::S_Sphere GetSphere() const
+	 {
+		 glm::vec3 center = minPoint + (maxPoint - minPoint) / 2.0f;
+		 float radius = glm::abs(glm::length(maxPoint - center));
+		 return Shapes::S_Sphere(center, radius);
 	 }
 };
 

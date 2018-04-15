@@ -4,6 +4,11 @@
 #include "ShaderManager.h"
 #include "GLW/ShaderProgram.h"
 
+#ifdef _DEBUG
+#include "UniformBuffersManager.h"
+#include "FrameConstantsBuffer.h"
+#endif
+
 #include "CameraManager.h"
 #include "Camera/ICamera.h"
 #include "Application.hpp"
@@ -143,7 +148,15 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::RenderPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
-		//RenderBBox(params.m_cameraViewProjectionMatrix, modelMatrix);
+//#ifdef _DEBUG
+//		const auto ubo = C_UniformBuffersManager::Instance().GetBufferByName("frameConst");
+//		RenderBBox(std::dynamic_pointer_cast<C_FrameConstantsBuffer>(ubo)->GetViewProjection(), modelMatrix);
+//#endif
+		if (!params.m_FrustumSphere.IsColliding(m_bbox.GetSphere())) {
+			return;
+		}
+
+
 		auto& shdManager = C_ShaderManager::Instance();
 		auto program = shdManager.GetProgram("basic-planes");
 
