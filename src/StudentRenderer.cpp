@@ -168,12 +168,16 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	m_FrameConstUBO->Activate(true);
 
 	render::S_RenderParams params;
-	params.m_cameraViewProjectionMatrix = camera.getViewProjectionMatrix();
 	params.m_cameraPosition = m_CSM->GetBoundCamera()->getPosition();
 	params.m_shadowMap = m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT);
 	params.m_pass = render::S_RenderParams::E_PassType::RenderPass;
 
+	glActiveTexture(GL_TEXTURE0);
+	params.m_shadowMap->bind();
+
 	m_renderScene->Render(params, glm::mat4(1.0f));
+
+	params.m_shadowMap->unbind();
 
 	ErrorCheck();
 	m_FrameConstUBO->Activate(false);
@@ -253,6 +257,10 @@ void StudentRenderer::renderDepthSamples() const
 
 	m_DepthSamplesframebuffer->Bind();
 
+	m_FrameConstUBO->SetViewProjection(mainCam->getViewProjectionMatrix());
+	m_FrameConstUBO->UploadData();
+	m_FrameConstUBO->Activate(true);
+
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -260,11 +268,11 @@ void StudentRenderer::renderDepthSamples() const
 
 	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::ZPass;
-	params.m_cameraViewProjectionMatrix = mainCam->getViewProjectionMatrix();
 
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
 	ErrorCheck();
 
+	m_FrameConstUBO->Activate(false);
 	m_DepthSamplesframebuffer->Unbind();
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 }

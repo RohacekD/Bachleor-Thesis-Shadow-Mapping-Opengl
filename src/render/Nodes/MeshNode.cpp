@@ -150,8 +150,6 @@ namespace render {
 		program->useProgram();
 		glBindVertexArray(m_VAO);
 
-		glActiveTexture(GL_TEXTURE0);
-		params.m_shadowMap->bind();
 		program->SetUniform("shadowMap", 0);
 
 		if (m_texture) {
@@ -172,7 +170,6 @@ namespace render {
 		glBindVertexArray(0);
 		program->disableProgram();
 		
-		params.m_shadowMap->unbind();
 		if (m_texture)
 		{
 			m_texture->unbind();
