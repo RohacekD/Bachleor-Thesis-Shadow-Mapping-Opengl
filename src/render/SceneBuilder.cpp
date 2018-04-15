@@ -122,7 +122,7 @@ namespace render {
 		if (positionNode) {
 			position = ReadPositionNode(positionNode);
 		}
-		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>();
+		std::shared_ptr<C_Scene> ret = std::make_shared<C_Scene>(position);
 		for (const auto&texture : scene->textures) {
 			m_textures.push_back(LoadTexture(texture));
 		}

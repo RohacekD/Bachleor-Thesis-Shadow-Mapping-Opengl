@@ -21,7 +21,7 @@ namespace GLW {
 	void C_UniformBuffer::bind() const
 	{
 		C_GLBuffer<GL_UNIFORM_BUFFER>::bind();
-		glBindBufferBase(GL_UNIFORM_BUFFER, m_index, m_id);	
+		glBindBufferBase(GL_UNIFORM_BUFFER, GetIndex(), m_id);	
 		ErrorCheck();
 	}
 

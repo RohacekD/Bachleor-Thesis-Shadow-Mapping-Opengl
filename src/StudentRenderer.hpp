@@ -27,6 +27,7 @@
 
 class I_Camera;
 class C_SDSMSplitsCalculator;
+class C_FrameConstantsBuffer;
 
 namespace GLW {
 	class C_Texture;
@@ -88,7 +89,8 @@ private:
 	unsigned long m_frameID;
 	const static long s_avgFramesNum = 10000;
 
-	std::shared_ptr<C_ShadowMapCascade> m_CSM;
+	std::shared_ptr<C_ShadowMapCascade>		m_CSM;
+	std::shared_ptr<C_FrameConstantsBuffer> m_FrameConstUBO;
 
 	std::shared_ptr<Animation::C_Animation> m_SunAnimation;
 };

@@ -105,10 +105,6 @@ namespace render {
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
-
-		auto& shdManager = C_ShaderManager::Instance();
-		m_program = shdManager.GetProgram("basic");
-		m_shadowProgram = shdManager.GetProgram("basic-shadow");
 	}
 
 	//=================================================================================
@@ -123,21 +119,24 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ShadowPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
+		auto& shdManager = C_ShaderManager::Instance();
+		auto program = shdManager.GetProgram("basic-shadow");
+
 		if (!m_bShadowCaster) {
 			return;
 		}
 		ErrorCheck();
-		m_shadowProgram->useProgram();
+		program->useProgram();
 
 		glBindVertexArray(m_VAO);
 
-		m_shadowProgram->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
+		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		m_shadowProgram->disableProgram();
+		program->disableProgram();
 		ErrorCheck();
 	}
 
@@ -166,7 +165,6 @@ namespace render {
 			program->SetUniform("modelColor", m_color);
 		}
 
-		program->SetUniform("projectionMatrix", params.m_cameraViewProjectionMatrix);
 		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);

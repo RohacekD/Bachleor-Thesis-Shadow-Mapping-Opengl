@@ -7,8 +7,7 @@ attribute vec3 normal;
 attribute vec2 texCoord;
 
 //per frame
-uniform mat4 projectionMatrix;
-uniform vec4 CameraPosition;
+#include "include/frameConstants.glsl"
 
 //per model
 uniform mat4 modelMatrix;
@@ -32,7 +31,7 @@ out vec4 camPosition;
 void main()
 {
 	normalOUT = normal;
-	camPosition = pssm.PSSM_CameraView * CameraPosition;
+	camPosition = pssm.PSSM_CameraView * frame.CameraPosition;
 	texCoordOUT = texCoord;
 
 	//to light should be counted from world space
@@ -41,6 +40,6 @@ void main()
 
 	worldCoord = modelMatrix * vertex;
 
-    gl_Position = projectionMatrix * worldCoord; //tohle je reálná hloubka
+    gl_Position = frame.projectionMatrix * worldCoord; //tohle je reálná hloubka
     PSSM_CameraDependentPos = pssm.PSSM_CameraView * worldCoord; //tohle je na odvozeni hloubek
 }

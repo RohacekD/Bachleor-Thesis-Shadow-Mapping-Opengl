@@ -1,6 +1,7 @@
 #include "ShaderManager.h"
 
 #include "GLW/ShaderProgram.h"
+#include "UniformBuffersManager.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -46,6 +47,7 @@ void C_ShaderManager::Update()
 			try
 			{
 				program.second.swap(std::make_shared<GLW::C_ShaderProgram>(LoadProgram(program.first)));
+				C_UniformBuffersManager::Instance().ProcessUBOBindingPoints(program.second);
 			}
 			catch (...)
 			{
@@ -67,6 +69,8 @@ C_ShaderManager::T_ShaderPtr C_ShaderManager::GetProgram(const std::string& name
 	GLuint program = LoadProgram(name);
 
 	T_ShaderPtr shaderProgram = std::make_shared<GLW::C_ShaderProgram>(program);
+
+	C_UniformBuffersManager::Instance().ProcessUBOBindingPoints(shaderProgram);
 	shaderProgram->SetName(name);
 
 	m_Programs.insert({ name, shaderProgram});

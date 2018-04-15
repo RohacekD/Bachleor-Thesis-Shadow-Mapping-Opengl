@@ -49,6 +49,8 @@ public:
 	void BindUBOs(const GLW::C_ShaderProgram* program) const;
 	template<class T, typename ...Params>
 	std::shared_ptr<T> CreateUniformBuffer(const std::string& name, Params&&... params);
+
+	void ProcessUBOBindingPoints(std::shared_ptr<GLW::C_ShaderProgram> program) const;
 private:
 	C_UniformBuffersManager();
 	std::vector<std::shared_ptr<GLW::C_UniformBuffer>> m_UBOs;

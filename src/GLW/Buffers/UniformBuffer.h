@@ -33,7 +33,10 @@ namespace GLW {
 		inline bool IsActive() const { return m_active; }
 
 		const std::string& GetBlockName() const { return m_blockName; }
-		int GetBinding() const { return m_index; }
+		int GetBinding() const { return GetIndex(); }
+
+		GLuint GetIndex() const { return m_index; }
+		void SetIndex(GLuint val) { m_index = val; }
 	private:
 		GLuint m_index;
 		std::string m_blockName;

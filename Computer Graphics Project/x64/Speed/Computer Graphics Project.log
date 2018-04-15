@@ -1,21 +1,38 @@
-﻿  Application.cpp
+﻿  Animation.cpp
+  Application.cpp
+  CameraManager.cpp
   FreelookCamera.cpp
+  Debug.cpp
+  FrameConstantsBuffer.cpp
   Frustum.cpp
   ShaderStorage.cpp
+  UniformBuffer.cpp
+  Framebuffer.cpp
+  ShaderProgram.cpp
+  Texture.cpp
+  Texture2D.cpp
   ISplitPlanesCalculator.cpp
   LightInfo.cpp
   main.cpp
   PSSMSplitsCalculator.cpp
   PSSMUBO.cpp
   MeshNode.cpp
+  RenderNode.cpp
+  Compiling...
+  Scene.cpp
+  Terrain.cpp
+  RenderParams.cpp
+  SceneBuilder.cpp
+  SDSMSplitsCalculator.cpp
   ShaderCompiler.cpp
-  ShaderPreprocessor.cpp
+  ShaderManager.cpp
   ShadowMapCascade.cpp
   StudentRenderer.cpp
+  UniformBuffersManager.cpp
   Generating code
-  1424 of 4825 functions (29.5%) were compiled, the rest were copied from previous compilation.
-    1043 functions were new in current compilation
-    494 functions had inline decision re-evaluated but remain unchanged
+  4965 of 4977 functions (99.8%) were compiled, the rest were copied from previous compilation.
+    19 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.exe
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.pdb (Partial PDB)

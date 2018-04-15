@@ -56,8 +56,6 @@ namespace render {
 		GLuint m_triangles;
 		GLuint m_VBOs[3];
 		GLuint m_VAO;
-		std::shared_ptr<GLW::C_ShaderProgram> m_program;
-		std::shared_ptr<GLW::C_ShaderProgram> m_shadowProgram;
 		std::shared_ptr<GLW::C_Texture> m_texture;
 
 		glm::vec4 m_color;

@@ -18,6 +18,7 @@
 #include "CameraManager.h"
 #include "Application.hpp"
 #include "UniformBuffersManager.h"
+#include "FrameConstantsBuffer.h"
 
 #ifndef SPEEDPROFILE
 #include "imgui/imgui.h"
@@ -88,6 +89,9 @@ bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidt
 	glEnable(GL_CULL_FACE);
 	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 
+
+	m_FrameConstUBO = C_UniformBuffersManager::Instance().CreateUniformBuffer<C_FrameConstantsBuffer>("frameConst");
+
 	std::cout << C_ShaderManager::Instance().ShadersStatistics();
 
 	std::cout << "Loading time: " << timer.getElapsedTimeFromLastQueryMilliseconds() << "ms" << std::endl;
@@ -148,7 +152,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 		auto calc = std::dynamic_pointer_cast<C_SDSMSplitsCalculator>(method);
 		calc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
 	}
-	
+
 	renderToFBO(camera.getViewProjectionMatrix());
 
 
@@ -157,6 +161,11 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	m_CSM->ActivateUBO();
 
 	glViewport(0, 0, m_screenWidht, m_screenHeight);
+
+	m_FrameConstUBO->SetViewProjection(camera.getViewProjectionMatrix());
+	m_FrameConstUBO->SetCameraPosition(glm::vec4(m_CSM->GetBoundCamera()->getPosition(), 1.0f));
+	m_FrameConstUBO->UploadData();
+	m_FrameConstUBO->Activate(true);
 
 	render::S_RenderParams params;
 	params.m_cameraViewProjectionMatrix = camera.getViewProjectionMatrix();
@@ -167,6 +176,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	m_renderScene->Render(params, glm::mat4(1.0f));
 
 	ErrorCheck();
+	m_FrameConstUBO->Activate(false);
 	m_CSM->ActivateUBO(false);
 
 	{

@@ -207,6 +207,9 @@
     <ClCompile Include="..\src\GLW\Texture\Texture2D.cpp">
       <Filter>Source Files\GLW\Texture2D</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\FrameConstantsBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Application.hpp">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="..\src\GLW\Texture\Texture2D.h">
       <Filter>Header Files\GLW\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FrameConstantsBuffer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

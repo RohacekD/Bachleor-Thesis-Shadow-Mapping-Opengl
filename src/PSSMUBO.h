@@ -21,8 +21,6 @@
 #include <array>
 #include <vector>
 
-// @todo get rid of template, have no meaning here
-
 class C_PSSMUBO : public GLW::C_UniformBuffer {
 public:
 	C_PSSMUBO(const std::string& blockName, unsigned int index, unsigned int splits);

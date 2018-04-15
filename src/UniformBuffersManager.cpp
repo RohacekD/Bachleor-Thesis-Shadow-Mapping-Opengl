@@ -42,3 +42,17 @@ void C_UniformBuffersManager::BindUBOs(const GLW::C_ShaderProgram* program) cons
 		}
 	}
 }
+
+//=================================================================================
+void C_UniformBuffersManager::ProcessUBOBindingPoints(std::shared_ptr<GLW::C_ShaderProgram> program) const
+{
+	int i = 0;
+	for (const auto & ubo : m_UBOs)
+	{
+		auto uniformBlockIndex = program->FindUniformBlockLocation<const std::string&>(ubo->GetBlockName());
+		if (uniformBlockIndex != GL_INVALID_INDEX) {
+			glUniformBlockBinding(program->GetProgram(), uniformBlockIndex, i);
+		}
+		++i;
+	}
+}
