@@ -51,9 +51,9 @@ public:
 	void BindUBOs(const GLW::C_ShaderProgram* program) const;
 	template<class T, typename ...Params>
 	std::shared_ptr<T> CreateUniformBuffer(const std::string& name, Params&&... params);
-#ifdef _DEBUG
+	// should be used only in debug
 	T_UBOSmartPtr GetBufferByName(const std::string& name) const;
-#endif
+
 
 	void ProcessUBOBindingPoints(std::shared_ptr<GLW::C_ShaderProgram> program) const;
 private:
