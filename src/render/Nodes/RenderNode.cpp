@@ -46,6 +46,9 @@ namespace render {
 	//=================================================================================
 	void I_RenderNode::Render(const S_RenderParams& params, const glm::mat4& parentModelMatrix)
 	{
+		if (!params.m_FrustumSphere.IsColliding(m_bbox.GetSphere())) {
+			return;
+		}
 		const glm::mat4& modelMatrix = parentModelMatrix * m_modelMatrix;
 		RenderMyself(params, modelMatrix);
 		RenderChilds(params, modelMatrix);

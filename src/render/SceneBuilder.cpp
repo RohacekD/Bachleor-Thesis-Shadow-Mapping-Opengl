@@ -73,6 +73,13 @@ namespace render {
 			}
 		}
 
+		AABB bbox;
+
+		for (const auto & node : *scene) {
+			bbox.updateWithAABB(node->GetActualAABB());
+		}
+		scene->SetBBox(bbox);
+
 		return scene;
 	}
 
@@ -148,6 +155,15 @@ namespace render {
 				std::cout << e.what() << std::endl;
 			}
 		}
+
+
+
+		AABB bbox;
+
+		for (const auto & node : *ret) {
+			bbox.updateWithAABB(node->GetActualAABB());
+		}
+		ret->SetBBox(bbox);
 
 		return ret;
 	}

@@ -156,11 +156,6 @@ namespace render {
 //		const auto ubo = C_UniformBuffersManager::Instance().GetBufferByName("frameConst");
 //		RenderBBox(std::dynamic_pointer_cast<C_FrameConstantsBuffer>(ubo)->GetViewProjection(), modelMatrix);
 //#endif
-		if (!params.m_FrustumSphere.IsColliding(m_bbox.GetSphere())) {
-			return;
-		}
-
-
 		auto& shdManager = C_ShaderManager::Instance();
 		auto program = shdManager.GetProgram("basic-planes");
 
@@ -196,10 +191,6 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
-		if (!params.m_FrustumSphere.IsColliding(m_bbox.GetSphere())) {
-			return;
-		}
-
 		auto& shdManager = C_ShaderManager::Instance();
 		ErrorCheck();
 		auto program = shdManager.GetProgram("depthsamples");

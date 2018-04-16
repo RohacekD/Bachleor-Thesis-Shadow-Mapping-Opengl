@@ -35,6 +35,10 @@ struct S_SplitInfo {
 	glm::mat4 m_lightViewProjectionMatrix;
 };
 
+namespace Shapes {
+	struct S_Sphere;
+}
+
 class C_ShadowMapCascade {
 public:
 	// not sure about near and far...
@@ -75,7 +79,9 @@ public:
 	glm::mat4 GetViewProjection() const { return m_lighInfo->GetViewProjectionMatrix(); }
 
 	const S_SplitInfo& GetSplitInfo(int i) { return m_splitInfos[i]; }
+	Shapes::S_Sphere GetLightFrustumSphere() const;
 private:
+	AABB GetBBoxInLightSpace(const C_Frustum& frustum) const;
 	void CalcCropMatrices();
 
 	std::shared_ptr<I_SplitPlanesCalculator> m_SplitCalculator;

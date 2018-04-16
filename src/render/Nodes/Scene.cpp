@@ -31,6 +31,12 @@ namespace render {
 	}
 
 	//=================================================================================
+	void C_Scene::SetBBox(const AABB& bbox)
+	{
+		m_bbox = bbox;
+	}
+
+	//=================================================================================
 	void C_Scene::RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix)
 	{
 		//this is just a wrapper

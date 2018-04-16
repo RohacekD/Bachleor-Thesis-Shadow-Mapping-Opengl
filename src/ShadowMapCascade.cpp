@@ -12,6 +12,8 @@
 #include "SDSMSplitsCalculator.h"
 #include "PSSMSplitsCalculator.h"
 
+#include "Shapes.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -116,6 +118,21 @@ void C_ShadowMapCascade::DebugDrawAABBs(const glm::mat4& projectionMatrix) const
 		C_DebugDraw::Instance().DrawAABB(aabb, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 		++i;
 	}
+}
+
+//=================================================================================
+Shapes::S_Sphere C_ShadowMapCascade::GetLightFrustumSphere() const
+{
+	AABB bboxInLightSpace = GetBBoxInLightSpace(m_boundCamera->getFrustum());
+	Shapes::S_Sphere sphere = bboxInLightSpace.GetSphere();
+	sphere.Transform(glm::inverse(m_lighInfo->GetViewMatrix()));
+	return sphere;
+}
+
+//=================================================================================
+AABB C_ShadowMapCascade::GetBBoxInLightSpace(const C_Frustum& frustum) const
+{
+	return frustum.GetAABB().getTransformedAABB(m_lighInfo->GetViewMatrix());
 }
 
 //=================================================================================

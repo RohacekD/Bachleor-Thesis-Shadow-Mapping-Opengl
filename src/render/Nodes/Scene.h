@@ -27,6 +27,8 @@ namespace render {
 
 		virtual void PostUpdate() override;
 
+		void SetBBox(const AABB& bbox);
+
 
 		virtual void RenderMyself(const S_RenderParams& params, const glm::mat4& modelMatrix) override;
 
