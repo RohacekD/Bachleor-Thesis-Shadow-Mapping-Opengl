@@ -147,34 +147,17 @@ void Application::setupCamera(std::shared_ptr<OrbitalCamera>& orbitalCamera)
 //=================================================================================
 void Application::setupCamera(std::shared_ptr<FreelookCamera>& freeCamera)
 {
-	float r = glm::length(_scene->bbox.maxPoint - _scene->bbox.minPoint) / 2;
+	//float r = glm::length(_scene->bbox.maxPoint - _scene->bbox.minPoint) / 2;
 	float fovyDeg = 90;
 	float fovyRad = glm::radians(fovyDeg);
 	float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
-	float nearZ = 0.1f;
+	//float nearZ = 0.1f;
 
-	float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad / 2.0f));
-	float d = r / glm::max(sin(fovyRad / 2), sin(fovXrad / 2));
+	//float fovXrad = 2 * glm::asin(aspectRatio * glm::sin(fovyRad / 2.0f));
+	//float d = r / glm::max(sin(fovyRad / 2), sin(fovXrad / 2));
 
 	freeCamera->setupCameraProjection(0.1f, 100.0f, aspectRatio, fovyDeg);
 	freeCamera->positionCamera(glm::vec3(0, 0, -1), glm::vec3(0));
-}
-
-//=================================================================================
-bool Application::addModelFileToScene(const char* fileToLoad, std::shared_ptr<Scene> scene, const glm::mat4& transform)
-{
-    std::unique_ptr<SceneLoader> sl = std::unique_ptr<SceneLoader>(new SceneLoader);
-
-    std::string pth(fileToLoad), directory, filename;
-	_splitPathToFilenameAndDirectory(pth, directory, filename);
-
-    if(!sl->addModelFromFileToScene(directory.c_str(), filename.c_str(), _scene, transform))
-    {
-         Clear();
-         return false;
-    }
-
-    return true;
 }
 
 //=================================================================================
@@ -209,17 +192,15 @@ Application& Application::Instance()
 }
 
 //=================================================================================
-bool Application::Run()
+bool Application::Run(int argc, char* argv[])
 {
+	if (argc != 2) {
+		return false;
+	}
+
+
     if(!Init())
         return false;
-
-    //Enter Your model path HERE
-	//if (!addModelFileToScene("models/scene.obj", _scene, glm::translate(glm::vec3(0.0f, 0.0f, 0.0f))))
-	//{
-	//	std::cerr << "Failed to load scene: " << std::string("models/terrain/terrain.obj") << std::endl;
-	//	return false;
-	//}
 
 	GetCamManager();
 
@@ -239,7 +220,7 @@ bool Application::Run()
 	debugCam->update();
 
     //Prepare rendering data
-    if(!_renderer.init(_scene, SCREEN_WIDTH, SCREEN_HEIGHT))
+    if(!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT))
          return false;
 
     _timer.reset();

@@ -15,6 +15,7 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
+#include <string>
 #include <memory>
 
 struct Scene;
@@ -35,7 +36,7 @@ public:
 	I_Renderer() {};
 	virtual ~I_Renderer() {}
 
-	virtual bool init(std::shared_ptr<Scene> scene, unsigned int screenWidth, unsigned int screenHeight) = 0;
+	virtual bool init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight) = 0;
 	virtual void onUpdate(float timeSinceLastUpdateMs) = 0;
 	virtual void onWindowRedraw(const I_Camera& camera, const glm::vec3& cameraPosition) = 0;
 	virtual void onKeyPressed(SDL_Keycode code) = 0;

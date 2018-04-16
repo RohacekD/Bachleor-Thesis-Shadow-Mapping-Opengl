@@ -57,16 +57,15 @@ StudentRenderer::~StudentRenderer() {
 }
 
 //=================================================================================
-bool StudentRenderer::init(std::shared_ptr<Scene> scene, unsigned int screenWidth, unsigned int screenHeight)
+bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight)
 {
 	HighResolutionTimer timer;
 	timer.reset();
-	m_scene = scene;
 	m_screenWidht = screenWidth;
 	m_screenHeight = screenHeight;
 	render::C_SceneBuilder sceneBuilder;
-	m_renderScene = sceneBuilder.LoadScene("models/DesertCity.xml");
-	m_renderScene->m_bbox = scene->bbox;
+	// known bug (aabb is wrong)
+	m_renderScene = sceneBuilder.LoadScene(scene);
 	m_avg = 0.0f;
 	m_frameID = 0;
 
@@ -196,7 +195,6 @@ void StudentRenderer::clearStudentData()
 {
 	m_framebuffer.reset();
 	m_DepthSamplesframebuffer.reset();
-	m_scene.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
 	C_ShaderManager::Instance().Clear();

@@ -2,9 +2,9 @@
 
 int main(int argc, char* argv[])
 {
-	std::cout << "start" << std::endl;
     Application & app = Application::Instance();
-    bool ret = app.Run();
+    bool ret = app.Run(argc, argv);
+
 
     if(ret)
         return EXIT_SUCCESS;

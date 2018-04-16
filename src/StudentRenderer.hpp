@@ -49,7 +49,7 @@ public:
 	StudentRenderer();
 	~StudentRenderer();;
 
-	bool init(std::shared_ptr<Scene> scene, unsigned int screenWidth, unsigned int screenHeight) override;
+	bool init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight) override;
 	void onUpdate(float timeSinceLastUpdateMs) override;
 	void onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition) override;
 	void onKeyPressed(SDL_Keycode code) override;
@@ -70,7 +70,6 @@ private:
 		bool m_animateSun;
 	} m_ControlPanel;
 
-	std::shared_ptr<Scene> m_scene; // IMHO I don't need it anymore
 	std::shared_ptr<render::C_Scene> m_renderScene;
 
 	static const int gs_splits;

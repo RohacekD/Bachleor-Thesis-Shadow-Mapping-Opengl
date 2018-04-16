@@ -48,16 +48,11 @@ public:
 	static Application& Instance();
 
     //Main application function
-    bool Run();
+    bool Run(int argc, char* argv[]);
 
     //Initializes window and OpenGL
     //Calls initGL function
     bool Init();
-
-    //Loads scene from file
-    //Stores all data in "scene" object
-    //Scene = all the meshes from single file
-    bool addModelFileToScene(const char* path, std::shared_ptr<Scene> scene, const glm::mat4& transform = glm::mat4(1));
 
 	void setupCamera(std::shared_ptr<OrbitalCamera>& orbitalCamera);
 	void setupCamera(std::shared_ptr<FreelookCamera>& freeCamera);
