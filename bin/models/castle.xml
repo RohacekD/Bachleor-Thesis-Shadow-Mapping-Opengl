@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+	<!-- <terrain file="profile.jpg" tile-size="1" /> -->
+	<model file="Castle/Castle OBJ.obj">
+	</model>
+</scene>

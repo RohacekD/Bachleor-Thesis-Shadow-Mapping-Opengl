@@ -1,8 +1,9 @@
-﻿  Application.cpp
+﻿  StudentRenderer.cpp
+  MeshNode.cpp
   Generating code
-  165 of 4970 functions ( 3.3%) were compiled, the rest were copied from previous compilation.
+  144 of 4971 functions ( 2.9%) were compiled, the rest were copied from previous compilation.
     1 functions were new in current compilation
-    82 functions had inline decision re-evaluated but remain unchanged
+    86 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.exe
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.pdb (Partial PDB)

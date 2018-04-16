@@ -20,8 +20,6 @@ out vec4 PSSM_CameraDependentPos;
 
 //=================================================================================
 out vec3 normalOUT;
-out vec4 lightOUT;
-out vec4 toLight;
 out vec2 texCoordOUT;
 out vec4 worldCoord;
 out vec4 camPosition;

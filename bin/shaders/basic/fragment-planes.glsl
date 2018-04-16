@@ -13,8 +13,6 @@ uniform bool hasTexture;
 uniform vec4 modelColor;
 
 in vec3 normalOUT;
-in vec4 lightOUT;
-in vec4 toLight;
 in vec4 worldCoord;
 varying vec2 texCoordOUT;
 in vec4 camPosition;
@@ -35,7 +33,7 @@ bool IsInPSSMShadow(){
 	vec4 shadowCoords = pssm.m_LightViewProjection[split] * worldCoord;
 	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
 	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;
-	return (shadowCoords.z - 1.0/1024.0 > objectNearestLight);
+	return (shadowCoords.z - 2.0/1024.0 > objectNearestLight);
 }
 
 //=================================================================================
@@ -57,7 +55,19 @@ void main()
 	if(PSSM_CameraDependentPos.z<0.0)
 		MaterialDiffuseColor += getColorForFrustum(abs(PSSM_CameraDependentPos.z))*0.3;
 
-	ApplyPSSM();
+	float visibility = 1.0f;
+	if(IsInPSSMShadow()){
+		visibility = 0.5f;
+	}
+
+	float cosTheta = dot(normalOUT,-1.0f * pssm.SunDirection);
+
+	// make sun colour less blue to simulate real sun
+
+	vec4 MaterialAmbientColor = 0.1f * MaterialDiffuseColor;
+
+	MaterialDiffuseColor = MaterialAmbientColor + 
+	visibility * MaterialDiffuseColor * vec4(1.0f, 1.0f, 0.8f, 1.0f) * cosTheta;
 
 	fragColor = MaterialDiffuseColor;
 }
