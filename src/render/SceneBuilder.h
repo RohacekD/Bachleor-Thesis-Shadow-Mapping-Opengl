@@ -46,6 +46,7 @@ namespace render {
 	private:
 		glm::vec3	ReadPositionNode(const pugi::xml_node& node) const noexcept;
 		std::string GetFolderpath(const std::string& filePath) const;
+		std::string GetFilePart(const std::string& filePath) const;
 
 		std::vector<std::shared_ptr<GLW::C_Texture>> m_textures;
 		std::shared_ptr<GLW::C_Texture> m_nullTexture;

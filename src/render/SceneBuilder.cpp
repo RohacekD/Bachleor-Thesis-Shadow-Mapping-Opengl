@@ -109,7 +109,9 @@ namespace render {
 		//	modelMatrix = glm::translate(modelMatrix, ReadPositionNode(positionNode));
 		//}
 
-		if (!sl->addModelFromFileToScene(m_sceneFolder.c_str(), node.attribute("file").as_string(), scene, modelMatrix))
+		auto path = (m_sceneFolder + "/" + GetFolderpath(node.attribute("file").as_string()));
+
+		if (!sl->addModelFromFileToScene(path.c_str(), GetFilePart(node.attribute("file").as_string()).c_str(), scene, modelMatrix))
 		{
 			std::cerr << "Unable to load model " << std::endl; 
 			return nullptr;
@@ -205,6 +207,14 @@ namespace render {
 		std::size_t found = filePath.find_last_of("/\\");
 
 		return filePath.substr(0, found);
+	}
+
+	//=================================================================================
+	std::string C_SceneBuilder::GetFilePart(const std::string& filePath) const
+	{
+		std::size_t found = filePath.find_last_of("/\\");
+
+		return filePath.substr(found + 1, std::string::npos);
 	}
 
 };
