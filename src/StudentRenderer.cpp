@@ -236,6 +236,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 
 	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
+	//params.m_FrustumSphere = m_CSM->GetBoundCamera()->getFrustum().GetAABB().GetSphere();
 
 	//glCullFace(GL_FRONT);
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
@@ -269,6 +270,7 @@ void StudentRenderer::renderDepthSamples() const
 
 	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::ZPass;
+	params.m_FrustumSphere = m_CSM->GetBoundCamera()->getFrustum().GetAABB().GetSphere();
 
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
 	ErrorCheck();

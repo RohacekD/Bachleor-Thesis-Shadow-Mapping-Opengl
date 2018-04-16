@@ -192,6 +192,10 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
+		if (!params.m_FrustumSphere.IsColliding(m_bbox.GetSphere())) {
+			return;
+		}
+
 		if (!m_bShadowCaster) {
 			return;
 		}
