@@ -151,7 +151,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 	auto splits = m_SplitCalculator->GetSplitFrusts();
 
 	// this makes subfrusums bigger, it is virtual distance from frustum to light
-	static const float s_lightDistance = 20.0f;
+	static const float s_lightDistance = 50.0f;
 
 	for (unsigned int i = 0; i < m_levels; ++i) {
 		frust.SetNear(splits[i].first);

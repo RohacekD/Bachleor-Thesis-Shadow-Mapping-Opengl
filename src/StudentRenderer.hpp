@@ -21,7 +21,6 @@
 #include "Scene.hpp"
 #include "ShaderCompiler.hpp"
 #include "HighResolutionTimer.hpp"
-#include "CameraPath.h"
 #include "ShadowMapCascade.h"
 #include "ISplitPlanesCalculator.h"
 

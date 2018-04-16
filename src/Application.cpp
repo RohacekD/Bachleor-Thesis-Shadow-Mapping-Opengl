@@ -194,8 +194,23 @@ Application& Application::Instance()
 //=================================================================================
 bool Application::Run(int argc, char* argv[])
 {
+#ifdef SPEEDPROFILE
+	//in speed profile we need to know rendering method
+	if (argc != 3) {
+		return false;
+	}
+#else
 	if (argc != 2) {
 		return false;
+	}
+#endif
+
+	bool sdsm = false;
+	if (!strcmp("s", argv[2])) {
+		sdsm = true;
+	}
+	else if (!strcmp("p", argv[2])) {
+		sdsm = false;
 	}
 
 
@@ -222,6 +237,8 @@ bool Application::Run(int argc, char* argv[])
     //Prepare rendering data
     if(!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT))
          return false;
+
+	_renderer.UseSDSM(sdsm);
 
     _timer.reset();
     bool quit = false;
