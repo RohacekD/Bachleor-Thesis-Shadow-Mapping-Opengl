@@ -195,6 +195,7 @@ void StudentRenderer::clearStudentData()
 {
 	m_framebuffer.reset();
 	m_DepthSamplesframebuffer.reset();
+	m_FrameConstUBO.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
 	C_ShaderManager::Instance().Clear();
