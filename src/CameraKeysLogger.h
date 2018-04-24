@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include <string>
+#include <mutex>
 
 class C_CameraKeysLogger {
 public:
@@ -15,7 +16,11 @@ public:
 protected:
 	template<class T>
 	void CreateNode(pugi::xml_node& node, const glm::vec3& vector, T&& name) const;
-	pugi::xml_document m_camPath;
+
+	void SaveXML() const;
+
+	pugi::xml_document	m_camPath;
+	mutable std::mutex	m_DocumentMutex;
 };
 
 //=================================================================================
