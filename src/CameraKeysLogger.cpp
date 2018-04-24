@@ -17,6 +17,8 @@ void C_CameraKeysLogger::LogKeyFrame(const glm::vec3& position, const glm::vec3&
 	CreateNode(keyElement.append_child(), position, "position");
 	CreateNode(keyElement.append_child(), viewVec, "viewVec"); 
 	CreateNode(keyElement.append_child(), upVec, "upVec");
+	std::cout << "Added key frame #"<< std::distance(m_camPath.child("path").children("key").begin(), m_camPath.child("path").children("key").end())
+		<<" to the camera path" << std::endl;
 }
 
 //=================================================================================

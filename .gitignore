@@ -48,3 +48,6 @@ Computer Graphics Project/Computer Graphics Project.vcxproj
 .vs/Computer Graphics Project/v14/.suo
 *.db
 Computer Graphics Project.VC.db
+Computer\ Graphics\ Project/x64/*.tlog
+*.tlog
+Computer\ Graphics\ Project/x64/*
