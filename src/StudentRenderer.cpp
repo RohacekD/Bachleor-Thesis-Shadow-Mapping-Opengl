@@ -183,11 +183,13 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	m_FrameConstUBO->Activate(false);
 	m_CSM->ActivateUBO(false);
 
+#ifndef SPEEDPROFILE
 	{
 		RenderDoc::C_DebugScope scope("DebugDraw");
 		m_CSM->DebugDrawAABBs(camera.getViewProjectionMatrix());
 		Application::Instance().GetCamManager()->DebugDraw();
 	}
+#endif // !SPEEDPROFILE
 }
 
 //=================================================================================

@@ -73,6 +73,19 @@ public:
 private:
 	Application();
 
+	
+	/** ==============================================
+	 * @method:    ProcessControls
+	 * @fullName:  Application::ProcessControls
+	 * @return:    bool true if application should continue execution
+	 * @param: 	   std::shared_ptr<I_Camera> camera
+	 * @brief	   
+	 ** ==============================================*/
+	bool ProcessControls(std::shared_ptr<I_Camera> camera);
+	bool PorcessControlsCamPath(std::shared_ptr<I_Camera> camera);
+	void ApplyCameraPath(std::shared_ptr<I_Camera> camera);
+	void CameraPathFinished();
+
 	struct {
 		bool m_active;
 		bool m_controlScene;
@@ -98,6 +111,8 @@ private:
 	std::shared_ptr<T_Camera> m_camera;
     //Scene data
     std::shared_ptr<Scene> _scene;
+
+	std::shared_ptr<CameraPath> m_camPath;
 
 	//Student renderer
 	StudentRenderer		 _renderer;  

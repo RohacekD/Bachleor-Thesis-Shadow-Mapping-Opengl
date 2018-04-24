@@ -7,14 +7,15 @@
 
 #include "Debug.h"
 #include "DebugCallbacks.h"
+#include "CameraPathLoader.h"
 
 
 
 //=================================================================================
 Application::Application()
-{
-    _window = nullptr;
-}
+	: m_camPath(nullptr)
+	, _window(nullptr)
+{}
 
 //=================================================================================
 bool Application::Init()
@@ -196,14 +197,16 @@ bool Application::Run(int argc, char* argv[])
 {
 #ifdef SPEEDPROFILE
 	//in speed profile we need to know rendering method
-	if (argc != 3) {
+	if (argc < 3) {
 		return false;
 	}
 #else
-	if (argc != 2) {
+	if (argc < 2) {
 		return false;
 	}
 #endif
+
+	bool useCamPath = argc == 4;
 
 	bool sdsm = false;
 	if (!strcmp("s", argv[2])) {
@@ -219,20 +222,32 @@ bool Application::Run(int argc, char* argv[])
 
 	GetCamManager();
 
+	// we need main camera no matter what
 	m_camera = std::make_shared<T_Camera>();
-	auto debugCam = std::make_shared<T_Camera>();
-
 	GetCamManager()->SetMainCamera(m_camera);
-	GetCamManager()->SetDebugCamera(debugCam);
-
-
 	setupCamera(m_camera);
-	setupCamera(debugCam);
 
 	m_camera->SetFov((60));
 	m_camera->SetFar(m_camera->GetFar() / 3);
 	m_camera->update();
-	debugCam->update();
+
+	if (!useCamPath) {
+		auto debugCam = std::make_shared<T_Camera>();
+		GetCamManager()->SetDebugCamera(debugCam);
+		setupCamera(debugCam);
+		debugCam->update();
+	}
+	else {
+		C_CameraPathLoader camPthLoader;
+
+		m_camPath = std::make_shared<CameraPath>(camPthLoader.LoadPath(argv[3]));
+		auto zeroKey = m_camPath->getKeypoint(0.0f);
+		m_camera->positionCamera(zeroKey.position, zeroKey.position + zeroKey.viewVector, zeroKey.upVector);
+		m_camera->update();
+	}
+	GetCamManager()->UseDebugCam(!useCamPath);
+
+
 
     //Prepare rendering data
     if(!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -242,66 +257,36 @@ bool Application::Run(int argc, char* argv[])
 
     _timer.reset();
     bool quit = false;
-    SDL_Event e;
 
-    while (!quit)
+	while (!quit)
 	{
 
 		auto renderCamera = GetCamManager()->GetActiveCamera();
-		auto controledCamera = renderCamera;
-		if (m_controlPanel.m_controlMainCam) {
-			controledCamera = GetCamManager()->GetMainCamera();
+
+		if (useCamPath) {
+			quit = PorcessControlsCamPath(GetCamManager()->GetMainCamera()) != true;
 		}
-		
-        while (SDL_PollEvent(&e) != 0)
-		{
-#ifndef SPEEDPROFILE
-			ImGui_ImplSdlGL3_ProcessEvent(&e);
-#endif
-			if(m_controlPanel.m_controlScene) continue;
-			controledCamera->Input(e);
-            switch (e.type)
-            {
-            case SDL_QUIT:
-                quit = true;
-                break;
+		else {
 
-            case SDL_KEYDOWN:
-                if (e.key.keysym.sym == SDLK_ESCAPE)
-					quit = true;
-				else if (e.key.keysym.sym == SDLK_v) {
-					m_controlPanel.m_controlMainCam = true;
-				}
-				else if (e.key.keysym.sym == SDLK_TAB) {
-					m_controlPanel.m_useMainCam = !m_controlPanel.m_useMainCam;
-				}
-                else
-                    _renderer.onKeyPressed(e.key.keysym.sym);
-                break;
-
-			case SDL_KEYUP:
-				if (e.key.keysym.sym == SDLK_v) {
-					m_controlPanel.m_controlMainCam = false;
-				}
-				break;
-
-            case SDL_MOUSEMOTION:
-                //Adjust camera only if left mouse button is pressed
-                if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
-                {
-                    controledCamera->adjustOrientation(static_cast<float>(e.motion.xrel), static_cast<float>(e.motion.yrel));
-                }
-                break;
-
-            default:
-                break;
-            }
+			auto controledCamera = renderCamera;
+			if (m_controlPanel.m_controlMainCam) {
+				controledCamera = GetCamManager()->GetMainCamera();
+			}
+			quit = ProcessControls(controledCamera) != true;
 		}
+
 #ifndef SPEEDPROFILE
 		ImGui_ImplSdlGL3_NewFrame(_window);
 #endif
-		GetCamManager()->UseDebugCam(!m_controlPanel.m_useMainCam);
-		ErrorCheck();
+		// strip down all we can when using cam path
+		if (useCamPath) {
+
+		}
+		else {
+			GetCamManager()->UseDebugCam(!m_controlPanel.m_useMainCam);
+			ErrorCheck();
+
+		}
 
 		renderCamera->update();
 		m_camera->update();
@@ -327,4 +312,103 @@ bool Application::Run(int argc, char* argv[])
     Clear();
 
     return true;
+}
+
+//=================================================================================
+bool Application::ProcessControls(std::shared_ptr<I_Camera> camera)
+{
+	SDL_Event e;
+	while (SDL_PollEvent(&e) != 0)
+	{
+#ifndef SPEEDPROFILE
+		ImGui_ImplSdlGL3_ProcessEvent(&e);
+#endif
+		if (m_controlPanel.m_controlScene) continue;
+		camera->Input(e);
+		switch (e.type)
+		{
+		case SDL_QUIT:
+			return false;
+			break;
+
+		case SDL_KEYDOWN:
+			if (e.key.keysym.sym == SDLK_ESCAPE)
+				return false;
+			else if (e.key.keysym.sym == SDLK_v) {
+				m_controlPanel.m_controlMainCam = true;
+			}
+			else if (e.key.keysym.sym == SDLK_TAB) {
+				m_controlPanel.m_useMainCam = !m_controlPanel.m_useMainCam;
+			}
+			else
+				_renderer.onKeyPressed(e.key.keysym.sym);
+			break;
+
+		case SDL_KEYUP:
+			if (e.key.keysym.sym == SDLK_v) {
+				m_controlPanel.m_controlMainCam = false;
+			}
+			break;
+
+		case SDL_MOUSEMOTION:
+			//Adjust camera only if left mouse button is pressed
+			if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
+			{
+				camera->adjustOrientation(static_cast<float>(e.motion.xrel), static_cast<float>(e.motion.yrel));
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	return true;
+}
+
+//=================================================================================
+bool Application::PorcessControlsCamPath(std::shared_ptr<I_Camera> camera)
+{
+	SDL_Event e;
+	while (SDL_PollEvent(&e) != 0)
+	{
+		switch (e.type)
+		{
+		case SDL_QUIT:
+			return false;
+			break;
+
+		case SDL_KEYDOWN:
+			if (e.key.keysym.sym == SDLK_ESCAPE)
+				return false;
+		}
+	}
+	ApplyCameraPath(camera);
+	return true;
+}
+
+//=================================================================================
+void Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
+{
+	static double actualTime = 0.0;
+	const static double waitTime = 1000.0;
+	actualTime += _timer.getElapsedTimeFromLastQueryMilliseconds();
+	const double fromPathStarted = actualTime - waitTime;
+
+	// wait for 1 second
+	const double totalTime = m_camPath->GetTotalTime();
+	if (fromPathStarted> 0.0 && fromPathStarted < totalTime) {
+		const double normalizedTime = (actualTime - 1000.0) / totalTime;
+		auto key = m_camPath->getKeypoint(normalizedTime);
+		auto camera = GetCamManager()->GetMainCamera();
+		camera->positionCamera(key);
+	}
+	if (fromPathStarted > totalTime) {
+		CameraPathFinished();
+	}
+}
+
+//=================================================================================
+void Application::CameraPathFinished()
+{
+
 }

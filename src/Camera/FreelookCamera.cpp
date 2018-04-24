@@ -1,5 +1,7 @@
 #include "FreelookCamera.hpp"
 
+#include "CameraPath.h"
+
 #include "Frustum.h"
 
 #include <glm/gtx/norm.hpp>
@@ -11,6 +13,7 @@
 
 //=================================================================================
 FreelookCamera::FreelookCamera()
+	: m_KeyLogger(10000.0f)
 {
     _cameraMovementSpeed = 1;
     _yaw = _pitch = 0;
@@ -67,6 +70,18 @@ void FreelookCamera::resetButtons()
 }
 
 //=================================================================================
+void FreelookCamera::LogKeyFrame()
+{
+	m_KeyLogger.LogKeyFrame(_position, _view, _up);
+}
+
+//=================================================================================
+void FreelookCamera::DumpKeyFrames() const
+{
+	m_KeyLogger.DumpKeyFrames();
+}
+
+//=================================================================================
 void FreelookCamera::positionCamera(const glm::vec3 &camPosition, const glm::vec3& focusPoint, const glm::vec3 &upDirection)
 {
     _position = camPosition;
@@ -74,6 +89,14 @@ void FreelookCamera::positionCamera(const glm::vec3 &camPosition, const glm::vec
     _view = glm::normalize(focusPoint - _position);
 
     _left = glm::normalize(glm::cross(_up, _view));
+}
+
+//=================================================================================
+void FreelookCamera::positionCamera(const CameraPathKeypoint& key)
+{
+	_position = key.position;
+	_up		  = key.upVector;
+	_view	  = key.viewVector;
 }
 
 //=================================================================================
@@ -257,6 +280,10 @@ bool FreelookCamera::Input(SDL_Event event)
 			handleInputMessage(CameraMessage::CAMERA_LEFT_DOWN);
 		else if (event.key.keysym.sym == SDLK_d)
 			handleInputMessage(CameraMessage::CAMERA_RIGHT_DOWN);
+		else if (event.key.keysym.sym == SDLK_m)
+			DumpKeyFrames();
+		else if (event.key.keysym.sym == SDLK_k)
+			LogKeyFrame();
 		break;
 	}
 

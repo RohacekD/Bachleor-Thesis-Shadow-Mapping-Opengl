@@ -37,6 +37,9 @@ void C_CameraManager::SetDebugCamera(std::shared_ptr<I_Camera> camera) { m_debug
 //=================================================================================
 void C_CameraManager::DebugDraw() const
 {
-	m_debugCamera->debugDraw();
+	// it is possible that there is no debug cam
+	if (m_debugCamera) {
+		m_debugCamera->debugDraw();
+	}
 	m_mainCamera->debugDraw();
 }

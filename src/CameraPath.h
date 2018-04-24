@@ -21,10 +21,12 @@ class CameraPathKeypoint{
 };
 
 class CameraPath{
-  public:
-    CameraPath(bool looping = false);
-    CameraPathKeypoint getKeypoint(float t);
-    std::vector<CameraPathKeypoint>keys;
-  protected:
-    bool _looping;
+public:
+	CameraPath(double time, bool looping = false);
+	CameraPathKeypoint getKeypoint(float t);
+	std::vector<CameraPathKeypoint>keys;
+	const double GetTotalTime() const { return m_time; }
+protected:
+  double m_time;
+	bool _looping;
 };

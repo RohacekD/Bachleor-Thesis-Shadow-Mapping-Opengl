@@ -8,6 +8,8 @@
 #include "HighResolutionTimer.hpp"
 #include "BitOperations.h"
 
+#include "CameraKeysLogger.h"
+
 #include "Camera/ICamera.h"
 
 
@@ -33,6 +35,8 @@ enum class CameraMessage : unsigned char
     CAMERA_DOWN_DOWN
 };
 
+class CameraPathKeypoint;
+
 //Free look camera
 //Works similarly to FPS camera
 //Timer and quaternion-based
@@ -46,13 +50,16 @@ public:
 
     //Use these 2 function to setup the camera
     //FOVY in degrees
-    void setupCameraProjection(float nearZ, float farZ, float aspectRatio, float fovYDeg);
+	void setupCameraProjection(float nearZ, float farZ, float aspectRatio, float fovYDeg);
 	void positionCamera(const glm::vec3 &camPosition, const glm::vec3& focusPoint, const glm::vec3 &upDirection = glm::vec3(0, 1, 0));
+	virtual void positionCamera(const CameraPathKeypoint& key) override;
 
 	void handleInputMessage( CameraMessage m );
 	void adjustOrientation(float hRad, float vRad);
 	void setMovementSpeed(float s );
     void resetButtons();
+	void LogKeyFrame();
+	void DumpKeyFrames() const;
 
     //Update method - call every time when camera data needs updating
 	void update();
@@ -84,13 +91,6 @@ public:
 
 	virtual AABB GetAABB() const override;
 
-
-
-
-
-
-
-
 	virtual C_Frustum getFrustum() const override;
 
 private:
@@ -116,6 +116,8 @@ private:
 
 	glm::mat4           _viewMatrix;
     glm::mat4           _projectionMatrix;
+
+	C_CameraKeysLogger	m_KeyLogger;
 
     enum
     {

@@ -163,12 +163,13 @@ void C_ShadowMapCascade::CalcCropMatrices()
 
 		float height = subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y;
 		float width = subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x;
+		float lightSpaceDepth = subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z;
 		glm::mat4 lightProjectionMatrix = glm::ortho(-width / 2.0f,
 			width / 2.0f,
 			height / 2.0f,
 			-height / 2.0f,
 			nearPlane,
-			nearPlane + subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z + s_lightDistance);
+			nearPlane + lightSpaceDepth + s_lightDistance);
 
 		vec4 normal = m_lighInfo->GetNormal();
 
@@ -200,21 +201,21 @@ void C_ShadowMapCascade::CalcCropMatrices()
 
 		m_splitInfos[i].m_lightViewProjectionMatrix = lightProjectionMatrix * lightViewMatrix;
 
-		subFrustBBox.minPoint.z = 0.0f;
-		// Create the crop matrix
-		float scaleX, scaleY, scaleZ;
-		float offsetX, offsetY, offsetZ;
-		scaleX = 2.0f / (subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x);
-		scaleY = 2.0f / (subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y);
-		offsetX = -0.5f * (subFrustBBox.maxPoint.x + subFrustBBox.minPoint.x) * scaleX;
-		offsetY = -0.5f * (subFrustBBox.maxPoint.y + subFrustBBox.minPoint.y) * scaleY;
-		scaleZ = 1.0f / (subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z);
-		offsetZ = -subFrustBBox.minPoint.z * scaleZ;
-
-		m_splitInfos[i].m_cropMat = glm::mat4
-		(scaleX, 0.0f, 0.0f, offsetX,
-			0.0f, scaleY, 0.0f, offsetY,
-			0.0f, 0.0f, scaleZ, offsetZ,
-			0.0f, 0.0f, 0.0f, 1.0f);
+		//subFrustBBox.minPoint.z = 0.0f;
+		//// Create the crop matrix
+		//float scaleX, scaleY, scaleZ;
+		//float offsetX, offsetY, offsetZ;
+		//scaleX = 2.0f / (subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x);
+		//scaleY = 2.0f / (subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y);
+		//offsetX = -0.5f * (subFrustBBox.maxPoint.x + subFrustBBox.minPoint.x) * scaleX;
+		//offsetY = -0.5f * (subFrustBBox.maxPoint.y + subFrustBBox.minPoint.y) * scaleY;
+		//scaleZ = 1.0f / (lightSpaceDepth);
+		//offsetZ = -subFrustBBox.minPoint.z * scaleZ;
+		//
+		//m_splitInfos[i].m_cropMat = glm::mat4
+		//(scaleX, 0.0f, 0.0f, offsetX,
+		//	0.0f, scaleY, 0.0f, offsetY,
+		//	0.0f, 0.0f, scaleZ, offsetZ,
+		//	0.0f, 0.0f, 0.0f, 1.0f);
 	}
 }

@@ -4,7 +4,10 @@
 #include<algorithm>
 #include<cctype>
 
-CameraPath::CameraPath(bool looping):_looping(looping){}
+CameraPath::CameraPath(double time, bool looping)
+	: _looping(looping)
+	, m_time(time)
+{}
 
 CameraPathKeypoint CameraPath::getKeypoint(float t){
   assert(this!=nullptr);

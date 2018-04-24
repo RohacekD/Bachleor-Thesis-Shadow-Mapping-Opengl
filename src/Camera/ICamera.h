@@ -21,6 +21,8 @@
 #include <vector>
 #include <memory>
 
+class CameraPathKeypoint;
+
 class I_CameraObserver;
 
 enum class E_CameraValues {
@@ -49,6 +51,8 @@ public:
 
 	virtual C_Frustum getFrustum() const = 0;
 
+	//virtual void SetKeypoint(CameraPathKeypoint) = 0;
+
 	// In world space!!
 	virtual AABB	  GetAABB() const = 0;
 
@@ -65,6 +69,8 @@ public:
 	virtual void  SetFov(float fov) = 0;
 	virtual float GetAspectRatio() const = 0;
 
+	//define it by default empty just to save some work. Create it pure virtual asfter updatin orbitalCamera TODO
+	virtual void positionCamera(const CameraPathKeypoint&) {};
 
 	void Subscribe(std::shared_ptr<I_CameraObserver> observer);
 	void Unsubscribe(std::shared_ptr<I_CameraObserver> observer);

@@ -241,8 +241,10 @@
     <ClCompile Include="..\src\animation\OneAxisAnimations.cpp" />
     <ClCompile Include="..\src\animation\TranslationAnimations.cpp" />
     <ClCompile Include="..\src\Application.cpp" />
+    <ClCompile Include="..\src\CameraKeysLogger.cpp" />
     <ClCompile Include="..\src\CameraManager.cpp" />
     <ClCompile Include="..\src\CameraPath.cpp" />
+    <ClCompile Include="..\src\CameraPathLoader.cpp" />
     <ClCompile Include="..\src\Camera\FreelookCamera.cpp" />
     <ClCompile Include="..\src\Camera\ICamera.cpp" />
     <ClCompile Include="..\src\Camera\OrbitalCamera.cpp" />
@@ -296,8 +298,10 @@
     <ClInclude Include="..\src\animation\TranslationAnimations.h" />
     <ClInclude Include="..\src\Application.hpp" />
     <ClInclude Include="..\src\BitOperations.h" />
+    <ClInclude Include="..\src\CameraKeysLogger.h" />
     <ClInclude Include="..\src\CameraManager.h" />
     <ClInclude Include="..\src\CameraPath.h" />
+    <ClInclude Include="..\src\CameraPathLoader.h" />
     <ClInclude Include="..\src\Camera\FreelookCamera.hpp" />
     <ClInclude Include="..\src\Camera\ICamera.h" />
     <ClInclude Include="..\src\Camera\OrbitalCamera.hpp" />
