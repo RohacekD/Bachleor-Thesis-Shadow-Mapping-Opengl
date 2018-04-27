@@ -14,6 +14,7 @@
 //=================================================================================
 Application::Application()
 	: m_camPath(nullptr)
+	, m_bPathFinished(false)
 	, _window(nullptr)
 {}
 
@@ -209,11 +210,13 @@ bool Application::Run(int argc, char* argv[])
 	bool useCamPath = argc == 4;
 
 	bool sdsm = false;
-	if (!strcmp("s", argv[2])) {
-		sdsm = true;
-	}
-	else if (!strcmp("p", argv[2])) {
-		sdsm = false;
+	if (argc > 2) {
+		if (!strcmp("s", argv[2])) {
+			sdsm = true;
+		}
+		else if (!strcmp("p", argv[2])) {
+			sdsm = false;
+		}
 	}
 
 
@@ -231,6 +234,13 @@ bool Application::Run(int argc, char* argv[])
 	m_camera->SetFar(m_camera->GetFar() / 3);
 	m_camera->update();
 
+
+	//Prepare rendering data
+	if (!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT))
+		return false;
+
+	_renderer.UseSDSM(sdsm);
+
 	if (!useCamPath) {
 		auto debugCam = std::make_shared<T_Camera>();
 		GetCamManager()->SetDebugCamera(debugCam);
@@ -239,6 +249,14 @@ bool Application::Run(int argc, char* argv[])
 	}
 	else {
 		C_CameraPathLoader camPthLoader;
+		std::string camPathFile(argv[3]);
+		camPathFile.erase(camPathFile.end() - 4, camPathFile.end());
+		camPathFile.append("-");
+		camPathFile.append(argv[2]);
+		camPathFile.append(".csv");
+		m_statisticsFile.open(camPathFile);
+		_renderer.SetStatisticsOutput(m_statisticsFile);
+		_renderer.WriteStatisticsHeader();
 
 		m_camPath = std::make_shared<CameraPath>(camPthLoader.LoadPath(argv[3]));
 		auto zeroKey = m_camPath->getKeypoint(0.0f);
@@ -247,13 +265,6 @@ bool Application::Run(int argc, char* argv[])
 	}
 	GetCamManager()->UseDebugCam(!useCamPath);
 
-
-
-    //Prepare rendering data
-    if(!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT))
-         return false;
-
-	_renderer.UseSDSM(sdsm);
 
     _timer.reset();
     bool quit = false;
@@ -390,19 +401,24 @@ bool Application::PorcessControlsCamPath(std::shared_ptr<I_Camera> camera)
 void Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
 {
 	static double actualTime = 0.0;
+	static unsigned int frames = 0;
 	const static double waitTime = 1000.0;
 	actualTime += _timer.getElapsedTimeFromLastQueryMilliseconds();
 	const double fromPathStarted = actualTime - waitTime;
 
 	// wait for 1 second
 	const double totalTime = m_camPath->GetTotalTime();
-	if (fromPathStarted> 0.0 && fromPathStarted < totalTime) {
+	if (fromPathStarted > 0.0 && fromPathStarted < totalTime) {
+
+		_renderer.EnableStatistics();
+		++frames;
 		const double normalizedTime = (actualTime - 1000.0) / totalTime;
 		auto key = m_camPath->getKeypoint(normalizedTime);
 		auto camera = GetCamManager()->GetMainCamera();
 		camera->positionCamera(key);
 	}
-	if (fromPathStarted > totalTime) {
+	if (!m_bPathFinished && fromPathStarted > totalTime) {
+		std::cout << "Fps during path: " << static_cast<double>(frames) / (totalTime / 1000.0f) << std::endl;
 		CameraPathFinished();
 	}
 }
@@ -410,5 +426,7 @@ void Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
 //=================================================================================
 void Application::CameraPathFinished()
 {
-
+	m_bPathFinished = true;
+	_renderer.EnableStatistics(false);
+	m_statisticsFile.close();
 }

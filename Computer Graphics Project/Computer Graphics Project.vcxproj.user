@@ -3,7 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>models/scene.xml</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>models/DesertCity.xml</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)bin</LocalDebuggerWorkingDirectory>
@@ -13,7 +13,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Speed|x64'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>models/DesertCity.xml p</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>models/DesertCity.xml s Path1.xml</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>
@@ -23,11 +23,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Speed|Win32'">
-    <LocalDebuggerCommandArguments>models/DesertCity.xml p</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>models/DesertCity.xml s Path1.xml</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>models/scene.xml</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>models/DesertCity.xml</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <fstream>
 
 //OpenGL stuff
 #include <SDL/SDL.h>
@@ -113,6 +114,9 @@ private:
     std::shared_ptr<Scene> _scene;
 
 	std::shared_ptr<CameraPath> m_camPath;
+	bool	m_bPathFinished : 1;
+
+	std::ofstream m_statisticsFile;
 
 	//Student renderer
 	StudentRenderer		 _renderer;  

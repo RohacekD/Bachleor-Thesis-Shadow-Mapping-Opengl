@@ -20,6 +20,8 @@
 #include "UniformBuffersManager.h"
 #include "FrameConstantsBuffer.h"
 
+#include "FrameStatistics.h"
+
 #ifndef SPEEDPROFILE
 #include "imgui/imgui.h"
 #endif
@@ -47,6 +49,8 @@ const int StudentRenderer::gs_splits = 4;
 // StudentRenderer
 //=================================================================================
 StudentRenderer::StudentRenderer()
+	: m_StatisticsEnabled(false)
+	, m_StatisticsStream(&std::cout)
 {
 	m_ControlPanel.m_animateSun = true;
 }
@@ -105,10 +109,14 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 	approxRollingAverage(timeSinceLastUpdateMs);
 	m_renderScene->Update(timeSinceLastUpdateMs);
 	++m_frameID;
+#ifndef SPEEDPROFILE
 	if (m_ControlPanel.m_animateSun) {
 		m_SunAnimation->Update(timeSinceLastUpdateMs);
 	}
 	UseSDSM(m_ControlPanel.m_useSDSM);
+#else
+	m_SunAnimation->Update(timeSinceLastUpdateMs);
+#endif
 	m_CSM->Update();
 }
 
@@ -139,6 +147,8 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
+	m_FrameStat = std::make_shared<C_CSVFrameStatistics>();
+	m_FrameStat->BeginFrame();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 #ifndef SPEEDPROFILE
@@ -148,11 +158,14 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	auto method = m_CSM->GetSplittingMethod(); // move it here until C++17 is used
 	if (method->MethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM) {
 		renderDepthSamples();
+		m_FrameStat->Stamp();
 		auto calc = std::dynamic_pointer_cast<C_SDSMSplitsCalculator>(method);
 		calc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
+		m_FrameStat->Stamp();
 	}
 
 	renderToFBO(camera.getViewProjectionMatrix());
+	m_FrameStat->Stamp();
 
 
 	RenderDoc::C_DebugScope scope("Render pass");
@@ -190,6 +203,11 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 		Application::Instance().GetCamManager()->DebugDraw();
 	}
 #endif // !SPEEDPROFILE
+	if (m_StatisticsEnabled) {
+		m_FrameStat->EndFrame();
+		*m_StatisticsStream << m_frameID << ";";
+		*m_StatisticsStream << m_FrameStat->Print();
+	}
 }
 
 //=================================================================================
@@ -200,6 +218,7 @@ void StudentRenderer::clearStudentData()
 	m_FrameConstUBO.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
+	m_FrameStat.reset();
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
 	C_UniformBuffersManager::Instance().Clear();
@@ -217,6 +236,19 @@ void StudentRenderer::UseSDSM(bool sdsm /*= true*/)
 	else {
 		m_CSM->SetSplittingMethod(I_SplitPlanesCalculator::E_MethodType::PSSM);
 	}
+}
+
+//=================================================================================
+void StudentRenderer::WriteStatisticsHeader() const
+{
+	*m_StatisticsStream << "\"Frame ID\";";
+	auto method = m_CSM->GetSplittingMethod(); // move it here until C++17 is used
+	if (method->MethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM) {
+		*m_StatisticsStream << "z-pass;";
+		*m_StatisticsStream << "min-max-reduction;";
+	}
+	*m_StatisticsStream << "\"Cascade render\";";
+	*m_StatisticsStream << "Render" << std::endl;
 }
 
 //=================================================================================

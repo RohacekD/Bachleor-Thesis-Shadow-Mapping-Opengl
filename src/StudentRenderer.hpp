@@ -27,6 +27,7 @@
 class I_Camera;
 class C_SDSMSplitsCalculator;
 class C_FrameConstantsBuffer;
+class C_CSVFrameStatistics;
 
 namespace GLW {
 	class C_Texture;
@@ -55,6 +56,10 @@ public:
 	void clearStudentData() override;
 
 	void UseSDSM(bool sdsm = true);
+	void EnableStatistics(const bool enable = true) { m_StatisticsEnabled = enable; }
+
+	void WriteStatisticsHeader() const;
+	void SetStatisticsOutput(std::basic_ostream<char, std::char_traits<char> >& os) { m_StatisticsStream = &os; };
 
 private:
 	void renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const;
@@ -89,6 +94,10 @@ private:
 
 	std::shared_ptr<C_ShadowMapCascade>		m_CSM;
 	std::shared_ptr<C_FrameConstantsBuffer> m_FrameConstUBO;
+	std::shared_ptr<C_CSVFrameStatistics>	m_FrameStat;
+	bool									m_StatisticsEnabled;
+	std::basic_ostream<char, std::char_traits<char> >* m_StatisticsStream;
+
 
 	std::shared_ptr<Animation::C_Animation> m_SunAnimation;
 };

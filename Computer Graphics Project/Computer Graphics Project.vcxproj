@@ -250,6 +250,7 @@
     <ClCompile Include="..\src\Camera\OrbitalCamera.cpp" />
     <ClCompile Include="..\src\Debug.cpp" />
     <ClCompile Include="..\src\FrameConstantsBuffer.cpp" />
+    <ClCompile Include="..\src\FrameStatistics.cpp" />
     <ClCompile Include="..\src\Frustum.cpp" />
     <ClCompile Include="..\src\GLW\Buffers\ShaderStorage.cpp" />
     <ClCompile Include="..\src\GLW\Buffers\UniformBuffer.cpp" />
@@ -308,6 +309,7 @@
     <ClInclude Include="..\src\Debug.h" />
     <ClInclude Include="..\src\DebugCallbacks.h" />
     <ClInclude Include="..\src\FrameConstantsBuffer.h" />
+    <ClInclude Include="..\src\FrameStatistics.h" />
     <ClInclude Include="..\src\Frustum.h" />
     <ClInclude Include="..\src\GLW\Buffers\GLBuffer.h" />
     <ClInclude Include="..\src\GLW\Buffers\ShaderStorage.h" />
