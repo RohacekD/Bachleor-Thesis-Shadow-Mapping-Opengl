@@ -95,9 +95,6 @@ namespace render {
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
-
-		auto& shdManager = C_ShaderManager::Instance();
-		m_program = shdManager.GetProgram("basic-planes");
 	}
 
 	//=================================================================================
@@ -199,7 +196,9 @@ namespace render {
 		glEnable(GL_PRIMITIVE_RESTART);
 		glPrimitiveRestartIndex(0xffffffff);
 		ErrorCheck();
-		m_program->useProgram();
+
+		auto& shdManager = C_ShaderManager::Instance();
+		shdManager.ActivateShader(shdManager.GetProgram("basic-planes"));
 
 		glBindVertexArray(m_VAO);
 
@@ -211,7 +210,6 @@ namespace render {
 		);
 
 		glBindVertexArray(0);
-		m_program->disableProgram();
 		glDisable(GL_PRIMITIVE_RESTART);
 	}
 

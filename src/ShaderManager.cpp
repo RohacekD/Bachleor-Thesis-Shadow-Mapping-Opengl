@@ -35,14 +35,17 @@ void C_ShaderManager::Clear()
 {
 	std::cout << ShadersStatistics();
 	m_Programs.clear();
+	m_ActiveShader.reset();
 }
 
 //=================================================================================
 void C_ShaderManager::Update()
 {
+	DeactivateShader();
 #if _DEBUG
 	const auto currentTime = std::chrono::system_clock::now();
 	if (m_LastUpdate + m_Timeout < currentTime) {
+		m_ActiveShader.reset();
 		for (auto& program : m_Programs) {
 			try
 			{
@@ -82,6 +85,28 @@ C_ShaderManager::T_ShaderPtr C_ShaderManager::GetProgram(const std::string& name
 bool C_ShaderManager::ShaderLoaded(const std::string & name)
 {
 	return m_Programs.find(name) != m_Programs.end();
+}
+
+//=================================================================================
+void C_ShaderManager::ActivateShader(T_ShaderPtr shader)
+{
+	if (shader == nullptr) {
+		throw 1;// just error
+	}
+	if (shader != m_ActiveShader || !m_ActiveShader->IsActive()) {
+		m_ActiveShader = shader;
+		m_ActiveShader->useProgram();
+	}
+}
+
+//=================================================================================
+void C_ShaderManager::DeactivateShader()
+{
+	// this is done because imGUI can change shader without letting us know
+	if (m_ActiveShader) {
+		m_ActiveShader->disableProgram();
+		m_ActiveShader = nullptr;
+	}
 }
 
 //=================================================================================

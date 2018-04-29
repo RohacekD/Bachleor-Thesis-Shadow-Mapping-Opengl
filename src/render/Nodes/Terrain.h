@@ -49,7 +49,6 @@ namespace render {
 		GLuint m_VBOs[3];
 		GLuint m_VAO;
 		GLuint m_elementbuffer;
-		std::shared_ptr<GLW::C_ShaderProgram> m_program;
 
 	};
 }

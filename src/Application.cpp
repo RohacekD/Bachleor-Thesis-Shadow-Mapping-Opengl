@@ -8,6 +8,7 @@
 #include "Debug.h"
 #include "DebugCallbacks.h"
 #include "CameraPathLoader.h"
+#include "ShaderManager.h"
 
 
 
@@ -307,7 +308,7 @@ bool Application::Run(int argc, char* argv[])
 #ifndef SPEEDPROFILE
 		ShowGUI();
 		{
-			glUseProgram(0);//just to be sure
+			C_ShaderManager::Instance().DeactivateShader();
 			RenderDoc::C_DebugScope a("imGUI-render");
 			ImGui::Render();
 			ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());

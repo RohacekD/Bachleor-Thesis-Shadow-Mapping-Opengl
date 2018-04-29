@@ -128,14 +128,10 @@ namespace render {
 			return;
 		}
 
+		ErrorCheck();
 		auto& shdManager = C_ShaderManager::Instance();
 		auto program = shdManager.GetProgram("basic-shadow");
-
-		if (!m_bShadowCaster) {
-			return;
-		}
-		ErrorCheck();
-		program->useProgram();
+		shdManager.ActivateShader(program);
 
 		glBindVertexArray(m_VAO);
 
@@ -145,8 +141,6 @@ namespace render {
 		ErrorCheck();
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		program->disableProgram();
-		ErrorCheck();
 	}
 
 	//=================================================================================
@@ -158,8 +152,8 @@ namespace render {
 //#endif
 		auto& shdManager = C_ShaderManager::Instance();
 		auto program = shdManager.GetProgram("basic-planes");
+		shdManager.ActivateShader(program);
 
-		program->useProgram();
 		glBindVertexArray(m_VAO);
 
 		program->SetUniform("shadowMap", 0);
@@ -180,7 +174,6 @@ namespace render {
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 
 		glBindVertexArray(0);
-		program->disableProgram();
 		
 		if (m_texture)
 		{
@@ -191,10 +184,10 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::ZPass(const S_RenderParams& params, const glm::mat4& modelMatrix) const
 	{
-		auto& shdManager = C_ShaderManager::Instance();
 		ErrorCheck();
+		auto& shdManager = C_ShaderManager::Instance();
 		auto program = shdManager.GetProgram("depthsamples");
-		program->useProgram();
+		shdManager.ActivateShader(program);
 
 		glBindVertexArray(m_VAO);
 
@@ -204,7 +197,6 @@ namespace render {
 		ErrorCheck();
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		program->disableProgram();
 		ErrorCheck();
 	}
 

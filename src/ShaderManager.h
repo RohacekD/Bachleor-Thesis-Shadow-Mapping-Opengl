@@ -61,6 +61,10 @@ public:
 
 	T_ShaderPtr GetProgram(const std::string& name);
 	bool		ShaderLoaded(const std::string& name);
+
+	void		ActivateShader(T_ShaderPtr shader);
+	void		DeactivateShader();
+
 	std::string ShadersStatistics() const;
 private:
 	C_ShaderManager();
@@ -72,7 +76,10 @@ private:
 
 	using T_ProgramMap = std::map<std::string, std::shared_ptr<GLW::C_ShaderProgram>>;
 
-	T_ProgramMap m_Programs;
+	T_ProgramMap	m_Programs;
+
+	T_ShaderPtr		m_ActiveShader;
+
 	const static std::string s_ShadersFolder;
 	static ShaderCompiler s_Compiler;
 

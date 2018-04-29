@@ -37,10 +37,11 @@ C_SDSMSplitsCalculator::C_SDSMSplitsCalculator(unsigned int frusrums, std::share
 //=================================================================================
 void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthMap)
 {
+	auto& shdManager = C_ShaderManager::Instance();
 	{
 		RenderDoc::C_DebugScope scope("Compute shader");
-		auto program = C_ShaderManager::Instance().GetProgram("compute-splits");
-		program->useProgram();
+		auto program = shdManager.GetProgram("compute-splits");
+		shdManager.ActivateShader(program);
 		program->SetUniform("nearFar", glm::vec2(m_camera->GetNear(), m_camera->GetFar()));
 		program->SetUniform("globalSize", glm::ivec2(512, 512));
 		m_histogram->bind();
@@ -53,12 +54,11 @@ void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthM
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
 		depthMap->unbind();
-		program->disableProgram();
 	}
 	{
 		RenderDoc::C_DebugScope scope("Compute shader splits");
-		auto program = C_ShaderManager::Instance().GetProgram("calcSplits");
-		program->useProgram();
+		auto program = shdManager.GetProgram("calcSplits");
+		shdManager.ActivateShader(program);
 		//todo
 		auto planes = m_ratios->CalcRations(m_frustums);
 
@@ -79,13 +79,12 @@ void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthM
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
 		m_SplitFrust->unbind();
-		program->disableProgram();
 	}
 #ifdef _DEBUG
 	{
 		RenderDoc::C_DebugScope scope("Compute shader draw");
 		auto program = C_ShaderManager::Instance().GetProgram("histagraDrawColor");
-		program->useProgram();
+		shdManager.ActivateShader(program);
 
 		m_SplitFrust->bind();
 		program->SetUniform("nearFar", glm::vec2(m_camera->GetNear(), m_camera->GetFar()));
@@ -99,7 +98,6 @@ void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthM
 		m_histogram->unbind();
 		m_SplitFrust->unbind();
 		m_HistogramTexture->unbind();
-		program->disableProgram();
 	}
 #endif
 }

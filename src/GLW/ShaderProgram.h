@@ -36,8 +36,7 @@ namespace GLW {
 		C_ShaderProgram(C_ShaderProgram& rhs) = delete;
 		virtual ~C_ShaderProgram();
 
-		void useProgram() const;
-		void disableProgram() const;
+		bool IsActive() const { return m_bIsActive; }
 
 		void BindUBO(std::shared_ptr<C_UniformBuffer>) const;
 
@@ -76,6 +75,13 @@ namespace GLW {
 #endif
 		GLuint m_Program;
 		std::map<std::size_t, GLint> m_uniformMap;
+		bool m_bIsActive : 1;
+
+
+		void useProgram();
+		void disableProgram();
+
+		friend class C_ShaderManager;
 	};
 }
 #include "GLW/ShaderProgram.inl"

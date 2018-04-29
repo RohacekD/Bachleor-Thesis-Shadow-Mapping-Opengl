@@ -19,15 +19,17 @@ namespace GLW {
 	}
 
 	//=================================================================================
-	void C_ShaderProgram::useProgram() const
+	void C_ShaderProgram::useProgram()
 	{
 		glUseProgram(m_Program);
+		m_bIsActive = true;
 	}
 
 	//=================================================================================
-	void C_ShaderProgram::disableProgram() const
-	{
+	void C_ShaderProgram::disableProgram()
+{
 		glUseProgram(0);
+		m_bIsActive = false;
 	}
 
 	//=================================================================================

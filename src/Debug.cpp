@@ -131,8 +131,9 @@ void C_DebugDraw::Clear()
 //=================================================================================
 void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectionMatrix, const glm::vec3 & color, const glm::mat4 & modelMatrix)
 {
-	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
-	program->useProgram();
+	auto& shdManager = C_ShaderManager::Instance();
+	auto program = shdManager.GetProgram("basic-wireframe");
+	shdManager.ActivateShader(program);
 
 	glBindVertexArray(m_VAOline);
 
@@ -154,7 +155,6 @@ void C_DebugDraw::DrawPoint(const glm::vec4 & point, const glm::mat4 & projectio
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	program->disableProgram();
 	ErrorCheck();
 }
 
@@ -167,8 +167,10 @@ void C_DebugDraw::DrawPoint(const glm::vec3 & point, const glm::mat4 & projectio
 //=================================================================================
 void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/, const glm::mat4& modelMatrix /*= glm::mat4(1.0f)*/)
 {
+	auto& shdManager = C_ShaderManager::Instance();
 	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
-	program->useProgram();
+	shdManager.ActivateShader(program);
+
 	glm::vec3 size = bbox.maxPoint - bbox.minPoint;
 	glm::vec3 center = (bbox.maxPoint + bbox.minPoint) / 2.0f;// glm::vec3((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
 	glm::mat4 transform = glm::translate(glm::mat4(1), center) * glm::scale(glm::mat4(1), size);
@@ -193,7 +195,6 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, 
 	ErrorCheck();
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	program->disableProgram();
 	glBindVertexArray(0);
 	ErrorCheck();
 }
@@ -201,8 +202,9 @@ void C_DebugDraw::DrawAABB(const AABB& bbox, const glm::mat4& projectionMatrix, 
 //=================================================================================
 void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, const glm::mat4& projectionMatrix, const glm::vec3& color /*= glm::vec3(0.0f, 0.0f, 0.0f)*/)
 {
+	auto& shdManager = C_ShaderManager::Instance();
 	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
-	program->useProgram();
+	shdManager.ActivateShader(program);
 
 	glBindVertexArray(m_VAOline);
 
@@ -222,7 +224,6 @@ void C_DebugDraw::DrawLine(const glm::vec4& pointA, const glm::vec4& pointB, con
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	program->disableProgram();
 	ErrorCheck();
 }
 
@@ -235,9 +236,9 @@ void C_DebugDraw::DrawLine(const glm::vec3& pointA, const glm::vec3& pointB, con
 //=================================================================================
 void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4 & projectionMatrix, const glm::vec3 & color)
 {
-	ErrorCheck();
+	auto& shdManager = C_ShaderManager::Instance();
 	auto program = C_ShaderManager::Instance().GetProgram("basic-wireframe");
-	program->useProgram();
+	shdManager.ActivateShader(program);
 
 	glBindVertexArray(m_VAOline);
 
@@ -257,7 +258,6 @@ void C_DebugDraw::DrawLines(const std::vector<glm::vec4>& pairs, const glm::mat4
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	program->disableProgram();
 	ErrorCheck();
 }
 
