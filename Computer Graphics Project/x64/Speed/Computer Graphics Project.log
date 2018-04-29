@@ -1,8 +1,16 @@
-﻿  SDSMSplitsCalculator.cpp
+﻿  Application.cpp
+..\src\Application.cpp(417): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
+  Debug.cpp
+  SDSMSplitsCalculator.cpp
+  ShaderManager.cpp
+  StudentRenderer.cpp
+  MeshNode.cpp
+  RenderNode.cpp
+  Terrain.cpp
   Generating code
-  169 of 5272 functions ( 3.2%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    54 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
+  161 of 5278 functions ( 3.1%) were compiled, the rest were copied from previous compilation.
+    5 functions were new in current compilation
+    58 functions had inline decision re-evaluated but remain unchanged
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.exe
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering.pdb (Partial PDB)
