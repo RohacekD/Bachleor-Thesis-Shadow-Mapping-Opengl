@@ -52,6 +52,7 @@ void C_FrameStatistics::EndFrame()
 		else {
 			m_Times.push_back(float(time - lastTime)*1e-6f);
 		}
+		first = false;
 		lastTime = time;
 	}
 }

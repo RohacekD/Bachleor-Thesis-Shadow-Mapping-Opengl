@@ -110,7 +110,7 @@ glm::mat4 C_DirectionalLight::GetViewMatrix() const
 
 	up = normalize(up);
 
-	return lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
+	return lookAt(GetPosition(), GetFocusPoint(), vec3(0,1,0));
 }
 
 //=================================================================================

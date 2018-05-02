@@ -78,8 +78,8 @@ bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, u
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 15.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 
 	// create animation for sun
-	m_SunAnimation = std::make_shared<Animation::C_Animation>(5000.0f);
-	m_SunAnimation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(10.0f, 10.0f));
+	m_SunAnimation = std::make_shared<Animation::C_Animation>(10000.0f);
+	m_SunAnimation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(100.0f, 100.0f));
 	lightInfo->SetDirectionAnimation(m_SunAnimation);
 
 	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits, std::make_shared<C_PSSMSplitsCalculator>(gs_splits, camera));

@@ -143,7 +143,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 	auto projectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
 	C_Frustum frust = m_boundCamera->getFrustum();
 	glm::mat4 lightViewMatrix = m_lighInfo->GetViewMatrix();
-	frust.UpdateWithMatrix(lightViewMatrix);
+	//frust.UpdateWithMatrix(lightViewMatrix);
 	frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
 	m_splitInfos = std::vector<S_SplitInfo>();
 	m_splitInfos.resize(m_levels);
@@ -157,19 +157,22 @@ void C_ShadowMapCascade::CalcCropMatrices()
 		frust.SetNear(splits[i].first);
 		frust.SetFar(splits[i].second);
 		AABB subFrustBBox = frust.GetAABB();
+		subFrustBBox = subFrustBBox.getTransformedAABB(lightViewMatrix);
 		frust.DebugDraw({ 1.0f, 1.0f, 0.0f });
-		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
+		subFrustBBox.maxPoint.z += s_lightDistance;
+		C_DebugDraw::Instance().DrawAABB(subFrustBBox.getTransformedAABB(inverse(lightViewMatrix)), projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 		C_DebugDraw::Instance().DrawAABB(frust.GetAABB(), projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 
 		float height = subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y;
 		float width = subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x;
 		float lightSpaceDepth = subFrustBBox.maxPoint.z - subFrustBBox.minPoint.z;
-		glm::mat4 lightProjectionMatrix = glm::ortho(-width / 2.0f,
-			width / 2.0f,
-			height / 2.0f,
-			-height / 2.0f,
+		glm::mat4 lightProjectionMatrix = glm::ortho(
+			-width / 2.0f,			// left
+			width / 2.0f,			// right
+			-height / 2.0f,			// bottom
+			height / 2.0f,			// top
 			nearPlane,
-			nearPlane + lightSpaceDepth + s_lightDistance);
+			nearPlane + lightSpaceDepth);
 
 		vec4 normal = m_lighInfo->GetNormal();
 

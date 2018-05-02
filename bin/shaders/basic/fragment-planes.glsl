@@ -36,7 +36,7 @@ bool IsInPSSMShadow(){
 	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
 	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;
 	float bias = 0.005*tan(acos(cosTheta));
-	bias = clamp(bias, 0.0,0.01);
+	bias = clamp(bias, 0.0,0.001);
 
 	return (shadowCoords.z - bias > objectNearestLight);
 }
@@ -57,23 +57,31 @@ void main()
 	else{
 		MaterialDiffuseColor = modelColor;
 	}
-	if(PSSM_CameraDependentPos.z<0.0)
+
+	if(PSSM_CameraDependentPos.z<0.0){
 		MaterialDiffuseColor += getColorForFrustum(abs(PSSM_CameraDependentPos.z))*0.3;
+	}
 
 
 	cosTheta = dot(normalOUT,-1.0f * pssm.SunDirection);
-
-	float visibility = 1.0f;
-	if(IsInPSSMShadow()){
-		visibility = 0.5f;
-	}
 
 	// make sun colour less blue to simulate real sun
 
 	vec4 MaterialAmbientColor = 0.1f * MaterialDiffuseColor;
 
-	MaterialDiffuseColor = MaterialAmbientColor + 
-	visibility * MaterialDiffuseColor * vec4(1.0f, 1.0f, 0.8f, 1.0f) * cosTheta;
+
+	if(IsInPSSMShadow()){
+		
+		// in this case we add just a little bit of colour to simulate ambient
+		MaterialDiffuseColor = MaterialAmbientColor + 
+		0.2 * MaterialDiffuseColor * vec4(1.0f, 1.0f, 0.8f, 1.0f);
+	}
+	else{
+		// if this fragment is on the light we would like to simulate the angle between the surface
+		// and the sun
+		MaterialDiffuseColor = MaterialAmbientColor + 
+		MaterialDiffuseColor * vec4(1.0f, 1.0f, 0.8f, 1.0f) * cosTheta;
+	}
 
 	fragColor = MaterialDiffuseColor;
 }
