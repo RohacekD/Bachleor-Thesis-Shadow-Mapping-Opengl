@@ -36,7 +36,7 @@ bool IsInPSSMShadow(){
 	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
 	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;
 	float bias = 0.0005*tan(acos(cosTheta));
-	bias = clamp(bias, 0.0,0.0005);
+	bias = clamp(bias, 0.0,0.005);
 
 	return (shadowCoords.z - bias > objectNearestLight);
 }

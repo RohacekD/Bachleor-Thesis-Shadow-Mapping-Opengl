@@ -261,6 +261,7 @@ bool Application::Run(int argc, char* argv[])
 		auto zeroKey = m_camPath->getKeypoint(0.0f);
 		m_camera->positionCamera(zeroKey.position, zeroKey.position + zeroKey.viewVector, zeroKey.upVector);
 		m_camera->update();
+		m_CameraPathTimer.reset();
 	}
 	GetCamManager()->UseDebugCam(!useCamPath);
 
@@ -402,7 +403,7 @@ void Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
 	static double actualTime = 0.0;
 	static unsigned int frames = 0;
 	const static double waitTime = 1000.0;
-	actualTime += _timer.getElapsedTimeFromLastQueryMilliseconds();
+	actualTime += m_CameraPathTimer.getElapsedTimeFromLastQueryMilliseconds();
 	const double fromPathStarted = actualTime - waitTime;
 
 	// wait for 1 second

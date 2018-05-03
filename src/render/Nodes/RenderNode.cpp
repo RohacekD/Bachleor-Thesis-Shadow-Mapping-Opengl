@@ -69,8 +69,8 @@ namespace render {
 			node->Update(timeSinceLastUpdateMs);
 		}
 
-		if (m_animation)
-			m_animation->Update(timeSinceLastUpdateMs);
+		//if (m_animation)
+		//	m_animation->Update(timeSinceLastUpdateMs);
 	}
 
 	//=================================================================================

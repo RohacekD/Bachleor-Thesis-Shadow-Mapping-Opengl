@@ -14,6 +14,7 @@ namespace GLW {
 class C_SDSMSplitsCalculator : public I_SplitPlanesCalculator {
 public:
 	C_SDSMSplitsCalculator(unsigned int frusrums, std::shared_ptr<I_Camera> camera);
+	virtual ~C_SDSMSplitsCalculator();
 
 	void RecalcSplits(std::shared_ptr<GLW::C_Texture> depthMap);
 

@@ -304,11 +304,11 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 void StudentRenderer::renderDepthSamples() const
 {
 	RenderDoc::C_DebugScope scope("Z Pass");
-	auto mainCam = Application::Instance().GetCamManager()->GetMainCamera();
+	auto boundCam = m_CSM->GetBoundCamera();
 
 	m_DepthSamplesframebuffer->Bind();
 
-	m_FrameConstUBO->SetViewProjection(m_CSM->GetBoundCamera()->getViewProjectionMatrix());
+	m_FrameConstUBO->SetViewProjection(boundCam->getViewProjectionMatrix());
 	m_FrameConstUBO->UploadData();
 	m_FrameConstUBO->Activate(true);
 
@@ -319,7 +319,7 @@ void StudentRenderer::renderDepthSamples() const
 
 	render::S_RenderParams params;
 	params.m_pass = render::S_RenderParams::E_PassType::ZPass;
-	params.m_FrustumSphere = m_CSM->GetBoundCamera()->getFrustum().GetAABB().GetSphere();
+	params.m_FrustumSphere = boundCam->getFrustum().GetAABB().GetSphere();
 
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
 	ErrorCheck();

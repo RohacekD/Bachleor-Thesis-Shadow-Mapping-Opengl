@@ -104,8 +104,9 @@ private:
     SDL_Window*          _window;
     SDL_GLContext        _glContext;
 
-    //Timer
-    HighResolutionTimer  _timer;
+	//Timer
+	HighResolutionTimer  _timer;
+	HighResolutionTimer  m_CameraPathTimer;
 
 	std::shared_ptr<C_CameraManager>		m_cameraManager;
 

@@ -35,6 +35,15 @@ C_SDSMSplitsCalculator::C_SDSMSplitsCalculator(unsigned int frusrums, std::share
 }
 
 //=================================================================================
+C_SDSMSplitsCalculator::~C_SDSMSplitsCalculator()
+{
+#ifdef _DEBUG
+	m_HistogramTexture = nullptr;
+#endif
+	m_histogram = nullptr;
+}
+
+//=================================================================================
 void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthMap)
 {
 	auto& shdManager = C_ShaderManager::Instance();
@@ -45,6 +54,7 @@ void C_SDSMSplitsCalculator::RecalcSplits(std::shared_ptr<GLW::C_Texture> depthM
 		program->SetUniform("nearFar", glm::vec2(m_camera->GetNear(), m_camera->GetFar()));
 		program->SetUniform("globalSize", glm::ivec2(512, 512));
 		m_histogram->bind();
+		m_histogram->ClearBuffer();
 
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 

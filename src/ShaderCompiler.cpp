@@ -1,6 +1,8 @@
 #include "ShaderCompiler.hpp"
 #include "ShaderPreprocessor.h"
 
+#include "Debug.h"
+
 #include <regex>
 #include <algorithm>
 #include <iterator>
@@ -130,6 +132,7 @@ bool ShaderCompiler::linkProgram(GLuint & program, std::string & errorLog, const
 	for (auto & shader : shaders)
 	{
 		glAttachShader(program, shader);
+		ErrorCheck();
 	}
 
 	glLinkProgram(program);
