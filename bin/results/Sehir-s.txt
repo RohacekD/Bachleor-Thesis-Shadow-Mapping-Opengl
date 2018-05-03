@@ -1,0 +1,6 @@
+Loaded shaders: 0
+Loading time: 77.4323ms
+Fps during path: 58.72
+Frame: 1516
+Approx avg frame time: 17.4998ms
+Statistic irrelevant because too few frames passed

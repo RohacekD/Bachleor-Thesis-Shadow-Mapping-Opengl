@@ -326,7 +326,12 @@ bool Application::Run(int argc, char* argv[])
 #ifndef SPEEDPROFILE
 	ImGui_ImplSdlGL3_Shutdown();
 #endif
-    Clear();
+	if (!sdsm) {
+		Clear();
+	}
+	else {
+		exit(0);
+	}
 
     return true;
 }
