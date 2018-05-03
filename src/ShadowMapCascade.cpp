@@ -191,14 +191,14 @@ void C_ShadowMapCascade::CalcCropMatrices()
 		up = normalize(up);
 
 
-		glm::mat4 lightViewMatrix = lookAt(vec3(eye - normal), vec3(eye + normal), vec3(up - eye));
+		glm::mat4 lightViewMatrix = lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
 
 		C_DebugDraw::Instance().DrawPoint(eye, projectionMatrix, glm::vec3(1, 0, 0));
-		C_DebugDraw::Instance().DrawPoint(glm::normalize(eye + normal), projectionMatrix, glm::vec3(0, 0, 0));
-		C_DebugDraw::Instance().DrawPoint(eye + up, projectionMatrix, glm::vec3(1,1,1));
-		C_DebugDraw::Instance().DrawPoint(midPointOnFront, projectionMatrix, glm::vec3(1, 0, 0));
-		C_DebugDraw::Instance().DrawPoint(glm::normalize(vec4(midPointOnFront, 1.0f) + glm::normalize(lightViewMatrix*normal)), projectionMatrix, glm::vec3(0, 0, 0));
-		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(0.0f));
+		//C_DebugDraw::Instance().DrawPoint(glm::normalize(eye + normal), projectionMatrix, glm::vec3(0, 0, 0));
+		//C_DebugDraw::Instance().DrawPoint(eye + up, projectionMatrix, glm::vec3(1,1,1));
+		//C_DebugDraw::Instance().DrawPoint(midPointOnFront, projectionMatrix, glm::vec3(1, 0, 0));
+		//C_DebugDraw::Instance().DrawPoint(glm::normalize(vec4(midPointOnFront, 1.0f) + glm::normalize(lightViewMatrix*normal)), projectionMatrix, glm::vec3(0, 0, 0));
+		//C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(0.0f));
 		//C_DebugDraw::Instance().DrawAABB(subFrustBBox.getTransformedAABB(), projectionMatrix, glm::vec3(0.0f));
 		
 

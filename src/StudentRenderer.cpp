@@ -117,6 +117,10 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 #else
 	m_SunAnimation->Update(timeSinceLastUpdateMs);
 #endif
+	m_FrameStat = std::make_shared<C_CSVFrameStatistics>();
+	m_FrameStat->BeginFrame();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 	m_CSM->Update();
 }
 
@@ -147,10 +151,6 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
-	m_FrameStat = std::make_shared<C_CSVFrameStatistics>();
-	m_FrameStat->BeginFrame();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
 #ifndef SPEEDPROFILE
 	ShowGUI();
 #endif
@@ -326,7 +326,7 @@ bool StudentRenderer::initFBO()
 	ErrorCheck();
 	depthTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
 	depthTexture->SetFilter(GL_NEAREST, GL_NEAREST);
-	depthTexture->SetTexParameter(GL_TEXTURE_BORDER_COLOR, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	depthTexture->SetTexParameter(GL_TEXTURE_BORDER_COLOR, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	depthTexture->EndGroupOp();
 
