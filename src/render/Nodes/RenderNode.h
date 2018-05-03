@@ -69,6 +69,8 @@ namespace render {
 		bool IsShadowCaster() const { return m_bShadowCaster; }
 		void SetShadowCaster(bool val) { m_bShadowCaster = val; }
 	protected:
+		glm::mat4 GetAnimationTRS() const;
+
 #ifdef _DEBUG
 		std::string m_name;
 #endif // _DEBUG

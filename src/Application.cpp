@@ -117,6 +117,11 @@ void Application::clearSDLWindow()
 void Application::Clear()
 {
     _renderer.clearStudentData();
+
+	m_cameraManager.reset();
+	m_camera.reset();
+	_scene.reset();
+	m_camPath.reset();
      
 	clearSDLWindow();
 }
@@ -252,7 +257,8 @@ bool Application::Run(int argc, char* argv[])
 		camPathFile.erase(camPathFile.end() - 4, camPathFile.end());
 		camPathFile.append("-");
 		camPathFile.append(argv[2]);
-		camPathFile.append(".csv");
+		camPathFile.append(".csv"); 
+		camPathFile = "results/" + camPathFile;
 		m_statisticsFile.open(camPathFile);
 		_renderer.SetStatisticsOutput(m_statisticsFile);
 		_renderer.WriteStatisticsHeader();
@@ -393,12 +399,11 @@ bool Application::PorcessControlsCamPath(std::shared_ptr<I_Camera> camera)
 				return false;
 		}
 	}
-	ApplyCameraPath(camera);
-	return true;
+	return ApplyCameraPath(camera);
 }
 
 //=================================================================================
-void Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
+bool Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
 {
 	static double actualTime = 0.0;
 	static unsigned int frames = 0;
@@ -419,14 +424,16 @@ void Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
 	}
 	if (!m_bPathFinished && fromPathStarted > totalTime) {
 		std::cout << "Fps during path: " << static_cast<double>(frames) / (totalTime / 1000.0f) << std::endl;
-		CameraPathFinished();
+		return CameraPathFinished();
 	}
+	return true;
 }
 
 //=================================================================================
-void Application::CameraPathFinished()
+bool Application::CameraPathFinished()
 {
 	m_bPathFinished = true;
 	_renderer.EnableStatistics(false);
 	m_statisticsFile.close();
+	return false; // should not run anymore
 }

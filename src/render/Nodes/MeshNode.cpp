@@ -74,12 +74,6 @@ namespace render {
 		m_triangles = static_cast<GLuint>(mesh.vertices.size());
 		m_bbox = mesh.bbox;
 
-		// ----------- just for test -------------
-		//if (m_triangles > 6) {
-		//	m_animation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(1.0f, 1.0f));
-		//}
-		// ----------- just for test -------------
-
 		glBindVertexArray(m_VAO);
 
 		// bind VBO in order to use
@@ -115,7 +109,7 @@ namespace render {
 	//=================================================================================
 	bool C_MeshNode::IsAABBChanged() const
 	{
-		if (m_animation->GetTRSMatrix() != glm::mat4(1.0f)) {
+		if (GetAnimationTRS() != glm::mat4(1.0f)) {
 			return true;
 		}
 		return T_Base::IsAABBChanged();
@@ -135,7 +129,7 @@ namespace render {
 
 		glBindVertexArray(m_VAO);
 
-		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
+		program->SetUniform("modelMatrix", modelMatrix * GetAnimationTRS());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
@@ -169,7 +163,7 @@ namespace render {
 			program->SetUniform("modelColor", m_color);
 		}
 
-		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
+		program->SetUniform("modelMatrix", modelMatrix * GetAnimationTRS());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 
@@ -191,7 +185,8 @@ namespace render {
 
 		glBindVertexArray(m_VAO);
 
-		program->SetUniform("modelMatrix", modelMatrix * m_animation->GetTRSMatrix());
+
+		program->SetUniform("modelMatrix", modelMatrix * GetAnimationTRS());
 
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
@@ -203,6 +198,6 @@ namespace render {
 	//=================================================================================
 	void C_MeshNode::RenderBBox(const glm::mat4& projectionMatrix, const glm::mat4& modelMatrix) const
 	{
-		C_DebugDraw::Instance().DrawAABB(m_bbox, projectionMatrix, glm::vec3(0.0f), modelMatrix * m_animation->GetTRSMatrix());
+		C_DebugDraw::Instance().DrawAABB(m_bbox, projectionMatrix, glm::vec3(0.0f), modelMatrix * GetAnimationTRS());
 	}
 };

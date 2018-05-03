@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+	<!-- <terrain file="profile.jpg" tile-size="1" /> -->
+	<model file="Residential Buildings Set/Export Files/Residential Buildings 001.obj">
+		<position x="0.0" y="0.0" z="0.0" />
+	</model>
+	<model file="Residential Buildings Set/Export Files/Residential Buildings 007.obj">
+		<position x="50.0" y="0.0" z="0.0" />
+	</model>
+	<model file="Residential Buildings Set/Export Files/Residential Buildings 010.obj">
+		<position x="0.0" y="0.0" z="50.0" />
+	</model>
+</scene>

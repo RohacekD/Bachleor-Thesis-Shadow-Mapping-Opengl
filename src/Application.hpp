@@ -84,8 +84,8 @@ private:
 	 ** ==============================================*/
 	bool ProcessControls(std::shared_ptr<I_Camera> camera);
 	bool PorcessControlsCamPath(std::shared_ptr<I_Camera> camera);
-	void ApplyCameraPath(std::shared_ptr<I_Camera> camera);
-	void CameraPathFinished();
+	bool ApplyCameraPath(std::shared_ptr<I_Camera> camera);
+	bool CameraPathFinished();
 
 	struct {
 		bool m_active;
