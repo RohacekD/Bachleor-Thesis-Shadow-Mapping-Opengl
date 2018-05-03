@@ -294,7 +294,7 @@ void StudentRenderer::renderDepthSamples() const
 
 	m_DepthSamplesframebuffer->Bind();
 
-	m_FrameConstUBO->SetViewProjection(mainCam->getViewProjectionMatrix());
+	m_FrameConstUBO->SetViewProjection(m_CSM->GetBoundCamera()->getViewProjectionMatrix());
 	m_FrameConstUBO->UploadData();
 	m_FrameConstUBO->Activate(true);
 
