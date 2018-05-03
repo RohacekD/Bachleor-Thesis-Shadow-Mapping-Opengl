@@ -12,7 +12,7 @@
 class C_FrameStatistics {
 public:
 	C_FrameStatistics();
-	~C_FrameStatistics();
+	virtual ~C_FrameStatistics();
 	void BeginFrame();
 	void Stamp();
 	void EndFrame();

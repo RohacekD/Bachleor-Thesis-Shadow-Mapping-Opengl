@@ -94,7 +94,7 @@ private:
 
 	std::shared_ptr<C_ShadowMapCascade>		m_CSM;
 	std::shared_ptr<C_FrameConstantsBuffer> m_FrameConstUBO;
-	std::shared_ptr<C_CSVFrameStatistics>	m_FrameStat;
+	std::unique_ptr<C_CSVFrameStatistics>	m_FrameStat;
 	bool									m_StatisticsEnabled;
 	std::basic_ostream<char, std::char_traits<char> >* m_StatisticsStream;
 

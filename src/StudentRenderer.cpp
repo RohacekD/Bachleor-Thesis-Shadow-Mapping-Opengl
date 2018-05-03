@@ -66,10 +66,12 @@ bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, u
 	HighResolutionTimer timer;
 	timer.reset();
 	m_screenWidht = screenWidth;
-	m_screenHeight = screenHeight;
-	render::C_SceneBuilder sceneBuilder;
-	// known bug (aabb is wrong)
-	m_renderScene = sceneBuilder.LoadScene(scene);
+	m_screenHeight = screenHeight; 
+	{
+		render::C_SceneBuilder sceneBuilder;
+		// known bug (aabb is wrong)
+		m_renderScene = sceneBuilder.LoadScene(scene);
+	}
 	m_avg = 0.0f;
 	m_frameID = 0;
 
@@ -117,7 +119,7 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 #else
 	m_SunAnimation->Update(timeSinceLastUpdateMs);
 #endif
-	m_FrameStat = std::make_shared<C_CSVFrameStatistics>();
+	m_FrameStat = std::make_unique<C_CSVFrameStatistics>();
 	m_FrameStat->BeginFrame();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
