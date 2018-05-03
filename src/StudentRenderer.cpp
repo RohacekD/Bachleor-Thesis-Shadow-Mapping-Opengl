@@ -61,7 +61,7 @@ StudentRenderer::~StudentRenderer() {
 }
 
 //=================================================================================
-bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight)
+bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight, bool useSDSM)
 {
 	HighResolutionTimer timer;
 	timer.reset();
@@ -77,6 +77,10 @@ bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, u
 
 	// I should pass camera just to CSM
 	auto camera = Application::Instance().GetCamManager()->GetMainCamera();
+
+	//===============================================================
+	//	Init CMS
+	//===============================================================
 	auto lightInfo = std::make_shared<C_DirectionalLight>(camera, glm::vec3(0.0f, 3.0f, 0.0f) * 15.0f, glm::vec3(0.0, 0.0, 0.0), 1.0f);
 
 	// create animation for sun
@@ -84,13 +88,23 @@ bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, u
 	m_SunAnimation->AddComponent(std::make_shared<Animation::C_ElipseTranslateAnim>(100.0f, 100.0f));
 	lightInfo->SetDirectionAnimation(m_SunAnimation);
 
-	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits, std::make_shared<C_PSSMSplitsCalculator>(gs_splits, camera));
+	std::shared_ptr<I_SplitPlanesCalculator> SplitCalculator;
+	if (useSDSM) {
+		SplitCalculator = std::make_shared<C_SDSMSplitsCalculator>(gs_splits, camera);
+	}
+	else {
+		SplitCalculator = std::make_shared<C_PSSMSplitsCalculator>(gs_splits, camera);
+	}
 
-	UseSDSM(m_ControlPanel.m_useSDSM);
+	m_CSM = std::make_shared<C_ShadowMapCascade>(lightInfo, camera, gs_shadowMapsize, gs_splits, SplitCalculator);
+	//===============================================================
+	//	Init CMS
+	//===============================================================
 
 	if (!initFBO()) {
 		return false;
 	}
+
 	glEnable(GL_CULL_FACE);
 	glClearColor(static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(.26), static_cast<GLclampf>(1.0));
 

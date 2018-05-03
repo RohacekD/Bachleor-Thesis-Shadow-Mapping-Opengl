@@ -36,7 +36,7 @@ public:
 	I_Renderer() {};
 	virtual ~I_Renderer() {}
 
-	virtual bool init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight) = 0;
+	virtual bool init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight, bool useSDSM = false) = 0;
 	virtual void onUpdate(float timeSinceLastUpdateMs) = 0;
 	virtual void onWindowRedraw(const I_Camera& camera, const glm::vec3& cameraPosition) = 0;
 	virtual void onKeyPressed(SDL_Keycode code) = 0;

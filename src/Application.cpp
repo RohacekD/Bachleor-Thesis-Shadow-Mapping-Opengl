@@ -237,10 +237,8 @@ bool Application::Run(int argc, char* argv[])
 
 
 	//Prepare rendering data
-	if (!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT))
+	if (!_renderer.init(argv[1], SCREEN_WIDTH, SCREEN_HEIGHT, sdsm))
 		return false;
-
-	_renderer.UseSDSM(sdsm);
 
 	if (!useCamPath) {
 		auto debugCam = std::make_shared<T_Camera>();

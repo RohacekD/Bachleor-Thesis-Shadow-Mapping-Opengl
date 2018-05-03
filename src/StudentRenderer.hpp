@@ -49,7 +49,7 @@ public:
 	StudentRenderer();
 	~StudentRenderer();;
 
-	bool init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight) override;
+	bool init(const std::string& scene, unsigned int screenWidth, unsigned int screenHeight, bool useSDSM = false) override;
 	void onUpdate(float timeSinceLastUpdateMs) override;
 	void onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition) override;
 	void onKeyPressed(SDL_Keycode code) override;
