@@ -133,11 +133,6 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 #else
 	m_SunAnimation->Update(timeSinceLastUpdateMs);
 #endif
-	m_FrameStat = std::make_unique<C_CSVFrameStatistics>();
-	m_FrameStat->BeginFrame();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	m_CSM->Update();
 }
 
 //=================================================================================
@@ -167,6 +162,10 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
+	m_FrameStat = std::make_unique<C_CSVFrameStatistics>();
+	m_FrameStat->BeginFrame();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 #ifndef SPEEDPROFILE
 	ShowGUI();
 #endif
@@ -179,6 +178,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 		calc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
 		m_FrameStat->Stamp();
 	}
+	m_CSM->Update();
 
 	renderToFBO(camera.getViewProjectionMatrix());
 	m_FrameStat->Stamp();
