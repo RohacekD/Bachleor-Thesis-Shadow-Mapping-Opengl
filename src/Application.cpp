@@ -86,9 +86,6 @@ bool Application::initWindow()
     //Create OpenGL context
     _glContext = SDL_GL_CreateContext(_window);
 
-    //VSync
-    SDL_GL_SetSwapInterval(1);
-
     return true;
 }
 
