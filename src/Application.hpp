@@ -75,6 +75,10 @@ public:
 
 	const std::string& GetShaderForMeshes() const { return m_ShaderForMeshes; }
 	void SetShaderForMeshes(std::string val) { m_ShaderForMeshes = val; }
+
+	const std::string& GetShaderForMeshesShadows() const { return m_ShaderForMeshesShadows; }
+	bool	IsLayeredOn() const { return m_bLayeredRender; }
+
 	double GetCameraPathProgress() const { return m_CameraPathProgress; }
 	void SetCameraPathProgress(double val) { m_CameraPathProgress = val; }
 private:
@@ -124,14 +128,17 @@ private:
 	// data for camera path
 	//==============================================
 	std::shared_ptr<CameraPath> m_camPath;
-	bool						m_bPathFinished : 1;
 	double						m_CameraPathProgress;
+	bool						m_bPathFinished : 1;
+
+	bool						m_bLayeredRender : 1;
 
 	// stream where to output statistics
 	std::ofstream				m_statisticsFile;
 
 	// shader for final rendering of mashes
 	std::string					m_ShaderForMeshes;
+	std::string					m_ShaderForMeshesShadows;
 
 
 	//Student renderer

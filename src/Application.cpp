@@ -15,10 +15,12 @@
 //=================================================================================
 Application::Application()
 	: m_camPath(nullptr)
-	, m_bPathFinished(false)
 	, m_CameraPathProgress(false)
+	, m_bPathFinished(false)
+	, m_bLayeredRender(true)
 	, _window(nullptr)
 	, m_ShaderForMeshes("basic")
+	, m_ShaderForMeshesShadows("shadow-layered")
 {}
 
 //=================================================================================
@@ -218,12 +220,18 @@ bool Application::Run(int argc, char* argv[])
 	bool useCamPath = argc >= 4;
 
 	bool sdsm = false;
+	std::string method(argv[2]);
 	if (argc > 2) {
-		if (!strcmp("s", argv[2])) {
+		if (method.substr(0, 4) == "sdsm") {
 			sdsm = true;
 		}
-		else if (!strcmp("p", argv[2])) {
+		else if (method.substr(0, 4) == "sdsm") {
 			sdsm = false;
+		}
+
+		if (method.length() > 4 && method.find("noLayers") != std::string::npos) {
+			m_bLayeredRender = false;
+			m_ShaderForMeshesShadows = "basic-shadow";
 		}
 	}
 

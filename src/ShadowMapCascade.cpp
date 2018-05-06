@@ -203,14 +203,17 @@ void C_ShadowMapCascade::CalcViewProjectionMatrices()
 		up = normalize(up);
 
 
-		glm::mat4 lightViewMatrix = lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
+		glm::mat4 lightViewMatrixNew = lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
 
 		C_DebugDraw::Instance().DrawPoint(eye, projectionMatrix, glm::vec3(1, 0, 0));
 		
 
-		m_splitInfos[i].m_lightViewProjectionMatrix = lightProjectionMatrix * lightViewMatrix;
+		m_splitInfos[i].m_lightViewProjectionMatrix = lightProjectionMatrix * lightViewMatrixNew;
 		m_splitInfos[i].m_boundingSphere = subFrustBBox.GetSphere();
+		C_DebugDraw::Instance().DrawPoint(m_splitInfos[i].m_boundingSphere.m_position, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f), inverse(lightViewMatrix));
 		m_splitInfos[i].m_boundingSphere.Transform(glm::inverse(lightViewMatrix));
+
+		C_DebugDraw::Instance().DrawPoint(m_splitInfos[i].m_boundingSphere.m_position, projectionMatrix, vec3(0.0, 1.0, 0.0));
 
 		//subFrustBBox.minPoint.z = 0.0f;
 		//// Create the crop matrix

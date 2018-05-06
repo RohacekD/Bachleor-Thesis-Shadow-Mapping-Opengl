@@ -21,6 +21,7 @@ namespace GLW {
 	class C_ShaderStorageBuffer : public C_GLBuffer<GL_SHADER_STORAGE_BUFFER> {
 	public:
 		C_ShaderStorageBuffer(int bindingPoint);
+		virtual ~C_ShaderStorageBuffer() {};
 		virtual void UploadData() const = 0;
 		virtual void DownloadData() = 0;
 		virtual void ClearBuffer() = 0;
@@ -58,6 +59,7 @@ class C_SplitPlanesStorage : public GLW::C_ShaderStorageBuffer {
 	public:
 		//each frustum consists of two splitting planes for now
 		C_SplitPlanesStorage(unsigned int numFrustums, int bindingPoint);
+		virtual ~C_SplitPlanesStorage() {};
 
 		virtual void UploadData() const override;
 		virtual void DownloadData() override;

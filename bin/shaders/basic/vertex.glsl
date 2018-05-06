@@ -34,8 +34,6 @@ void main()
 
 	//to light should be counted from world space
 
-	//shadowCoords = toShadowMapSpaceMatrix * modelMatrix * vertex;// so far I don't have model matrix
-
 	worldCoord = modelMatrix * vertex;
 
     gl_Position = frame.projectionMatrix * worldCoord; //tohle je reálná hloubka

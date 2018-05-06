@@ -32,7 +32,7 @@ in vec4 PSSM_CameraDependentPos;
 //=================================================================================
 bool IsInPSSMShadow(){
 	int split = getNumberFrustum(abs(PSSM_CameraDependentPos.z));
-	if(split == PSSM_SPLITS) return false; // out of frustum, just save a time
+	//if(split == PSSM_SPLITS) return false; // out of frustum, just save a time
 	vec4 shadowCoords = pssm.m_LightViewProjection[split] * worldCoord;
 	shadowCoords = vec4(shadowCoords.xyz * 0.5 + 0.5, 1.0f);
 	float objectNearestLight = texture(shadowMap, vec3(shadowCoords.xy, split)).r;

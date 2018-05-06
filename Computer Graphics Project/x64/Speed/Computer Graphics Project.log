@@ -1,17 +1,35 @@
 ﻿  Application.cpp
-..\src\Application.cpp(435): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
+..\src\Application.cpp(443): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
+  CameraManager.cpp
   FreelookCamera.cpp
-  FrameStatistics.cpp
+  Debug.cpp
+  FrameConstantsBuffer.cpp
   Frustum.cpp
+  ShaderStorage.cpp
+  UniformBuffer.cpp
+  Framebuffer.cpp
+  ShaderProgram.cpp
+  Texture.cpp
+  ISplitPlanesCalculator.cpp
   LightInfo.cpp
-  main.cpp
-  MeshNode.cpp
+  PSSMSplitsCalculator.cpp
+  PSSMUBO.cpp
+  SDSMSplitsCalculator.cpp
+  ShaderCompiler.cpp
   ShadowMapCascade.cpp
   StudentRenderer.cpp
+  UniformBuffersManager.cpp
+  Compiling...
+  main.cpp
+  MeshNode.cpp
+  RenderNode.cpp
+  Scene.cpp
+  Terrain.cpp
+  SceneBuilder.cpp
   Generating code
-  130 of 5305 functions ( 2.5%) were compiled, the rest were copied from previous compilation.
-    4 functions were new in current compilation
-    58 functions had inline decision re-evaluated but remain unchanged
+  129 of 5300 functions ( 2.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    120 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering-Speed.exe
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering-Speed.pdb (Partial PDB)

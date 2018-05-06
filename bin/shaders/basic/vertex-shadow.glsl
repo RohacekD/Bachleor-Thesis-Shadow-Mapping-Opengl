@@ -1,5 +1,7 @@
 #version 330
 
+#include "include/frameConstants.glsl"
+
 attribute vec4 vertex;
 attribute vec3 normal;
 
@@ -8,5 +10,5 @@ uniform mat4 modelMatrix;
 
 void main()
 {
-    gl_Position = modelMatrix * (vertex);
+    gl_Position = frame.projectionMatrix * modelMatrix * (vertex);
 }

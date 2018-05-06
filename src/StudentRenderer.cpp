@@ -93,6 +93,9 @@ bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, u
 	lightInfo->SetDirectionAnimation(m_SunAnimation);
 
 	std::shared_ptr<I_SplitPlanesCalculator> SplitCalculator;
+
+	m_ControlPanel.m_useSDSM = useSDSM;
+
 	if (useSDSM) {
 		SplitCalculator = std::make_shared<C_SDSMSplitsCalculator>(gs_splits, camera);
 	}
@@ -195,6 +198,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	m_CSM->Update();
 
 	renderToFBO(camera.getViewProjectionMatrix());
+	glViewport(0, 0, m_screenWidht, m_screenHeight);
 	m_FrameStat[m_ActualStatistics]->Stamp();
 
 
@@ -202,7 +206,6 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 
 	m_CSM->ActivateUBO();
 
-	glViewport(0, 0, m_screenWidht, m_screenHeight);
 
 	m_FrameConstUBO->SetViewProjection(camera.getViewProjectionMatrix());
 	m_FrameConstUBO->SetCameraPosition(glm::vec4(m_CSM->GetBoundCamera()->getPosition(), 1.0f));
@@ -299,21 +302,45 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 #endif
 
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
+	if (Application::Instance().IsLayeredOn()) {
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
 
-	render::S_RenderParams params;
-	params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
-	params.m_FrustumSphere = m_CSM->GetLightFrustumSphere();
+		render::S_RenderParams params;
+		params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
+		params.m_FrustumSphere = m_CSM->GetLightFrustumSphere();
 
-	// you can read about this in thesis
-	//glCullFace(GL_FRONT);
-	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
-	//glCullFace(GL_BACK);
-	ErrorCheck();
+		// you can read about this in thesis
+		//glCullFace(GL_FRONT);
+		m_renderScene->RenderChilds(params, glm::mat4(1.0f));
+		//glCullFace(GL_BACK);
+		ErrorCheck();
+	}
+	else {
+		for (int i = 0; i < gs_splits; ++i) {
+			glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT)->GetTexture(), 0, i);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
+
+			m_FrameConstUBO->SetViewProjection(m_CSM->GetSplitInfo(i).m_lightViewProjectionMatrix);
+			m_FrameConstUBO->UploadData();
+			m_FrameConstUBO->Activate(true);
+
+			render::S_RenderParams params;
+			params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
+			params.m_FrustumSphere = m_CSM->GetSplitInfo(i).m_boundingSphere;// m_CSM->GetLightFrustumSphere();
+
+			// you can read about this in thesis
+			//glCullFace(GL_FRONT);
+			m_renderScene->RenderChilds(params, glm::mat4(1.0f));
+			//glCullFace(GL_BACK);
+			ErrorCheck();
+		}
+	}
 	
-
+	m_FrameConstUBO->Activate(false);
 	m_framebuffer->Unbind();
 	m_CSM->ActivateUBO(false);
 #ifdef FBO_COLOR
@@ -348,6 +375,7 @@ void StudentRenderer::renderDepthSamples() const
 	m_FrameConstUBO->Activate(false);
 	m_DepthSamplesframebuffer->Unbind();
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	glViewport(0, 0, m_screenWidht, m_screenHeight);
 }
 
 //=================================================================================

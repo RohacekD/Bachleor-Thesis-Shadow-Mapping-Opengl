@@ -98,7 +98,7 @@ C_SplitPlanesStorage::C_SplitPlanesStorage(unsigned int numFrustums, int binding
 	: m_NumFrustums(numFrustums)
 	, C_ShaderStorageBuffer(bindingPoint)
 {
-	m_Frustums.reserve(m_NumFrustums);
+	//m_Frustums.reserve(m_NumFrustums);
 	for (unsigned int i = 0; i < m_NumFrustums; ++i) {
 		m_Frustums.emplace_back(0.0f, 0.0f);
 	}
@@ -125,7 +125,7 @@ void C_SplitPlanesStorage::DownloadData()
 	bind();
 	decltype (m_Frustums)::value_type* data = (decltype (m_Frustums)::value_type *)glMapBuffer(GetBufferType(), GL_READ_WRITE);
 
-	memcpy(m_Frustums.data(), data, m_NumFrustums * 2 * sizeof(decltype (m_Frustums)::value_type));
+	memcpy(m_Frustums.data(), data, m_NumFrustums * sizeof(decltype (m_Frustums)::value_type));
 
 	glUnmapBuffer(GetBufferType());
 	unbind();

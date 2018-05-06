@@ -55,6 +55,7 @@ AABB C_Frustum::GetAABB() const
 //=================================================================================
 void C_Frustum::DebugDraw(const glm::vec3& color) const
 {
+#ifdef _DEBUG
 	glm::vec3 nearCenter = glm::vec3(m_position + (m_foreward * m_near));
 	glm::vec3 farCenter = glm::vec3(m_position + (m_foreward * m_far));
 
@@ -99,6 +100,7 @@ void C_Frustum::DebugDraw(const glm::vec3& color) const
 	dd.DrawPoint(m_position, viewProjectionMatrix);
 	dd.DrawLine(m_position, m_position + m_foreward, viewProjectionMatrix, glm::vec3(0,1,0));
 	dd.DrawLine(m_position, m_position + m_upVector, viewProjectionMatrix, glm::vec3(1, 0, 0));
+#endif // #ifdef _DEBUG
 }
 
 //=================================================================================

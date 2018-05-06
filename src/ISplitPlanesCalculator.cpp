@@ -19,6 +19,7 @@ I_SplitPlanesCalculator::I_SplitPlanesCalculator(std::shared_ptr<I_Camera> camer
 I_SplitPlanesCalculator::~I_SplitPlanesCalculator()
 {
 	m_camera->Unsubscribe(m_ratios);
+	m_SplitFrust->unbind();
 	m_SplitFrust.reset();
 	DestructorFullCheck();
 }

@@ -4,6 +4,8 @@
 
 #include "Debug.h"
 
+#include <iostream>
+
 namespace GLW {
 
 	//=================================================================================
@@ -15,6 +17,10 @@ namespace GLW {
 	C_ShaderProgram::~C_ShaderProgram()
 	{
 		glDeleteProgram(m_Program);
+#ifdef _DEBUG
+		// because of random crashes
+		std::cout << "Deleting program: " << m_Program << std::endl;
+#endif
 		DestructorFullCheck();
 	}
 
