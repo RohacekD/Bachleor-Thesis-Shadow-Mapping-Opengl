@@ -59,6 +59,7 @@ public:
 
 	void UseSDSM(bool sdsm = true);
 	void EnableStatistics(const bool enable = true) { m_StatisticsEnabled = enable; }
+	void SetLambda(float lambda) { m_CSM->SetLambda(lambda); m_ControlPanel.m_lambda = lambda; }
 
 	void WriteStatisticsHeader() const;
 	void SetStatisticsOutput(std::basic_ostream<char, std::char_traits<char> >& os) { m_StatisticsStream = &os; };

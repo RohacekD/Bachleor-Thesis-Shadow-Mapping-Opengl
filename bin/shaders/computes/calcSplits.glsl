@@ -27,7 +27,7 @@ float SampleToRealZ(uint index){
 //=================================================================================
 void main()
 {
-	frustum[0].x = SampleToRealZ(lowestIndex);
+	frustum[0].x = SampleToRealZ(0);
 	uint sum = 0;
 	uint actualGroup = 0;
 	float groupTrashhold = splitRatios[0] * float(numSamples);

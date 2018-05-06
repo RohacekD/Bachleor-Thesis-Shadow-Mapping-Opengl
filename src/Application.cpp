@@ -284,6 +284,10 @@ bool Application::Run(int argc, char* argv[])
 		m_camera->positionCamera(zeroKey.position, zeroKey.position + zeroKey.viewVector, zeroKey.upVector);
 		m_camera->update();
 		m_CameraPathTimer.reset();
+
+		if (sdsm) {
+			_renderer.SetLambda(0.0f); // tried best value
+		}
 	}
 	GetCamManager()->UseDebugCam(!useCamPath);
 
