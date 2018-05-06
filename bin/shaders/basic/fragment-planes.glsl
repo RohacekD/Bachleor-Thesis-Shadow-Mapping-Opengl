@@ -76,7 +76,7 @@ void main()
 		// if this fragment is on the light we would like to simulate the angle between the surface
 		// and the sun
 		MaterialDiffuseColor = MaterialAmbientColor + 
-		MaterialDiffuseColor * vec4(1.0f, 1.0f, 0.8f, 1.0f);
+		MaterialDiffuseColor * vec4(1.0f, 1.0f, 0.8f, 1.0f) * cosTheta;
 	}
 
 	fragColor = MaterialDiffuseColor;

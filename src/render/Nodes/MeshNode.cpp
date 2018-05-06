@@ -145,7 +145,7 @@ namespace render {
 //		RenderBBox(std::dynamic_pointer_cast<C_FrameConstantsBuffer>(ubo)->GetViewProjection(), modelMatrix);
 //#endif
 		auto& shdManager = C_ShaderManager::Instance();
-		auto program = shdManager.GetProgram("basic-planes");
+		auto program = shdManager.GetProgram(Application::Instance().GetShaderForMeshes());
 		shdManager.ActivateShader(program);
 
 		glBindVertexArray(m_VAO);

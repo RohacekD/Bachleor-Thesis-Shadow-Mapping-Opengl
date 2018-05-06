@@ -24,6 +24,8 @@
 #include "ShadowMapCascade.h"
 #include "ISplitPlanesCalculator.h"
 
+#include <array>
+
 class I_Camera;
 class C_SDSMSplitsCalculator;
 class C_FrameConstantsBuffer;
@@ -91,12 +93,14 @@ private:
 	double m_avg;
 	unsigned long m_frameID;
 	const static long s_avgFramesNum = 10000;
+	const static std::size_t s_FramesStat = 3;
 
-	std::shared_ptr<C_ShadowMapCascade>		m_CSM;
-	std::shared_ptr<C_FrameConstantsBuffer> m_FrameConstUBO;
-	std::unique_ptr<C_CSVFrameStatistics>	m_FrameStat;
-	bool									m_StatisticsEnabled;
-	std::basic_ostream<char, std::char_traits<char> >* m_StatisticsStream;
+	std::shared_ptr<C_ShadowMapCascade>						m_CSM;
+	std::shared_ptr<C_FrameConstantsBuffer>					m_FrameConstUBO;
+	std::array<std::unique_ptr<C_CSVFrameStatistics>, s_FramesStat>	m_FrameStat;
+	bool													m_StatisticsEnabled;
+	int														m_ActualStatistics;
+	std::basic_ostream<char, std::char_traits<char> >*		m_StatisticsStream;
 
 
 	std::shared_ptr<Animation::C_Animation> m_SunAnimation;

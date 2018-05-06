@@ -36,7 +36,6 @@ void C_FrameStatistics::Stamp()
 //=================================================================================
 void C_FrameStatistics::EndFrame()
 {
-	Stamp();
 	GLuint64 beginTime = 0;
 	glGetQueryObjectui64v(m_BeginQuery, GL_QUERY_RESULT, &beginTime);
 	GLuint64 lastTime = 0;

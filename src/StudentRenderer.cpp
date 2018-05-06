@@ -51,8 +51,12 @@ const int StudentRenderer::gs_splits = 4;
 StudentRenderer::StudentRenderer()
 	: m_StatisticsEnabled(false)
 	, m_StatisticsStream(&std::cout)
+	, m_ActualStatistics(0)
 {
 	m_ControlPanel.m_animateSun = true;
+	for (auto & it : m_FrameStat) {
+		it = nullptr;
+	}
 }
 
 //=================================================================================
@@ -162,8 +166,16 @@ void StudentRenderer::onKeyPressed(SDL_Keycode code)
 //=================================================================================
 void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& cameraPosition)
 {
-	m_FrameStat = std::make_unique<C_CSVFrameStatistics>();
-	m_FrameStat->BeginFrame();
+	m_ActualStatistics = (m_ActualStatistics + 1) % s_FramesStat;
+	auto& nextStat = m_FrameStat[m_ActualStatistics];
+	if (m_StatisticsEnabled && nextStat) {
+		nextStat->EndFrame();
+		*m_StatisticsStream << m_frameID - s_FramesStat + 1 << ";";
+		*m_StatisticsStream << nextStat->Print();
+		nextStat = nullptr;
+	}
+	m_FrameStat[m_ActualStatistics] = std::make_unique<C_CSVFrameStatistics>();
+	m_FrameStat[m_ActualStatistics]->BeginFrame();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 #ifndef SPEEDPROFILE
@@ -173,15 +185,15 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	auto method = m_CSM->GetSplittingMethod(); // move it here until C++17 is used
 	if (method->MethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM) {
 		renderDepthSamples();
-		m_FrameStat->Stamp();
+		m_FrameStat[m_ActualStatistics]->Stamp();
 		auto calc = std::dynamic_pointer_cast<C_SDSMSplitsCalculator>(method);
 		calc->RecalcSplits(m_DepthSamplesframebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
-		m_FrameStat->Stamp();
+		m_FrameStat[m_ActualStatistics]->Stamp();
 	}
 	m_CSM->Update();
 
 	renderToFBO(camera.getViewProjectionMatrix());
-	m_FrameStat->Stamp();
+	m_FrameStat[m_ActualStatistics]->Stamp();
 
 
 	RenderDoc::C_DebugScope scope("Render pass");
@@ -219,11 +231,7 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 		Application::Instance().GetCamManager()->DebugDraw();
 	}
 #endif // !SPEEDPROFILE
-	if (m_StatisticsEnabled) {
-		m_FrameStat->EndFrame();
-		*m_StatisticsStream << m_frameID << ";";
-		*m_StatisticsStream << m_FrameStat->Print();
-	}
+	m_FrameStat[m_ActualStatistics]->Stamp();
 }
 
 //=================================================================================
@@ -234,7 +242,9 @@ void StudentRenderer::clearStudentData()
 	m_FrameConstUBO.reset();
 	m_CSM.reset();
 	m_renderScene.reset();
-	m_FrameStat.reset();
+	for (auto & it : m_FrameStat) {
+		it.reset();
+	}
 	C_ShaderManager::Instance().Clear();
 	C_DebugDraw::Instance().Clear();
 	C_UniformBuffersManager::Instance().Clear();
@@ -341,7 +351,7 @@ bool StudentRenderer::initFBO()
 
 	ErrorCheck();
 	depthTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
-	depthTexture->SetFilter(GL_NEAREST, GL_NEAREST);
+	depthTexture->SetFilter(GL_LINEAR, GL_LINEAR);
 	depthTexture->SetTexParameter(GL_TEXTURE_BORDER_COLOR, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	depthTexture->EndGroupOp();

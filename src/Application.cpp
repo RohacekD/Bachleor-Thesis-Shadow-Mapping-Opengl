@@ -17,6 +17,7 @@ Application::Application()
 	: m_camPath(nullptr)
 	, m_bPathFinished(false)
 	, _window(nullptr)
+	, m_ShaderForMeshes("basic")
 {}
 
 //=================================================================================
@@ -87,7 +88,7 @@ bool Application::initWindow()
     _glContext = SDL_GL_CreateContext(_window);
 
     //VSync
-    SDL_GL_SetSwapInterval(1);
+    SDL_GL_SetSwapInterval(0);
 
     return true;
 }
@@ -213,7 +214,7 @@ bool Application::Run(int argc, char* argv[])
 	}
 #endif
 
-	bool useCamPath = argc == 4;
+	bool useCamPath = argc >= 4;
 
 	bool sdsm = false;
 	if (argc > 2) {
@@ -223,6 +224,10 @@ bool Application::Run(int argc, char* argv[])
 		else if (!strcmp("p", argv[2])) {
 			sdsm = false;
 		}
+	}
+
+	if (argc >= 5) {
+		m_ShaderForMeshes = argv[4];
 	}
 
 
@@ -257,6 +262,8 @@ bool Application::Run(int argc, char* argv[])
 		camPathFile.erase(camPathFile.end() - 4, camPathFile.end());
 		camPathFile.append("-");
 		camPathFile.append(argv[2]);
+		camPathFile.append("-");
+		camPathFile.append(m_ShaderForMeshes);
 		camPathFile.append(".csv"); 
 		camPathFile = "results/" + camPathFile;
 		m_statisticsFile.open(camPathFile);

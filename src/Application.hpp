@@ -71,6 +71,8 @@ public:
 
 	std::shared_ptr<C_CameraManager> GetCamManager() const { return m_cameraManager; }
 
+	const std::string& GetShaderForMeshes() const { return m_ShaderForMeshes; }
+	void SetShaderForMeshes(std::string val) { m_ShaderForMeshes = val; }
 private:
 	Application();
 
@@ -118,6 +120,8 @@ private:
 	bool	m_bPathFinished : 1;
 
 	std::ofstream m_statisticsFile;
+
+	std::string		m_ShaderForMeshes;
 
 	//Student renderer
 	StudentRenderer		 _renderer;  
