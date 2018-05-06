@@ -18,6 +18,8 @@
 
 #include "PSSMSplitsCalculator.h"
 
+#include "Shapes.h"
+
 #include <memory>
 #include <vector>
 
@@ -33,6 +35,7 @@ struct S_SplitInfo {
 	double m_depth;
 	glm::mat4 m_cropMat;
 	glm::mat4 m_lightViewProjectionMatrix;
+	Shapes::S_Sphere m_boundingSphere;
 };
 
 namespace Shapes {
@@ -82,11 +85,12 @@ public:
 	Shapes::S_Sphere GetLightFrustumSphere() const;
 private:
 	AABB GetBBoxInLightSpace(const C_Frustum& frustum) const;
-	void CalcCropMatrices();
+	void CalcViewProjectionMatrices();
 
 	std::shared_ptr<I_SplitPlanesCalculator> m_SplitCalculator;
 	std::shared_ptr<C_SplitPlanesStorage> m_SplitFrust;
 
+	Shapes::S_Sphere								m_boundingSphere;
 	unsigned int									m_levels;
 	unsigned int									m_resolution;
 	float											m_lambda;

@@ -297,6 +297,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	params.m_pass = render::S_RenderParams::E_PassType::ShadowPass;
 	params.m_FrustumSphere = m_CSM->GetLightFrustumSphere();
 
+	// you can read about this in thesis
 	//glCullFace(GL_FRONT);
 	m_renderScene->RenderChilds(params, glm::mat4(1.0f));
 	//glCullFace(GL_BACK);
@@ -352,7 +353,7 @@ bool StudentRenderer::initFBO()
 	ErrorCheck();
 	depthTexture->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
 	depthTexture->SetFilter(GL_LINEAR, GL_LINEAR);
-	depthTexture->SetTexParameter(GL_TEXTURE_BORDER_COLOR, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	depthTexture->SetTexParameter(GL_TEXTURE_BORDER_COLOR, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	depthTexture->EndGroupOp();
 

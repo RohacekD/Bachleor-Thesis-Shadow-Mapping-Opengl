@@ -106,7 +106,7 @@ void C_ShadowMapCascade::SetSplittingMethod(I_SplitPlanesCalculator::E_MethodTyp
 //=================================================================================
 void C_ShadowMapCascade::RecalcAll()
 {
-	CalcCropMatrices();
+	CalcViewProjectionMatrices();
 }
 
 //=================================================================================
@@ -123,10 +123,10 @@ void C_ShadowMapCascade::DebugDrawAABBs(const glm::mat4& projectionMatrix) const
 //=================================================================================
 Shapes::S_Sphere C_ShadowMapCascade::GetLightFrustumSphere() const
 {
-	AABB bboxInLightSpace = GetBBoxInLightSpace(m_boundCamera->getFrustum());
-	Shapes::S_Sphere sphere = bboxInLightSpace.GetSphere();
-	sphere.Transform(glm::inverse(m_lighInfo->GetViewMatrix()));
-	return sphere;
+	//AABB bboxInLightSpace = GetBBoxInLightSpace(m_boundCamera->getFrustum());
+	//Shapes::S_Sphere sphere = bboxInLightSpace.GetSphere();
+	//sphere.Transform(glm::inverse(m_lighInfo->GetViewMatrix()));
+	return m_boundingSphere;
 }
 
 //=================================================================================
@@ -136,22 +136,33 @@ AABB C_ShadowMapCascade::GetBBoxInLightSpace(const C_Frustum& frustum) const
 }
 
 //=================================================================================
-void C_ShadowMapCascade::CalcCropMatrices()
+void C_ShadowMapCascade::CalcViewProjectionMatrices()
 {
 	using namespace glm;
 	const static float nearPlane = 0.0f;
 	auto projectionMatrix = Application::Instance().GetCamManager()->GetActiveCamera()->getViewProjectionMatrix();
 	C_Frustum frust = m_boundCamera->getFrustum();
 	glm::mat4 lightViewMatrix = m_lighInfo->GetViewMatrix();
-	//frust.UpdateWithMatrix(lightViewMatrix);
+
 	frust.DebugDraw(glm::vec3(1.0f, 1.f, 1.f));
+
 	m_splitInfos = std::vector<S_SplitInfo>();
 	m_splitInfos.resize(m_levels);
 
 	auto splits = m_SplitCalculator->GetSplitFrusts();
 
-	// this makes subfrusums bigger, it is virtual distance from frustum to light
+	// this makes subfrustums bigger, it is virtual distance from frustum to light
 	static const float s_lightDistance = 50.0f;
+
+	// get bounding sphere for whole lightspace
+	auto wholeLightspaceAABB = frust.GetAABB();
+	wholeLightspaceAABB = wholeLightspaceAABB.getTransformedAABB(lightViewMatrix);
+	// increase the size of bbox towards sun
+	wholeLightspaceAABB.maxPoint.z += s_lightDistance;
+
+	m_boundingSphere = wholeLightspaceAABB.GetSphere();
+	m_boundingSphere.Transform(glm::inverse(lightViewMatrix));
+
 
 	for (unsigned int i = 0; i < m_levels; ++i) {
 		frust.SetNear(splits[i].first);
@@ -159,9 +170,10 @@ void C_ShadowMapCascade::CalcCropMatrices()
 		AABB subFrustBBox = frust.GetAABB();
 		subFrustBBox = subFrustBBox.getTransformedAABB(lightViewMatrix);
 		frust.DebugDraw({ 1.0f, 1.0f, 0.0f });
+		// increase the size of bbox towards sun
 		subFrustBBox.maxPoint.z += s_lightDistance;
-		C_DebugDraw::Instance().DrawAABB(subFrustBBox.getTransformedAABB(inverse(lightViewMatrix)), projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
-		C_DebugDraw::Instance().DrawAABB(frust.GetAABB(), projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
+		C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f), inverse(lightViewMatrix));
+		//C_DebugDraw::Instance().DrawAABB(frust.GetAABB(), projectionMatrix, glm::vec3(1.0f, 0.5f, 1.f));
 
 		float height = subFrustBBox.maxPoint.y - subFrustBBox.minPoint.y;
 		float width = subFrustBBox.maxPoint.x - subFrustBBox.minPoint.x;
@@ -179,7 +191,7 @@ void C_ShadowMapCascade::CalcCropMatrices()
 		vec3 center = (subFrustBBox.maxPoint + subFrustBBox.minPoint) / 2.0f;
 
 		vec3 midPointOnFront = vec3(center.x, center.y, subFrustBBox.maxPoint.z - nearPlane);
-
+		//eye position have to be in world space
 		vec4 eye(inverse(lightViewMatrix) * vec4(midPointOnFront, 1.0f));
 
 		vec4 up = vec4(midPointOnFront, 1.0f);
@@ -194,15 +206,11 @@ void C_ShadowMapCascade::CalcCropMatrices()
 		glm::mat4 lightViewMatrix = lookAt(vec3(eye), vec3(eye + normal), vec3(up - eye));
 
 		C_DebugDraw::Instance().DrawPoint(eye, projectionMatrix, glm::vec3(1, 0, 0));
-		//C_DebugDraw::Instance().DrawPoint(glm::normalize(eye + normal), projectionMatrix, glm::vec3(0, 0, 0));
-		//C_DebugDraw::Instance().DrawPoint(eye + up, projectionMatrix, glm::vec3(1,1,1));
-		//C_DebugDraw::Instance().DrawPoint(midPointOnFront, projectionMatrix, glm::vec3(1, 0, 0));
-		//C_DebugDraw::Instance().DrawPoint(glm::normalize(vec4(midPointOnFront, 1.0f) + glm::normalize(lightViewMatrix*normal)), projectionMatrix, glm::vec3(0, 0, 0));
-		//C_DebugDraw::Instance().DrawAABB(subFrustBBox, projectionMatrix, glm::vec3(0.0f));
-		//C_DebugDraw::Instance().DrawAABB(subFrustBBox.getTransformedAABB(), projectionMatrix, glm::vec3(0.0f));
 		
 
 		m_splitInfos[i].m_lightViewProjectionMatrix = lightProjectionMatrix * lightViewMatrix;
+		m_splitInfos[i].m_boundingSphere = subFrustBBox.GetSphere();
+		m_splitInfos[i].m_boundingSphere.Transform(glm::inverse(lightViewMatrix));
 
 		//subFrustBBox.minPoint.z = 0.0f;
 		//// Create the crop matrix

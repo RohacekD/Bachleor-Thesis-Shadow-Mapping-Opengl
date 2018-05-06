@@ -1,7 +1,6 @@
 ﻿  Application.cpp
 ..\src\Application.cpp(433): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
   FreelookCamera.cpp
-  FrameStatistics.cpp
   Frustum.cpp
   LightInfo.cpp
   ShadowMapCascade.cpp
@@ -9,9 +8,9 @@
   main.cpp
   MeshNode.cpp
   Generating code
-  147 of 5297 functions ( 2.8%) were compiled, the rest were copied from previous compilation.
-    16 functions were new in current compilation
-    64 functions had inline decision re-evaluated but remain unchanged
+  80 of 5296 functions ( 1.5%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    62 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering-Speed.exe
   Computer Graphics Project.vcxproj -> E:\BP\sablona\bin\Opengl Shadow Rendering-Speed.pdb (Partial PDB)

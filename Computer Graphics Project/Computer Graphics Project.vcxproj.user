@@ -13,7 +13,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Speed|x64'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>models/DesertCity.xml s DesertPth1.xml basic-poisson</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>models/DesertCity.xml p DesertPth1.xml basic</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>
@@ -23,7 +23,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Speed|Win32'">
-    <LocalDebuggerCommandArguments>models/DesertCity.xml s DesertPth1.xml basic-poisson</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>models/DesertCity.xml p DesertPth1.xml basic</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
