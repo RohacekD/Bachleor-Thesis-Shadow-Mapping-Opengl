@@ -34,6 +34,7 @@
 *.ilk
 *.pdb
 bin/models/sopwith/sopwith.mtl
+bin/results*
 /external*
 *include*
 *lib*

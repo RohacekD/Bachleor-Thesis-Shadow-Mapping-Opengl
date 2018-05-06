@@ -124,7 +124,7 @@ namespace render {
 
 		ErrorCheck();
 		auto& shdManager = C_ShaderManager::Instance();
-		auto program = shdManager.GetProgram("basic-shadow");
+		auto program = shdManager.GetProgram("shadow-layered");
 		shdManager.ActivateShader(program);
 
 		glBindVertexArray(m_VAO);
