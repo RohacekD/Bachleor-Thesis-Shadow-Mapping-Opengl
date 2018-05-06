@@ -69,10 +69,14 @@ public:
     //Destroys window
     void clearSDLWindow();
 
+	inline void AddDrawCall() { _renderer.AddDrawCall(); }
+
 	std::shared_ptr<C_CameraManager> GetCamManager() const { return m_cameraManager; }
 
 	const std::string& GetShaderForMeshes() const { return m_ShaderForMeshes; }
 	void SetShaderForMeshes(std::string val) { m_ShaderForMeshes = val; }
+	double GetCameraPathProgress() const { return m_CameraPathProgress; }
+	void SetCameraPathProgress(double val) { m_CameraPathProgress = val; }
 private:
 	Application();
 
@@ -116,12 +120,19 @@ private:
     //Scene data
     std::shared_ptr<Scene> _scene;
 
+	//==============================================
+	// data for camera path
+	//==============================================
 	std::shared_ptr<CameraPath> m_camPath;
-	bool	m_bPathFinished : 1;
+	bool						m_bPathFinished : 1;
+	double						m_CameraPathProgress;
 
-	std::ofstream m_statisticsFile;
+	// stream where to output statistics
+	std::ofstream				m_statisticsFile;
 
-	std::string		m_ShaderForMeshes;
+	// shader for final rendering of mashes
+	std::string					m_ShaderForMeshes;
+
 
 	//Student renderer
 	StudentRenderer		 _renderer;  

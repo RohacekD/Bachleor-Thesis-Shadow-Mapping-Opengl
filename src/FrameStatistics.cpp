@@ -5,6 +5,8 @@
 
 //=================================================================================
 C_FrameStatistics::C_FrameStatistics()
+	: m_StartedProgress(0.0f)
+	, m_DrawedMeshes(0)
 {
 	glCreateQueries(GL_TIMESTAMP, 1, &m_BeginQuery);
 }
@@ -17,8 +19,9 @@ C_FrameStatistics::~C_FrameStatistics()
 }
 
 //=================================================================================
-void C_FrameStatistics::BeginFrame()
+void C_FrameStatistics::BeginFrame(double started)
 {
+	m_StartedProgress = started;
 	glQueryCounter(m_BeginQuery, GL_TIMESTAMP);
 	m_CurrentStamp = 0;
 }
@@ -57,11 +60,16 @@ void C_FrameStatistics::EndFrame()
 }
 
 //=================================================================================
+// C_CSVFrameStatistics
+//=================================================================================
+const std::string C_CSVFrameStatistics::s_separator = ",";
+
+//=================================================================================
 std::string C_CSVFrameStatistics::Print() const
 {
 	std::stringstream ss;
 	for (const auto& time : m_Times) {
-		ss << time << ";";
+		ss << time << s_separator;
 	}
 	std::string ret = ss.str();
 	if (!ret.empty()) {
@@ -70,4 +78,10 @@ std::string C_CSVFrameStatistics::Print() const
 	}
 	ret += '\n';
 	return ret;
+}
+
+//=================================================================================
+const std::string& C_CSVFrameStatistics::GetSeparator() const
+{
+	return s_separator;
 }

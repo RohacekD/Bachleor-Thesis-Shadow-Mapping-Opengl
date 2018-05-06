@@ -16,6 +16,7 @@
 Application::Application()
 	: m_camPath(nullptr)
 	, m_bPathFinished(false)
+	, m_CameraPathProgress(false)
 	, _window(nullptr)
 	, m_ShaderForMeshes("basic")
 {}
@@ -430,6 +431,7 @@ bool Application::ApplyCameraPath(std::shared_ptr<I_Camera> camera)
 		_renderer.EnableStatistics();
 		++frames;
 		const double normalizedTime = (actualTime - 1000.0) / totalTime;
+		m_CameraPathProgress = normalizedTime;
 		auto key = m_camPath->getKeypoint(normalizedTime);
 		auto camera = GetCamManager()->GetMainCamera();
 		camera->positionCamera(key);

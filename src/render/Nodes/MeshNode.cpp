@@ -131,6 +131,7 @@ namespace render {
 
 		program->SetUniform("modelMatrix", modelMatrix * GetAnimationTRS());
 
+		Application::Instance().AddDrawCall();
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
 
@@ -165,6 +166,7 @@ namespace render {
 
 		program->SetUniform("modelMatrix", modelMatrix * GetAnimationTRS());
 
+		Application::Instance().AddDrawCall();
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 
 		glBindVertexArray(0);
@@ -188,6 +190,7 @@ namespace render {
 
 		program->SetUniform("modelMatrix", modelMatrix * GetAnimationTRS());
 
+		Application::Instance().AddDrawCall();
 		glDrawArrays(GL_TRIANGLES, 0, m_triangles);
 		ErrorCheck();
 

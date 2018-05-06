@@ -170,12 +170,14 @@ void StudentRenderer::onWindowRedraw(const I_Camera& camera, const  glm::vec3& c
 	auto& nextStat = m_FrameStat[m_ActualStatistics];
 	if (m_StatisticsEnabled && nextStat) {
 		nextStat->EndFrame();
-		*m_StatisticsStream << m_frameID - s_FramesStat + 1 << ";";
+		*m_StatisticsStream << m_frameID - s_FramesStat + 1 << nextStat->GetSeparator();
+		*m_StatisticsStream << nextStat->GetStartTimeOfFrame() << nextStat->GetSeparator();
+		*m_StatisticsStream << nextStat->GetNumDrawCalls() << nextStat->GetSeparator();
 		*m_StatisticsStream << nextStat->Print();
 		nextStat = nullptr;
 	}
 	m_FrameStat[m_ActualStatistics] = std::make_unique<C_CSVFrameStatistics>();
-	m_FrameStat[m_ActualStatistics]->BeginFrame();
+	m_FrameStat[m_ActualStatistics]->BeginFrame(Application::Instance().GetCameraPathProgress());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 #ifndef SPEEDPROFILE
@@ -267,14 +269,22 @@ void StudentRenderer::UseSDSM(bool sdsm /*= true*/)
 //=================================================================================
 void StudentRenderer::WriteStatisticsHeader() const
 {
-	*m_StatisticsStream << "\"Frame ID\";";
+	*m_StatisticsStream << "\"Frame ID\"" << ",";
+	*m_StatisticsStream << "\"pth-progress\"" << ",";
+	*m_StatisticsStream << "\"DrawCall\"" << ",";
 	auto method = m_CSM->GetSplittingMethod(); // move it here until C++17 is used
 	if (method->MethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM) {
-		*m_StatisticsStream << "z-pass;";
-		*m_StatisticsStream << "min-max-reduction;";
+		*m_StatisticsStream << "z-pass,";
+		*m_StatisticsStream << "min-max-reduction,";
 	}
-	*m_StatisticsStream << "\"Cascade render\";";
+	*m_StatisticsStream << "\"Cascade render\",";
 	*m_StatisticsStream << "Render" << std::endl;
+}
+
+//=================================================================================
+void StudentRenderer::AddDrawCall()
+{
+	m_FrameStat[m_ActualStatistics]->AddDrawCall();
 }
 
 //=================================================================================

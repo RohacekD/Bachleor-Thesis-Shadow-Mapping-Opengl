@@ -63,6 +63,8 @@ public:
 	void WriteStatisticsHeader() const;
 	void SetStatisticsOutput(std::basic_ostream<char, std::char_traits<char> >& os) { m_StatisticsStream = &os; };
 
+	void AddDrawCall();
+
 private:
 	void renderToFBO(const glm::mat4& cameraViewProjectionMatrix) const;
 	void renderDepthSamples() const;
@@ -101,6 +103,7 @@ private:
 	bool													m_StatisticsEnabled;
 	int														m_ActualStatistics;
 	std::basic_ostream<char, std::char_traits<char> >*		m_StatisticsStream;
+
 
 
 	std::shared_ptr<Animation::C_Animation> m_SunAnimation;
