@@ -35,7 +35,7 @@
  * @param: 	   const int line
  * @brief	   You should not use this directly, use ErrorCheck() macro instead
  ** ==============================================*/
-bool _glErrorCheck(const std::string file, const int line);
+bool _glErrorCheck(const char* file, const int line);
 
 /** ==============================================
 * @method:    ErrorCheck

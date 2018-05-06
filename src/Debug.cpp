@@ -31,11 +31,11 @@ const char* glErrorCodeToString(unsigned int code) {
 }
 
 //=================================================================================
-bool _glErrorCheck(const std::string file, const int line) 
+bool _glErrorCheck(const char* file, const int line) 
 {
  GLenum status;
  while ((status = glGetError()) != GL_NO_ERROR) {
-	 std::cout << "[" << file.substr(file.rfind("\\") + 1) << ":" << line << "] Error (0x"
+	 std::cout << "[" << file << ":" << line << "] Error (0x"
 		 << std::hex << std::setfill('0') << std::setw(4)
 		 << status << ":"<< glErrorCodeToString(status) << "): "
 		 << glewGetErrorString(status)
