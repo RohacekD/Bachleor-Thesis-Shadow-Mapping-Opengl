@@ -1,14 +1,12 @@
-"Opengl Shadow Rendering-Speed.exe" models/sehir.xml sdsm SehirPth1.xml > results/Sehir-s.txt 
-"Opengl Shadow Rendering-Speed.exe" models/sehir.xml sdsm-noLayers SehirPth1.xml > results/Sehir-s.txt 
-"Opengl Shadow Rendering-Speed.exe" models/sehir.xml pssm SehirPth1.xml > results/Sehir-p.txt 
-"Opengl Shadow Rendering-Speed.exe" models/sehir.xml pssm SehirPth1.xml basic-poisson > results/Sehir-p-p.txt
+CALL:RunTestForScene "Sehir", "SehirPth1"
+CALL:RunTestForScene "DesertCity", "DesertPth1"
+CALL:RunTestForScene "City", "CityPth1"
+exit 0
 
-"Opengl Shadow Rendering-Speed.exe" models/DesertCity.xml sdsm DesertPth1.xml > results/DesertCity-s.txt
-"Opengl Shadow Rendering-Speed.exe" models/DesertCity.xml sdsm DesertPth1.xml > results/DesertCity-s.txt
-"Opengl Shadow Rendering-Speed.exe" models/DesertCity.xml pssm DesertPth1.xml > results/DesertCity-p.txt
-"Opengl Shadow Rendering-Speed.exe" models/DesertCity.xml pssm DesertPth1.xml  basic-poisson > results/DesertCity-p-p.txt
-
-"Opengl Shadow Rendering-Speed.exe" models/City.xml sdsm CityPth1.xml > results/City-s.txt
-"Opengl Shadow Rendering-Speed.exe" models/City.xml sdsm-noLayers CityPth1.xml > results/City-s.txt
-"Opengl Shadow Rendering-Speed.exe" models/City.xml pssm CityPth1.xml > results/City-p.txt
-"Opengl Shadow Rendering-Speed.exe" models/City.xml pssm CityPth1.xml basic-poisson > results/City-p-p.txt
+:RunTestForScene ::first argument is xml name, second is path
+	"Opengl Shadow Rendering-Speed.exe" models/%~1.xml sdsm %~2.xml 				> results/%~1-sdsm.txt 
+	"Opengl Shadow Rendering-Speed.exe" models/%~1.xml sdsm-noLayers %~2.xml 		> results/%~1-sdsm-noLayers.txt 
+	"Opengl Shadow Rendering-Speed.exe" models/%~1.xml pssm %~2.xml 				> results/%~1-pssm.txt 
+	"Opengl Shadow Rendering-Speed.exe" models/%~1.xml sdsm-noLayers %~2.xml 		> results/%~1-pssm-noLayers.txt 
+	"Opengl Shadow Rendering-Speed.exe" models/%~1.xml pssm %~2.xml basic-poisson 	> results/%~1-pssm-poisson.txt
+EXIT /B 0
