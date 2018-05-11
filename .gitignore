@@ -35,7 +35,7 @@
 *.pdb
 bin/models/sopwith/sopwith.mtl
 bin/results*
-/external*
+/external
 *include*
 *lib*
 */x64/Debug*

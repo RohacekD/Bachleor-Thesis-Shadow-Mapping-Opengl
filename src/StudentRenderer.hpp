@@ -77,6 +77,7 @@ private:
 		int m_splits;
 		bool m_useSDSM;
 		bool m_animateSun;
+		bool m_UseGLLayer;
 	} m_ControlPanel;
 
 	std::shared_ptr<render::C_Scene> m_renderScene;

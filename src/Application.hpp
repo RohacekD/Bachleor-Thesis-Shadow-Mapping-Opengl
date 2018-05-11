@@ -78,6 +78,7 @@ public:
 
 	const std::string& GetShaderForMeshesShadows() const { return m_ShaderForMeshesShadows; }
 	bool	IsLayeredOn() const { return m_bLayeredRender; }
+	void	SetLayered(bool enable = true);
 
 	double GetCameraPathProgress() const { return m_CameraPathProgress; }
 	void SetCameraPathProgress(double val) { m_CameraPathProgress = val; }

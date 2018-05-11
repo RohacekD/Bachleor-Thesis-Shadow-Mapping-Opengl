@@ -95,6 +95,7 @@ bool StudentRenderer::init(const std::string& scene, unsigned int screenWidth, u
 	std::shared_ptr<I_SplitPlanesCalculator> SplitCalculator;
 
 	m_ControlPanel.m_useSDSM = useSDSM;
+	m_ControlPanel.m_UseGLLayer = Application::Instance().IsLayeredOn();
 
 	if (useSDSM) {
 		SplitCalculator = std::make_shared<C_SDSMSplitsCalculator>(gs_splits, camera);
@@ -137,6 +138,13 @@ void StudentRenderer::onUpdate(float timeSinceLastUpdateMs)
 		m_SunAnimation->Update(timeSinceLastUpdateMs);
 	}
 	UseSDSM(m_ControlPanel.m_useSDSM);
+
+	if (!Application::Instance().IsLayeredOn() && m_ControlPanel.m_UseGLLayer) {
+		m_framebuffer->AttachTexture(GL_DEPTH_ATTACHMENT, m_framebuffer->GetAttachement(GL_DEPTH_ATTACHMENT));
+	}
+
+
+	Application::Instance().SetLayered(m_ControlPanel.m_UseGLLayer);
 #else
 	m_SunAnimation->Update(timeSinceLastUpdateMs);
 #endif
@@ -297,9 +305,12 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 
 	m_framebuffer->Bind();
 	m_CSM->ActivateUBO();
-#ifdef FBO_COLOR
+#ifndef FBO_COLOR
 	glDrawBuffer(GL_NONE);
 #endif
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, gs_shadowMapsize, gs_shadowMapsize);
 
 
 	if (Application::Instance().IsLayeredOn()) {
@@ -343,7 +354,7 @@ void StudentRenderer::renderToFBO(const glm::mat4& cameraViewProjectionMatrix) c
 	m_FrameConstUBO->Activate(false);
 	m_framebuffer->Unbind();
 	m_CSM->ActivateUBO(false);
-#ifdef FBO_COLOR
+#ifndef FBO_COLOR
 	glDrawBuffer(GL_BACK);
 #endif
 }
@@ -447,6 +458,7 @@ void StudentRenderer::ShowGUI()
 {
 	m_ControlPanel.m_lambda = m_CSM->GetLambda();
 	m_ControlPanel.m_useSDSM = (m_CSM->GetSplittingMethodType() == I_SplitPlanesCalculator::E_MethodType::SDSM);
+	m_ControlPanel.m_UseGLLayer = Application::Instance().IsLayeredOn();
 
 	bool active = true;
 	if (m_ControlPanel.m_useSDSM) {
@@ -463,6 +475,7 @@ void StudentRenderer::ShowGUI()
 	ImGui::SliderFloat("Lambda", &m_ControlPanel.m_lambda, 0.0f, 1.0f);
 	ImGui::Checkbox("Use SDSM", &m_ControlPanel.m_useSDSM);
 	ImGui::Checkbox("Animate sun position", &m_ControlPanel.m_animateSun);
+	ImGui::Checkbox("Use gl_Layer", &m_ControlPanel.m_UseGLLayer);
 	ImGui::End();
 
 	m_CSM->SetLambda(m_ControlPanel.m_lambda);

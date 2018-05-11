@@ -118,6 +118,18 @@ void Application::clearSDLWindow()
 }
 
 //=================================================================================
+void Application::SetLayered(bool enable /*= true*/)
+{
+	m_bLayeredRender = enable;
+	if (enable) {
+		m_ShaderForMeshesShadows = "shadow-layered";
+	}
+	else {
+		m_ShaderForMeshesShadows = "basic-shadow";
+	}
+}
+
+//=================================================================================
 void Application::Clear()
 {
     _renderer.clearStudentData();
@@ -230,8 +242,7 @@ bool Application::Run(int argc, char* argv[])
 		}
 
 		if (method.length() > 4 && method.find("noLayers") != std::string::npos) {
-			m_bLayeredRender = false;
-			m_ShaderForMeshesShadows = "basic-shadow";
+			SetLayered(false);
 		}
 	}
 
